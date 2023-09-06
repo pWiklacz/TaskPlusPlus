@@ -1,7 +1,8 @@
 ﻿using FluentResults;
+using TaskPlusPlus.Domain.Errors;
 using TaskPlusPlus.Domain.Primitives;
 
-namespace TaskPlusPlus.Domain.ValueObjects;
+namespace TaskPlusPlus.Domain.ValueObjects.Task;
 
 public sealed class TaskName : ValueObject
 {
@@ -17,12 +18,14 @@ public sealed class TaskName : ValueObject
     {
         if (string.IsNullOrEmpty(taskName))
         {
-            return Result.Fail<TaskName>(new Error("Task name is empty."));
+            return Result.Fail<TaskName>(
+                new EmptyTaskNameError());
         }
 
         if (taskName.Length > MaxLength)
         {
-            return Result.Fail<TaskName>(new Error("Task name is too long."));
+            return Result.Fail<TaskName>(
+                new TaskNameTooLongError(MaxLength));
         }
 
         return new TaskName(taskName);
@@ -32,7 +35,7 @@ public sealed class TaskName : ValueObject
         => name.Value;
 
     public static implicit operator TaskName(string name)
-        => TaskName.Create(name).Value;
+        => Create(name).Value;
 
     public override IEnumerable<object> GetAtomicValues()
     {
