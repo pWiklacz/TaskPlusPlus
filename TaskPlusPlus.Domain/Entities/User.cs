@@ -2,10 +2,7 @@
 
 namespace TaskPlusPlus.Domain.Entities;
 
-internal sealed class User : Entity
+internal sealed class User
 {
-    public User(Guid id) : base(id)
-    {
-    }
-
+    
 }

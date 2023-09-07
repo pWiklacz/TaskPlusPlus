@@ -6,7 +6,7 @@ namespace TaskPlusPlus.Domain.ValueObjects.Task;
 
 public sealed class TaskName : ValueObject
 {
-    public const int MaxLength = 500;
+    public const ushort MaxLength = 500;
     private TaskName(string value)
     {
         Value = value;
@@ -19,13 +19,13 @@ public sealed class TaskName : ValueObject
         if (string.IsNullOrEmpty(taskName))
         {
             return Result.Fail<TaskName>(
-                new EmptyTaskNameError());
+                new EmptyStringError(nameof(TaskName)));
         }
 
         if (taskName.Length > MaxLength)
         {
             return Result.Fail<TaskName>(
-                new TaskNameTooLongError(MaxLength));
+                new StringTooLongError(MaxLength,nameof(TaskName)));
         }
 
         return new TaskName(taskName);

@@ -4,11 +4,7 @@ namespace TaskPlusPlus.Domain.Primitives;
 
 public abstract class Entity : IEquatable<Entity>
 {
-    protected Entity(Guid id)
-    {
-        Id = id;
-    }
-    public Guid Id { get; private init; }
+    public abstract TypedId Id { get;}
     public static bool operator ==(Entity? left, Entity? right)
         => left is not null && right is not null && left.Equals(right);
     public static bool operator !=(Entity? left, Entity? right)
