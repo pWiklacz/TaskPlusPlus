@@ -7,7 +7,7 @@ namespace TaskPlusPlus.Domain.ValueObjects;
 public sealed class Notes : ValueObject
 {
     public const uint MaxLength = 10000;
-
+    public string Value { get; }
     private Notes(string value)
     {
         Value = value;
@@ -23,15 +23,10 @@ public sealed class Notes : ValueObject
 
         return new Notes(taskNotes);
     }
-
+  
     public static implicit operator string(Notes taskNotes)
         => taskNotes.Value;
 
-    public static implicit operator Notes(string taskNotes)
-        => Create(taskNotes).Value;
-
-
-    public string Value { get; }
     public override IEnumerable<object> GetAtomicValues()
     {
         yield return Value;

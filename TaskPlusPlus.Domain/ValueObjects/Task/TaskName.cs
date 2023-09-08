@@ -34,9 +34,6 @@ public sealed class TaskName : ValueObject
     public static implicit operator string(TaskName name)
         => name.Value;
 
-    public static implicit operator TaskName(string name)
-        => Create(name).Value;
-
     public override IEnumerable<object> GetAtomicValues()
     {
         yield return Value;

@@ -27,9 +27,6 @@ public sealed class DueDate : ValueObject
     public static implicit operator DateTime(DueDate dueDate)
         => dueDate.Value;
 
-    public static implicit operator DueDate(DateTime dueDate)
-        => Create(dueDate).Value;
-
     public override IEnumerable<object> GetAtomicValues()
     {
         yield return Value;

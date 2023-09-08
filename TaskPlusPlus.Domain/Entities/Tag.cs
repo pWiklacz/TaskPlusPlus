@@ -7,7 +7,7 @@ namespace TaskPlusPlus.Domain.Entities;
 internal sealed class Tag : Entity
 {
     public override TagId Id { get; }
-    public TagName Name { get; set; }
+    internal TagName Name { get; private set; }
     public ColorHex ColorHex { get; set; }
     public bool IsFavorite { get; set; }
     public Tag(TagName name, ColorHex colorHex, bool isFavorite = false)

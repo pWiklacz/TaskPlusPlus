@@ -26,10 +26,6 @@ public sealed class CreationTime : ValueObject
 
     public static implicit operator DateTime(CreationTime creationTime)
         => creationTime.Value;
-
-    public static implicit operator CreationTime(DateTime creationTime)
-        => Create(creationTime).Value;
-
     public override IEnumerable<object> GetAtomicValues()
     {
         yield return Value;

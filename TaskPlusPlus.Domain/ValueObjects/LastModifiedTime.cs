@@ -26,10 +26,6 @@ public sealed class LastModifiedTime : ValueObject
 
     public static implicit operator DateTime(LastModifiedTime creationTime)
         => creationTime.Value;
-
-    public static implicit operator LastModifiedTime(DateTime creationTime)
-        => Create(creationTime).Value;
-
     public override IEnumerable<object> GetAtomicValues()
     {
         yield return Value;
