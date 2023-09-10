@@ -14,7 +14,7 @@ internal sealed class Task : Entity
     private readonly List<Tag> _tags = new();
     private readonly List<Task> _subTasks = new();
     public override TaskId Id { get; }
-    private TaskName _name;
+    internal TaskName Name { get; private set; }
     private DueDate? _dueDate;
     private Notes _notes;
     private CreationTime _creationTime;  
@@ -40,7 +40,7 @@ internal sealed class Task : Entity
         CreationTime creationTime)
     {
         Id = new TaskId(new Guid());
-        _name = name;
+        Name = name;
         _dueDate = dueDate;
         _notes = notes;
         _lastModifiedTime = lastModifiedTime;
@@ -124,6 +124,16 @@ internal sealed class Task : Entity
         _tags.Remove(tagResult.Value);
         return Result.Ok();
     }
+    public Result DeleteSubTask(Task task)
+    {
+        var taskResult = GetTask(task.Id);
+
+        if (taskResult.IsFailed)
+            return Result.Fail(taskResult.Errors);
+
+        _subTasks.Remove(taskResult.Value);
+        return Result.Ok();
+    }
     public Result AddSubTask(Task task)
     {
         var alreadyExist = _subTasks.Any(t => t == task);
@@ -150,7 +160,7 @@ internal sealed class Task : Entity
         var taskNameResult = TaskName.Create(name);
         if (taskNameResult.IsFailed)
             return Result.Fail(taskNameResult.Errors);
-        _name = taskNameResult.Value;
+        Name = taskNameResult.Value;
         return Result.Ok();
     }
     public Result UpdateNotes(string notes)
@@ -169,5 +179,12 @@ internal sealed class Task : Entity
 
         return tag ?? Result.Fail<Tag>(
             new ItemNotFoundError(typeof(Tag), tag!.Name));
+    }
+    private Result<Task> GetTask(TaskId id)
+    {
+        var task = _subTasks.SingleOrDefault(t => t.Id == id);
+
+        return task ?? Result.Fail<Task>(
+            new ItemNotFoundError(typeof(Task), task!.Name));
     }
 } 
