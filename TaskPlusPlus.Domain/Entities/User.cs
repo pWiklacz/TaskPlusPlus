@@ -2,7 +2,7 @@
 
 namespace TaskPlusPlus.Domain.Entities;
 
-internal sealed class User
+public sealed class User
 {
     
 }

@@ -9,10 +9,8 @@ using TaskPlusPlus.Domain.ValueObjects.Task;
 
 namespace TaskPlusPlus.Domain.Entities;
 
-internal sealed class Task : Entity
+public sealed class Task : Entity
 {
-    private readonly List<Tag> _tags = new();
-    private readonly List<Task> _subTasks = new();
     public override TaskId Id { get; }
     internal TaskName Name { get; private set; }
     private DueDate? _dueDate;
@@ -24,6 +22,8 @@ internal sealed class Task : Entity
     private Priority _priority;
     private Energy _energy;
     private ProjectId? _projectId;
+    private readonly List<Tag> _tags = new();
+    private readonly List<Task> _subTasks = new();
 
     //TODO: Add User id when will be created
     //TODO: Think about Category

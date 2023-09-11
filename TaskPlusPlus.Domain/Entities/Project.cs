@@ -8,18 +8,18 @@ using TaskPlusPlus.Domain.ValueObjects.Task;
 
 namespace TaskPlusPlus.Domain.Entities;
 
-internal sealed class Project : Entity
+public sealed class Project : Entity
 {
-    private readonly List<Task> _tasks = new();
-    private readonly List<Tag> _tags = new();
     public override ProjectId Id { get; }
-    private ProjectName _name;
+    internal ProjectName Name { get; private set; }
     private Notes _notes;
     private DueDate _dueDate;
     private CreationTime _creationTime;
     private LastModifiedTime _lastModifiedTime;
     private bool _isCompleted;
-    private ColorHex _colorHex; 
+    private ColorHex _colorHex;
+    private readonly List<Task> _tasks = new();
+    private readonly List<Tag> _tags = new();
 
     //TODO: Add User id when will be created
     //TODO: Think how to store icon information
@@ -30,7 +30,7 @@ internal sealed class Project : Entity
         LastModifiedTime lastModifiedTime,
         ColorHex colorHex)
     {
-        _name = name;
+        Name = name;
         _notes = notes;
         _dueDate = dueDate;
         _creationTime = creationTime;
@@ -99,7 +99,7 @@ internal sealed class Project : Entity
         var nameResult = ProjectName.Create(name);
         if (nameResult.IsFailed)
             return Result.Fail(nameResult.Errors);
-        _name = nameResult.Value;
+        Name = nameResult.Value;
         return Result.Ok();
     }
     public Result UpdateNotes(string notes)
