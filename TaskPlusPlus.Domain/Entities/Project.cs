@@ -8,43 +8,48 @@ using TaskPlusPlus.Domain.ValueObjects.Task;
 
 namespace TaskPlusPlus.Domain.Entities;
 
-public sealed class Project : Entity
+public sealed class Project : Entity<ProjectId>
 {
-    public override ProjectId Id { get; }
-    internal ProjectName Name { get; private set; }
-    private Notes _notes;
-    private DueDate _dueDate;
-    private CreationTime _creationTime;
-    private LastModifiedTime _lastModifiedTime;
-    private bool _isCompleted;
-    private ColorHex _colorHex;
+    //public override ProjectId Id { get; }
+    public ProjectName Name { get; private set; }
+    public Notes Notes { get; private set; }
+    public DueDate? DueDate { get; private set; }
+    public CreationTime CreationTime { get; private set; }
+    public LastModifiedTime LastModifiedTime { get; private set; }
+    public bool IsCompleted { get; private set; }
+    public ColorHex ColorHex { get; private set; }
+    public IReadOnlyCollection<Tag> Tags => _tags;
+    public IReadOnlyCollection<Task> Tasks => _tasks;
+    public string UserId { get; private set; }
+
     private readonly List<Task> _tasks = new();
     private readonly List<Tag> _tags = new();
 
-    //TODO: Add User id when will be created
-    //TODO: Think how to store icon information
     public Project(
         ProjectName name,
-        Notes notes, DueDate dueDate, 
+        Notes notes, 
+        DueDate? dueDate, 
         CreationTime creationTime, 
         LastModifiedTime lastModifiedTime,
-        ColorHex colorHex)
+        ColorHex colorHex,
+        string userId)
     {
         Name = name;
-        _notes = notes;
-        _dueDate = dueDate;
-        _creationTime = creationTime;
-        _lastModifiedTime = lastModifiedTime;
-        _colorHex = colorHex;
-        _isCompleted = false;
-        Id = new ProjectId(new Guid());
+        Notes = notes;
+        DueDate = dueDate;
+        CreationTime = creationTime;
+        LastModifiedTime = lastModifiedTime;
+        ColorHex = colorHex;
+        UserId = userId;
+        IsCompleted = false;
     }
 
     public Result<Project> Create(
         string name,
         string notes,
-        DateTime dueDate,
-        string colorHex)
+        DateTime? dueDate,
+        string colorHex,
+        string userId)
     {
 
         var errors = new List<IError>();
@@ -61,9 +66,13 @@ public sealed class Project : Entity
         if (nameResult.IsFailed)
             errors.AddRange(nameResult.Errors);
 
-        var dueDateResult = DueDate.Create(dueDate);
-        if (dueDateResult.IsFailed)
-            errors.AddRange(dueDateResult.Errors);
+        Result<DueDate> dueDateResult = null!;
+        if (dueDate != null)
+        {
+            dueDateResult = DueDate.Create((DateTime)dueDate);
+            if (dueDateResult.IsFailed)
+                errors.AddRange(dueDateResult.Errors);
+        }
 
         var notesResult = Notes.Create(notes);
         if (notesResult.IsFailed)
@@ -79,10 +88,11 @@ public sealed class Project : Entity
         var project = new Project(
             nameResult.Value,
             notesResult.Value,
-            dueDateResult.Value,
+            dueDate == null ? null : dueDateResult!.Value,
             creationTimeResult.Value,
             lastModifiedTimeResult.Value,
-            colorResult.Value);
+            colorResult.Value,
+            userId);
 
         return project;
     }
@@ -91,7 +101,7 @@ public sealed class Project : Entity
         var dueDateResult = DueDate.Create(dueDate);
         if (dueDateResult.IsFailed)
             return Result.Fail(dueDateResult.Errors);
-        _dueDate = dueDateResult.Value;
+        DueDate = dueDateResult.Value;
         return Result.Ok();
     }
     public Result UpdateName(string name)
@@ -107,11 +117,11 @@ public sealed class Project : Entity
         var notesResult = Notes.Create(notes);
         if (notesResult.IsFailed)
             return Result.Fail(notesResult.Errors);
-        _notes = notesResult.Value;
+        Notes = notesResult.Value;
         return Result.Ok();
     }
     public void ChangeCompleteState()
-        => _isCompleted = !_isCompleted;
+        => IsCompleted = !IsCompleted;
     public Result DeleteTask(Task task)
     {
         var taskResult = GetTask(task.Id);

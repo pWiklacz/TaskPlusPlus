@@ -9,23 +9,26 @@ using TaskPlusPlus.Domain.ValueObjects.Task;
 
 namespace TaskPlusPlus.Domain.Entities;
 
-public sealed class Task : Entity
+public sealed class Task : Entity<TaskId>
 {
-    public override TaskId Id { get; }
-    internal TaskName Name { get; private set; }
-    private DueDate? _dueDate;
-    private Notes _notes;
-    private CreationTime _creationTime;  
-    private LastModifiedTime _lastModifiedTime;
-    private bool _isCompleted;
-    private TimeOnly? _durationTime;
-    private Priority _priority;
-    private Energy _energy;
-    private ProjectId? _projectId;
+    //public override TaskId Id { get; }
+    public TaskName Name { get; private set; }
+    public DueDate? DueDate { get; private set; }
+    public Notes Notes { get; private set; }
+    public CreationTime CreationTime { get; private set; }
+    public LastModifiedTime LastModifiedTime { get; private set; }
+    public bool IsCompleted { get; private set; }
+    public TimeOnly? DurationTime { get; private set; }
+    public Priority Priority { get; private set; }
+    public Energy Energy { get; private set; }
+    public ProjectId? ProjectId { get; private set; }
+    public string UserId { get; private set; }
+    public IReadOnlyCollection<Tag> Tags => _tags;
+    public IReadOnlyCollection<Task> SubTasks => _subTasks;
+
     private readonly List<Tag> _tags = new();
     private readonly List<Task> _subTasks = new();
 
-    //TODO: Add User id when will be created
     //TODO: Think about Category
 
     private Task(
@@ -37,29 +40,31 @@ public sealed class Task : Entity
         ProjectId? projectId, 
         Energy energy,
         TimeOnly? durationTime,
-        CreationTime creationTime)
+        CreationTime creationTime,
+        string userId)
     {
-        Id = new TaskId(new Guid());
         Name = name;
-        _dueDate = dueDate;
-        _notes = notes;
-        _lastModifiedTime = lastModifiedTime;
-        _priority = priority;
-        _projectId = projectId;
-        _energy = energy;
-        _durationTime = durationTime;
-        _creationTime = creationTime;
-        _isCompleted = false;
+        DueDate = dueDate;
+        Notes = notes;
+        LastModifiedTime = lastModifiedTime;
+        Priority = priority;
+        ProjectId = projectId;
+        Energy = energy;
+        DurationTime = durationTime;
+        CreationTime = creationTime;
+        UserId = userId;
+        IsCompleted = false;
     }
 
-    public Result<Task> Create(
+    public static Result<Task> Create(
         string name,
-        DateTime dueDate,
-        string notes,
+        DateTime? dueDate,
+        string notes,  
         Priority priority,
         ProjectId? projectId,
         Energy energy,
-        TimeOnly durationTime)
+        TimeOnly? durationTime,
+        string userId)
     {
         var errors = new List<IError>();
 
@@ -75,10 +80,14 @@ public sealed class Task : Entity
         if (nameResult.IsFailed)
             errors.AddRange(nameResult.Errors);
 
-        var dueDateResult = DueDate.Create(dueDate);
-        if (dueDateResult.IsFailed)
-            errors.AddRange(dueDateResult.Errors);
-
+        Result<DueDate> dueDateResult = null!;
+        if (dueDate != null)
+        {
+            dueDateResult = DueDate.Create((DateTime)dueDate);
+            if (dueDateResult.IsFailed)
+                errors.AddRange(dueDateResult.Errors);
+        }
+        
         var notesResult = Notes.Create(notes);
         if (notesResult.IsFailed)
             errors.AddRange(notesResult.Errors);
@@ -86,15 +95,17 @@ public sealed class Task : Entity
         if (errors.Any())
             return Result.Fail<Task>(errors);
 
-        var task = new Task(nameResult.Value,
-            dueDateResult.Value,
+        var task = new Task(
+            nameResult.Value,
+            dueDate == null ? null : dueDateResult!.Value,
             notesResult.Value,
-            lastModifiedTimeResult.Value,
+            lastModifiedTimeResult.Value, 
             priority,
             projectId,
             energy,
             durationTime,
-            creationTimeResult.Value);
+            creationTimeResult.Value,
+            userId);
 
         return task;
     }
@@ -146,13 +157,13 @@ public sealed class Task : Entity
         return Result.Ok();
     }
     public void ChangePriority(Priority priority)
-    => _priority = priority;
+    => Priority = priority;
     public Result UpdateDueDate(DateTime dueDate)
     {
         var dueDateResult = DueDate.Create(dueDate);
         if (dueDateResult.IsFailed)
             return Result.Fail(dueDateResult.Errors);
-        _dueDate = dueDateResult.Value;
+        DueDate = dueDateResult.Value;
         return Result.Ok();
     }
     public Result UpdateName(string name)
@@ -168,11 +179,11 @@ public sealed class Task : Entity
         var notesResult = Notes.Create(notes);
         if (notesResult.IsFailed)
             return Result.Fail(notesResult.Errors);
-        _notes = notesResult.Value;
+        Notes = notesResult.Value;
         return Result.Ok();
     }
     public void ChangeCompleteState()
-    => _isCompleted = !_isCompleted;
+    => IsCompleted = !IsCompleted;
     private Result<Tag> GetTag(TagId id)
     {
         var tag = _tags.SingleOrDefault(t => t.Id == id);

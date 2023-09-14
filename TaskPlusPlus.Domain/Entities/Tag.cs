@@ -1,32 +1,32 @@
 ﻿using FluentResults;
-using System.Xml.Linq;
+using TaskPlusPlus.Domain.DomainEvents;
 using TaskPlusPlus.Domain.Primitives;
 using TaskPlusPlus.Domain.ValueObjects;
-using TaskPlusPlus.Domain.ValueObjects.Project;
 using TaskPlusPlus.Domain.ValueObjects.Tag;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TaskPlusPlus.Domain.Entities;
 
-public sealed class Tag : Entity
+public sealed class Tag : Entity<TagId>
 {
-    public override TagId Id { get; }
-    internal TagName Name { get; private set; }
-    private ColorHex _colorHex;
-    private bool _isFavorite;
-    private Tag(TagName name, 
+    //public override TagId Id { get; } = null!;
+    public TagName Name { get; private set; } = null!;
+    public ColorHex ColorHex { get; private set; } = null!;
+    public bool IsFavorite { get; private set; }
+
+    private Tag(
+        TagName name, 
         ColorHex colorHex, 
-        bool isFavorite)
+        bool isFavorite 
+        )
     {
         Name = name;
-        _colorHex = colorHex;
-        Id = new TagId(new Guid());
-        _isFavorite = isFavorite;
+        ColorHex = colorHex;
+        IsFavorite = isFavorite;
     }
-
-    public Result<Tag> Create(
+    private Tag() { }
+    public static Result<Tag> Create(
         string name, 
-        string colorHex, 
+        string colorHex,
         bool isFavorite = false)
     {
         var errors = new List<IError>();
@@ -46,11 +46,14 @@ public sealed class Tag : Entity
             nameResult.Value,
             colorResult.Value,
             isFavorite);
+
+        tag.RaiseDomainEvent(new TagCreatedDomainEvent(Guid.NewGuid(), tag.Id));
+
         return tag;
     }
 
     public void ChangeFavoriteState()
-        => _isFavorite = !_isFavorite;
+        => IsFavorite = !IsFavorite;
     public Result UpdateName(string name)
     {
         var nameResult = TagName.Create(name);
@@ -64,7 +67,7 @@ public sealed class Tag : Entity
         var colorResult = ColorHex.Create(color);
         if(colorResult.IsFailed)
             return Result.Fail(colorResult.Errors);
-        _colorHex = colorResult.Value;
+        ColorHex = colorResult.Value;
         return Result.Ok();
     }
 }
