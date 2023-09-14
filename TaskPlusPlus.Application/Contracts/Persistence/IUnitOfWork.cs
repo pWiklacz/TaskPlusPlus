@@ -1,4 +1,4 @@
-﻿namespace TaskPlusPlus.Application.Persistence.Contracts;
+﻿namespace TaskPlusPlus.Application.Contracts.Persistence;
 
 public interface IUnitOfWork
 {

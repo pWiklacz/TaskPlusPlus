@@ -1,9 +1,9 @@
 ﻿using FluentResults;
 using MediatR;
 
-namespace TaskPlusPlus.Application.Persistence.Messaging;
+namespace TaskPlusPlus.Application.Messaging;
 
-public interface IQueryHandler<TQuery,TResponse>
+public interface IQueryHandler<TQuery, TResponse>
 : IRequestHandler<TQuery, Result<TResponse>>
 where TQuery : IQuery<TResponse>
 {

@@ -1,7 +1,7 @@
 ﻿using FluentResults;
-using TaskPlusPlus.Application.Persistence.Contracts;
-using TaskPlusPlus.Application.Persistence.Contracts.Repositories;
-using TaskPlusPlus.Application.Persistence.Messaging;
+using TaskPlusPlus.Application.Contracts.Persistence;
+using TaskPlusPlus.Application.Contracts.Persistence.Repositories;
+using TaskPlusPlus.Application.Messaging;
 using TaskPlusPlus.Application.Responses.Errors;
 using TaskPlusPlus.Application.Responses.Successes;
 using TaskPlusPlus.Domain.Entities;

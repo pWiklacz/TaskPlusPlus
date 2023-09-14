@@ -1,7 +1,7 @@
 ﻿using FluentResults;
 using MediatR;
 
-namespace TaskPlusPlus.Application.Persistence.Messaging;
+namespace TaskPlusPlus.Application.Messaging;
 
 public interface IQuery<TResponse>
     : IRequest<Result<TResponse>>
