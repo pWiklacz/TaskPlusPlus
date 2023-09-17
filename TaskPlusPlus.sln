@@ -23,7 +23,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastracture", "Infrastra
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{C9679531-E9FD-4A5F-807A-2CA8A23FF772}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskPlusPlus.Persistence", "TaskPlusPlus.Persistence\TaskPlusPlus.Persistence.csproj", "{0E7AB26C-8AD1-4B46-A9AA-737A547308DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskPlusPlus.Persistence", "TaskPlusPlus.Persistence\TaskPlusPlus.Persistence.csproj", "{0E7AB26C-8AD1-4B46-A9AA-737A547308DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskPlusPlus.API", "TaskPlusPlus.API\TaskPlusPlus.API.csproj", "{312EDC37-C48B-4673-A7E5-9ADF74845F79}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +57,10 @@ Global
 		{0E7AB26C-8AD1-4B46-A9AA-737A547308DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E7AB26C-8AD1-4B46-A9AA-737A547308DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E7AB26C-8AD1-4B46-A9AA-737A547308DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{312EDC37-C48B-4673-A7E5-9ADF74845F79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{312EDC37-C48B-4673-A7E5-9ADF74845F79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{312EDC37-C48B-4673-A7E5-9ADF74845F79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{312EDC37-C48B-4673-A7E5-9ADF74845F79}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

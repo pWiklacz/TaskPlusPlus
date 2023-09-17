@@ -3,7 +3,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TaskPlusPlus.Application.Contracts.Persistence;
 using TaskPlusPlus.Application.Contracts.Persistence.Repositories;
-using TaskPlusPlus.Persistence.Repositories;
+using TaskPlusPlus.Persistence.Repositories
+    ;
 
 namespace TaskPlusPlus.Persistence;
 
