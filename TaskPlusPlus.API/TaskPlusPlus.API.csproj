@@ -17,7 +17,6 @@
     <ProjectReference Include="..\TaskPlusPlus.Application\TaskPlusPlus.Application.csproj" />
     <ProjectReference Include="..\TaskPlusPlus.Infrastructure\TaskPlusPlus.Infrastructure.csproj" />
     <ProjectReference Include="..\TaskPlusPlus.Persistence\TaskPlusPlus.Persistence.csproj" />
-    <ProjectReference Include="..\TaskPlusPlus.Presentation\TaskPlusPlus.Presentation.csproj" />
   </ItemGroup>
 
 </Project>

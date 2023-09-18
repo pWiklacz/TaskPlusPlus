@@ -1,40 +1,47 @@
 ﻿using FluentResults;
-using TaskPlusPlus.Domain.DomainEvents;
 using TaskPlusPlus.Domain.Primitives;
 using TaskPlusPlus.Domain.ValueObjects;
-using TaskPlusPlus.Domain.ValueObjects.Tag;
+using TaskPlusPlus.Domain.ValueObjects.Category;
 
 namespace TaskPlusPlus.Domain.Entities;
 
-public sealed class Tag : Entity<TagId>
+public class Category : Entity<CategoryId>
 {
-    public TagName Name { get; private set; } = null!;
-    public ColorHex ColorHex { get; private set; } = null!;
+    public CategoryName Name { get; private set; } = null!;
+    public bool IsImmutable { get; private set; }
     public bool IsFavorite { get; private set; }
+    public ColorHex ColorHex { get; private set; } = null!;
     public UserId UserId { get; private set; } = null!;
 
-    private Tag(
-        TagName name, 
-        ColorHex colorHex, 
-        bool isFavorite,
-        UserId userId
+    public const string SystemOwner = "system";
+
+    private Category() { }
+
+    private Category(
+        CategoryName name,
+        bool isImmutable,
+        ColorHex colorHex,
+        UserId userId,
+        bool isFavorite = false
         )
     {
         Name = name;
-        ColorHex = colorHex;
+        IsImmutable = isImmutable;
         IsFavorite = isFavorite;
+        ColorHex = colorHex;
         UserId = userId;
     }
-    private Tag() { }
-    public static Result<Tag> Create(
-        string name, 
+
+    public static Result<Category> Create(
+        string name,
+        bool isImmutable,
+        bool isFavorite,
         string colorHex,
-        string userId,
-        bool isFavorite = false)
+        string userId)
     {
         var errors = new List<IError>();
 
-        var nameResult = TagName.Create(name);
+        var nameResult = CategoryName.Create(name);
         if (nameResult.IsFailed)
             errors.AddRange(nameResult.Errors);
 
@@ -47,24 +54,25 @@ public sealed class Tag : Entity<TagId>
             errors.AddRange(userIdResult.Errors);
 
         if (errors.Any())
-            return Result.Fail<Tag>(errors);
+            return Result.Fail<Category>(errors);
 
-        var tag = new Tag(
+        var category = new Category(
             nameResult.Value,
+            isImmutable,
             colorResult.Value,
-            isFavorite,
-            userIdResult.Value);
+            userIdResult.Value,
+            isFavorite
+            );
 
-        tag.RaiseDomainEvent(new TagCreatedDomainEvent(Guid.NewGuid(), tag.Id));
-
-        return tag;
+        return category;
     }
 
     public void ChangeFavoriteState()
         => IsFavorite = !IsFavorite;
+
     public Result UpdateName(string name)
     {
-        var nameResult = TagName.Create(name);
+        var nameResult = CategoryName.Create(name);
         if (nameResult.IsFailed)
             return Result.Fail(nameResult.Errors);
         Name = nameResult.Value;
@@ -73,7 +81,7 @@ public sealed class Tag : Entity<TagId>
     public Result ChangeColor(string color)
     {
         var colorResult = ColorHex.Create(color);
-        if(colorResult.IsFailed)
+        if (colorResult.IsFailed)
             return Result.Fail(colorResult.Errors);
         ColorHex = colorResult.Value;
         return Result.Ok();

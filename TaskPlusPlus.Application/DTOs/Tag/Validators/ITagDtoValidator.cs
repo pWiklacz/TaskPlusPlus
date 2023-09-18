@@ -1,13 +1,13 @@
 ﻿using FluentValidation;
-using TaskPlusPlus.Application.DTOs.Tag;
 
-namespace TaskPlusPlus.Application.Features.Tags.Commands.CreateTag;
+namespace TaskPlusPlus.Application.DTOs.Tag.Validators;
 
-internal class CreateTagCommandValidator : AbstractValidator<CreateTagDto>
+public class InterfaceTagDtoValidator : AbstractValidator<ITagDto>
 {
     private const string HexPattern = @"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
     private const byte MaxNameLength = 50;
-    public CreateTagCommandValidator()
+
+    public InterfaceTagDtoValidator()
     {
         RuleFor(dto => dto.ColorHex)
             .NotEmpty().WithMessage("{PropertyName} is required")

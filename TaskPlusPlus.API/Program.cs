@@ -2,7 +2,7 @@ using Serilog;
 using TaskPlusPlus.Application;
 using TaskPlusPlus.Infrastructure;
 using TaskPlusPlus.Persistence;
-using TaskPlusPlus.Presentation;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,11 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddApplication()
     .AddInfrastructure(builder.Configuration)
-    .AddPresentation()
     .AddPersistence(builder.Configuration);
 
 builder.Host.UseSerilog((context, configuration) =>
-    configuration.ReadFrom.Configuration(context.Configuration));1111111111111
+    configuration.ReadFrom.Configuration(context.Configuration));
 
 // Add services to the container.
 

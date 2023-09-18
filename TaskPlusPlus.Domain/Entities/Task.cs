@@ -11,7 +11,6 @@ namespace TaskPlusPlus.Domain.Entities;
 
 public sealed class Task : Entity<TaskId>
 {
-    //public override TaskId Id { get; }
     public TaskName Name { get; private set; }
     public DueDate? DueDate { get; private set; }
     public Notes Notes { get; private set; }
@@ -22,14 +21,14 @@ public sealed class Task : Entity<TaskId>
     public Priority Priority { get; private set; }
     public Energy Energy { get; private set; }
     public ProjectId? ProjectId { get; private set; }
-    public string UserId { get; private set; }
+    public UserId UserId { get; private set; }
     public IReadOnlyCollection<Tag> Tags => _tags;
     public IReadOnlyCollection<Task> SubTasks => _subTasks;
 
     private readonly List<Tag> _tags = new();
     private readonly List<Task> _subTasks = new();
 
-    //TODO: Think about Category
+    
 
     private Task(
         TaskName name,
@@ -41,7 +40,7 @@ public sealed class Task : Entity<TaskId>
         Energy energy,
         TimeOnly? durationTime,
         CreationTime creationTime,
-        string userId)
+        UserId userId)
     {
         Name = name;
         DueDate = dueDate;
@@ -87,7 +86,11 @@ public sealed class Task : Entity<TaskId>
             if (dueDateResult.IsFailed)
                 errors.AddRange(dueDateResult.Errors);
         }
-        
+
+        var userIdResult = UserId.Create(userId);
+        if (userIdResult.IsFailed)
+            errors.AddRange(userIdResult.Errors);
+
         var notesResult = Notes.Create(notes);
         if (notesResult.IsFailed)
             errors.AddRange(notesResult.Errors);
@@ -105,7 +108,7 @@ public sealed class Task : Entity<TaskId>
             energy,
             durationTime,
             creationTimeResult.Value,
-            userId);
+            userIdResult.Value);
 
         return task;
     }
@@ -189,13 +192,13 @@ public sealed class Task : Entity<TaskId>
         var tag = _tags.SingleOrDefault(t => t.Id == id);
 
         return tag ?? Result.Fail<Tag>(
-            new ItemNotFoundError(typeof(Tag), tag!.Name));
+            new NotFoundError(nameof(Tag), id));
     }
     private Result<Task> GetTask(TaskId id)
     {
         var task = _subTasks.SingleOrDefault(t => t.Id == id);
 
         return task ?? Result.Fail<Task>(
-            new ItemNotFoundError(typeof(Task), task!.Name));
+            new NotFoundError(nameof(Task), id));
     }
 } 

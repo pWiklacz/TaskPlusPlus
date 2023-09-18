@@ -1,6 +1,4 @@
-﻿using TaskPlusPlus.Domain.Primitives;
-
-namespace TaskPlusPlus.Domain.ValueObjects.Task;
+﻿namespace TaskPlusPlus.Domain.ValueObjects.Task;
 
 public sealed record TaskId(ulong Value)
 {

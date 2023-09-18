@@ -1,10 +1,12 @@
 ﻿using FluentResults;
 using TaskPlusPlus.Application.Contracts.Persistence;
 using TaskPlusPlus.Application.Contracts.Persistence.Repositories;
+using TaskPlusPlus.Application.DTOs.Tag.Validators;
 using TaskPlusPlus.Application.Messaging;
 using TaskPlusPlus.Application.Responses.Errors;
 using TaskPlusPlus.Application.Responses.Successes;
 using TaskPlusPlus.Domain.Entities;
+using Task = TaskPlusPlus.Domain.Entities.Task;
 
 namespace TaskPlusPlus.Application.Features.Tags.Commands.CreateTag;
 
@@ -22,19 +24,21 @@ internal sealed class CreateTagCommandHandler : ICommandHandler<CreateTagCommand
     public async Task<Result> Handle(CreateTagCommand request, CancellationToken cancellationToken)
     {
         var dto = request.Dto;
-        var validator = new CreateTagCommandValidator();
+        var validator = new CreateTagDtoValidator();
         var validationResult = await validator.ValidateAsync(dto, cancellationToken);
 
         if (validationResult.IsValid is false)
         {
             return Result.Fail(new ValidationError(validationResult,nameof(Tag)));
         }
-
-        var result = Tag.Create(dto.Name, dto.ColorHex, dto.IsFavorite);
         
-        if (result.IsFailed)
-            return Result.Fail(result.Errors);
+        //TODO:: UserID
+        var result = Tag.Create(dto.Name, dto.ColorHex, "UserId", dto.IsFavorite);
 
+        if (result.IsFailed)
+            return result.ToResult();
+
+        
         var tag = result.Value;
 
         _tagRepository.Add(tag);

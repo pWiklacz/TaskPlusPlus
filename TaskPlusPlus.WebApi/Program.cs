@@ -1,6 +1,6 @@
 using TaskPlusPlus.Application;
 using TaskPlusPlus.Infrastructure;
-using TaskPlusPlus.Presentation;
+
 using Serilog;
 using TaskPlusPlus.Persistence;
 
@@ -12,7 +12,6 @@ builder.Services.AddControllersWithViews();
 builder.Services
     .AddApplication()
     .AddInfrastructure(builder.Configuration)
-    .AddPresentation()
     .AddPersistence(builder.Configuration);
 
 builder.Host.UseSerilog((context, configuration) =>

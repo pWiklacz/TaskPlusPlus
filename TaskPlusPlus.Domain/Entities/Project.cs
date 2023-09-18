@@ -20,7 +20,7 @@ public sealed class Project : Entity<ProjectId>
     public ColorHex ColorHex { get; private set; }
     public IReadOnlyCollection<Tag> Tags => _tags;
     public IReadOnlyCollection<Task> Tasks => _tasks;
-    public string UserId { get; private set; }
+    public UserId UserId { get; private set; }
 
     private readonly List<Task> _tasks = new();
     private readonly List<Tag> _tags = new();
@@ -32,7 +32,7 @@ public sealed class Project : Entity<ProjectId>
         CreationTime creationTime, 
         LastModifiedTime lastModifiedTime,
         ColorHex colorHex,
-        string userId)
+        UserId userId)
     {
         Name = name;
         Notes = notes;
@@ -61,6 +61,10 @@ public sealed class Project : Entity<ProjectId>
         var lastModifiedTimeResult = LastModifiedTime.Create(creationTimeResult.Value);
         if (lastModifiedTimeResult.IsFailed)
             errors.AddRange(lastModifiedTimeResult.Errors);
+
+        var userIdResult = UserId.Create(userId);
+        if (userIdResult.IsFailed)
+            errors.AddRange(userIdResult.Errors);
 
         var nameResult = ProjectName.Create(name);
         if (nameResult.IsFailed)
@@ -92,7 +96,7 @@ public sealed class Project : Entity<ProjectId>
             creationTimeResult.Value,
             lastModifiedTimeResult.Value,
             colorResult.Value,
-            userId);
+            userIdResult.Value);
 
         return project;
     }
@@ -173,12 +177,12 @@ public sealed class Project : Entity<ProjectId>
         var tag = _tags.SingleOrDefault(t => t.Id == id);
 
         return tag ?? Result.Fail<Tag>(
-            new ItemNotFoundError(typeof(Tag), tag!.Name));
+            new NotFoundError(nameof(Tag), id));
     }
     private Result<Task> GetTask(TaskId id)
     {
         var task = _tasks.SingleOrDefault(t => t.Id == id);
         return task ?? Result.Fail<Task>(
-            new ItemNotFoundError(typeof(Task), task!.Name));
+            new NotFoundError(nameof(Task), id));
     }
 }

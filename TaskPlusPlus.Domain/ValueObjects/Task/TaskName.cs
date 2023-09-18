@@ -18,6 +18,7 @@ public sealed class TaskName : ValueObject
     {
         if (string.IsNullOrEmpty(taskName))
         {
+            
             return Result.Fail<TaskName>(
                 new EmptyStringError(nameof(TaskName)));
         }
