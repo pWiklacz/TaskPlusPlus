@@ -3,55 +3,56 @@ using TaskPlusPlus.Domain.Enums;
 using TaskPlusPlus.Domain.Errors;
 using TaskPlusPlus.Domain.Primitives;
 using TaskPlusPlus.Domain.ValueObjects;
+using TaskPlusPlus.Domain.ValueObjects.Category;
 using TaskPlusPlus.Domain.ValueObjects.Project;
 using TaskPlusPlus.Domain.ValueObjects.Tag;
 using TaskPlusPlus.Domain.ValueObjects.Task;
 
 namespace TaskPlusPlus.Domain.Entities;
 
-public sealed class Task : Entity<TaskId>
+public sealed class Task : Entity<TaskId>, IAuditEntity
 {
     public TaskName Name { get; private set; }
     public DueDate? DueDate { get; private set; }
     public Notes Notes { get; private set; }
-    public CreationTime CreationTime { get; private set; }
-    public LastModifiedTime LastModifiedTime { get; private set; }
     public bool IsCompleted { get; private set; }
     public TimeOnly? DurationTime { get; private set; }
     public Priority Priority { get; private set; }
     public Energy Energy { get; private set; }
     public ProjectId? ProjectId { get; private set; }
     public UserId UserId { get; private set; }
+    public CategoryId CategoryId { get; private set; }
     public IReadOnlyCollection<Tag> Tags => _tags;
     public IReadOnlyCollection<Task> SubTasks => _subTasks;
-
+    
     private readonly List<Tag> _tags = new();
     private readonly List<Task> _subTasks = new();
 
-    
+    public DateTime CreatedOnUtc { get; set; }
+    public DateTime? LastModifiedOnUtc { get; set; }
+    public DateTime? CompletedOnUtc { get; private set; }
+
 
     private Task(
         TaskName name,
         DueDate? dueDate,
         Notes notes,
-        LastModifiedTime lastModifiedTime, 
         Priority priority, 
         ProjectId? projectId, 
         Energy energy,
         TimeOnly? durationTime,
-        CreationTime creationTime,
-        UserId userId)
+        UserId userId, 
+        CategoryId categoryId)
     {
         Name = name;
         DueDate = dueDate;
         Notes = notes;
-        LastModifiedTime = lastModifiedTime;
         Priority = priority;
         ProjectId = projectId;
         Energy = energy;
         DurationTime = durationTime;
-        CreationTime = creationTime;
         UserId = userId;
+        CategoryId = categoryId;
         IsCompleted = false;
     }
 
@@ -59,21 +60,14 @@ public sealed class Task : Entity<TaskId>
         string name,
         DateTime? dueDate,
         string notes,  
-        Priority priority,
+        string priority,
         ProjectId? projectId,
-        Energy energy,
+        string energy,
         TimeOnly? durationTime,
-        string userId)
+        string userId,
+        CategoryId categoryId)
     {
         var errors = new List<IError>();
-
-        var creationTimeResult = CreationTime.Create(DateTime.Now);
-        if (creationTimeResult.IsFailed)
-            errors.AddRange(creationTimeResult.Errors);
-
-        var lastModifiedTimeResult = LastModifiedTime.Create(creationTimeResult.Value);
-        if (lastModifiedTimeResult.IsFailed)
-            errors.AddRange(lastModifiedTimeResult.Errors);
 
         var nameResult = TaskName.Create(name);
         if (nameResult.IsFailed)
@@ -95,6 +89,14 @@ public sealed class Task : Entity<TaskId>
         if (notesResult.IsFailed)
             errors.AddRange(notesResult.Errors);
 
+        var priorityResult = Priority.FromName(priority);
+        if (priorityResult.IsFailed)
+            errors.AddRange(priorityResult.Errors);
+
+        var energyResult = Energy.FromName(energy);
+        if(energyResult.IsFailed)
+            errors.AddRange(energyResult.Errors);
+
         if (errors.Any())
             return Result.Fail<Task>(errors);
 
@@ -102,13 +104,12 @@ public sealed class Task : Entity<TaskId>
             nameResult.Value,
             dueDate == null ? null : dueDateResult!.Value,
             notesResult.Value,
-            lastModifiedTimeResult.Value, 
-            priority,
+            priorityResult.Value!,
             projectId,
-            energy,
+            energyResult.Value!,
             durationTime,
-            creationTimeResult.Value,
-            userIdResult.Value);
+            userIdResult.Value,
+            categoryId);
 
         return task;
     }
@@ -186,7 +187,19 @@ public sealed class Task : Entity<TaskId>
         return Result.Ok();
     }
     public void ChangeCompleteState()
-    => IsCompleted = !IsCompleted;
+    {
+        switch (IsCompleted)
+        {
+            case false:
+                IsCompleted = true;
+                CompletedOnUtc = DateTime.UtcNow;
+                break;
+            case true:
+                IsCompleted = false;
+                CompletedOnUtc = null;
+                break;
+        }
+    }
     private Result<Tag> GetTag(TagId id)
     {
         var tag = _tags.SingleOrDefault(t => t.Id == id);
@@ -201,4 +214,5 @@ public sealed class Task : Entity<TaskId>
         return task ?? Result.Fail<Task>(
             new NotFoundError(nameof(Task), id));
     }
+
 } 

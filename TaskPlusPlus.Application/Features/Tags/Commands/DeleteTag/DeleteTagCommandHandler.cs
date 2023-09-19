@@ -23,7 +23,7 @@ internal sealed class DeleteTagCommandHandler : ICommandHandler<DeleteTagCommand
     {
         var tag = await _tagRepository.GetByIdAsync(request.Id);
 
-        if (tag == null)
+        if (tag is null)
         {
             return  Result.Fail(new NotFoundError(nameof(Tag), request.Id));
         }

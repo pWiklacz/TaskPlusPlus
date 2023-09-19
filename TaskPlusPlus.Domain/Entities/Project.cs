@@ -8,14 +8,11 @@ using TaskPlusPlus.Domain.ValueObjects.Task;
 
 namespace TaskPlusPlus.Domain.Entities;
 
-public sealed class Project : Entity<ProjectId>
+public sealed class Project : Entity<ProjectId>, IAuditEntity
 {
-    //public override ProjectId Id { get; }
     public ProjectName Name { get; private set; }
     public Notes Notes { get; private set; }
     public DueDate? DueDate { get; private set; }
-    public CreationTime CreationTime { get; private set; }
-    public LastModifiedTime LastModifiedTime { get; private set; }
     public bool IsCompleted { get; private set; }
     public ColorHex ColorHex { get; private set; }
     public IReadOnlyCollection<Tag> Tags => _tags;
@@ -25,20 +22,20 @@ public sealed class Project : Entity<ProjectId>
     private readonly List<Task> _tasks = new();
     private readonly List<Tag> _tags = new();
 
+    public DateTime CreatedOnUtc { get; set; }
+    public DateTime? LastModifiedOnUtc { get; set; }
+    public DateTime? CompletedOnUtc { get; private set; }
+
     public Project(
         ProjectName name,
         Notes notes, 
-        DueDate? dueDate, 
-        CreationTime creationTime, 
-        LastModifiedTime lastModifiedTime,
+        DueDate? dueDate,
         ColorHex colorHex,
         UserId userId)
     {
         Name = name;
         Notes = notes;
         DueDate = dueDate;
-        CreationTime = creationTime;
-        LastModifiedTime = lastModifiedTime;
         ColorHex = colorHex;
         UserId = userId;
         IsCompleted = false;
@@ -53,14 +50,6 @@ public sealed class Project : Entity<ProjectId>
     {
 
         var errors = new List<IError>();
-
-        var creationTimeResult = CreationTime.Create(DateTime.Now);
-        if (creationTimeResult.IsFailed)
-            errors.AddRange(creationTimeResult.Errors);
-
-        var lastModifiedTimeResult = LastModifiedTime.Create(creationTimeResult.Value);
-        if (lastModifiedTimeResult.IsFailed)
-            errors.AddRange(lastModifiedTimeResult.Errors);
 
         var userIdResult = UserId.Create(userId);
         if (userIdResult.IsFailed)
@@ -93,8 +82,6 @@ public sealed class Project : Entity<ProjectId>
             nameResult.Value,
             notesResult.Value,
             dueDate == null ? null : dueDateResult!.Value,
-            creationTimeResult.Value,
-            lastModifiedTimeResult.Value,
             colorResult.Value,
             userIdResult.Value);
 
@@ -125,7 +112,19 @@ public sealed class Project : Entity<ProjectId>
         return Result.Ok();
     }
     public void ChangeCompleteState()
-        => IsCompleted = !IsCompleted;
+    {
+        switch (IsCompleted)
+        {
+            case false:
+                IsCompleted = true;
+                CompletedOnUtc = DateTime.UtcNow;
+                break;
+            case true:
+                IsCompleted = false;
+                CompletedOnUtc = null;
+                break;
+        }
+    }
     public Result DeleteTask(Task task)
     {
         var taskResult = GetTask(task.Id);

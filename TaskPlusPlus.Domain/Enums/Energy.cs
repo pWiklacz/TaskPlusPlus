@@ -12,6 +12,7 @@ public sealed class Energy : Enumeration<Energy>
         : base(value, name)
     {
     }
+    
     public override string ToString()
     {
         return Name;

@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using FluentResults;
 
 namespace TaskPlusPlus.Domain.Primitives;
 
@@ -14,19 +15,21 @@ public abstract class Enumeration<TEnum> : IEquatable<Enumeration<TEnum>>
     }
     public int Value { get; protected init; }
     public string Name { get; protected init; }
-    public static TEnum? FromValue(int value)
+    public static Result<TEnum?> FromValue(int value)
     {
         return Enumerations.TryGetValue(
             value,
             out TEnum? enumeration)
             ? enumeration
-            : default;
+            : Result.Fail<TEnum?>(new Error($"The {nameof(TEnum)} does not exist."));
     }
-    public static TEnum? FromName(string name)
+    public static Result<TEnum?> FromName(string name)
     {
-        return Enumerations
+        var @enum = Enumerations
             .Values
             .SingleOrDefault(e => e.Name == name);
+
+        return @enum ?? Result.Fail<TEnum?>(new Error($"The {nameof(TEnum)} does not exist."));
     }
     public bool Equals(Enumeration<TEnum>? other)
     {

@@ -60,8 +60,8 @@ public sealed class Tag : Entity<TagId>
         return tag;
     }
 
-    public void ChangeFavoriteState()
-        => IsFavorite = !IsFavorite;
+    public void ChangeFavoriteState(bool favorite)
+    => IsFavorite = favorite;
     public Result UpdateName(string name)
     {
         var nameResult = TagName.Create(name);

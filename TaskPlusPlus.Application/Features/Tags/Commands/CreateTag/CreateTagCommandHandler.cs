@@ -6,7 +6,6 @@ using TaskPlusPlus.Application.Messaging;
 using TaskPlusPlus.Application.Responses.Errors;
 using TaskPlusPlus.Application.Responses.Successes;
 using TaskPlusPlus.Domain.Entities;
-using Task = TaskPlusPlus.Domain.Entities.Task;
 
 namespace TaskPlusPlus.Application.Features.Tags.Commands.CreateTag;
 
@@ -27,6 +26,7 @@ internal sealed class CreateTagCommandHandler : ICommandHandler<CreateTagCommand
         var validator = new CreateTagDtoValidator();
         var validationResult = await validator.ValidateAsync(dto, cancellationToken);
 
+
         if (validationResult.IsValid is false)
         {
             return Result.Fail(new ValidationError(validationResult,nameof(Tag)));
@@ -38,7 +38,6 @@ internal sealed class CreateTagCommandHandler : ICommandHandler<CreateTagCommand
         if (result.IsFailed)
             return result.ToResult();
 
-        
         var tag = result.Value;
 
         _tagRepository.Add(tag);

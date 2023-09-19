@@ -67,8 +67,8 @@ public class Category : Entity<CategoryId>
         return category;
     }
 
-    public void ChangeFavoriteState()
-        => IsFavorite = !IsFavorite;
+    public void ChangeFavoriteState(bool favorite)
+        => IsFavorite = favorite;
 
     public Result UpdateName(string name)
     {
