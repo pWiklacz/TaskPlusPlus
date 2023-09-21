@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using MimeKit;
 using Org.BouncyCastle.Asn1.Pkcs;
 using TaskPlusPlus.Application.Contracts.Infrastructure;
-using TaskPlusPlus.Application.Models;
+using TaskPlusPlus.Application.Models.Mail;
 
 namespace TaskPlusPlus.Infrastructure.Email;
 
@@ -14,7 +14,7 @@ public class EmailSender : IEmailSender
     {
         _mailSettings = mailSettingsOptions.Value;
     }
-    public async Task<bool> SendEmail(Application.Models.Email email)
+    public async Task<bool> SendEmail(Application.Models.Mail.Email email)
     {
         try
         {
@@ -43,7 +43,7 @@ public class EmailSender : IEmailSender
         }
         catch (Exception ex)
         {
-            // Exception Details
+  
             return false;
         }
     }

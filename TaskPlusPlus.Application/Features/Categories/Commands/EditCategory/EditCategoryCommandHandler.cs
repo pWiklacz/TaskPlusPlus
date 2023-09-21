@@ -1,13 +1,12 @@
 ﻿using FluentResults;
-using TaskPlusPlus.Application.Contracts.Persistence.Repositories;
 using TaskPlusPlus.Application.Contracts.Persistence;
+using TaskPlusPlus.Application.Contracts.Persistence.Repositories;
 using TaskPlusPlus.Application.DTOs.Category.Validators;
 using TaskPlusPlus.Application.Messaging;
-using TaskPlusPlus.Application.DTOs.Tag.Validators;
 using TaskPlusPlus.Application.Responses.Errors;
+using TaskPlusPlus.Application.Responses.Successes;
 using TaskPlusPlus.Domain.Entities;
 using TaskPlusPlus.Domain.Errors;
-using TaskPlusPlus.Application.Responses.Successes;
 
 namespace TaskPlusPlus.Application.Features.Categories.Commands.EditCategory;
 internal sealed class EditCategoryCommandHandler : ICommandHandler<EditCategoryCommand>

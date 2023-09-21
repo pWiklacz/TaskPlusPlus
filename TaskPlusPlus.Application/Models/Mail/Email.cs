@@ -1,4 +1,4 @@
-﻿namespace TaskPlusPlus.Application.Models;
+﻿namespace TaskPlusPlus.Application.Models.Mail;
 
 public class Email
 {

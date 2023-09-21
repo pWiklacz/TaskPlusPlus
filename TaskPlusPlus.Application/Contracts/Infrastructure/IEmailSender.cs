@@ -1,4 +1,4 @@
-﻿using TaskPlusPlus.Application.Models;
+﻿using TaskPlusPlus.Application.Models.Mail;
 
 namespace TaskPlusPlus.Application.Contracts.Infrastructure;
 

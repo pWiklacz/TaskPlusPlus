@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TaskPlusPlus.Application.Contracts.Infrastructure;
-using TaskPlusPlus.Application.Models;
+using TaskPlusPlus.Application.Models.Mail;
 
 namespace TaskPlusPlus.Infrastructure;
 
