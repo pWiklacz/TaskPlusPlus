@@ -23,15 +23,11 @@ public sealed class Task : Entity<TaskId>, IAuditEntity
     public UserId UserId { get; private set; }
     public CategoryId CategoryId { get; private set; }
     public IReadOnlyCollection<Tag> Tags => _tags;
-    public IReadOnlyCollection<Task> SubTasks => _subTasks;
-    
-    private readonly List<Tag> _tags = new();
-    private readonly List<Task> _subTasks = new();
 
+    private readonly List<Tag> _tags = new();
     public DateTime CreatedOnUtc { get; set; }
     public DateTime? LastModifiedOnUtc { get; set; }
     public DateTime? CompletedOnUtc { get; private set; }
-
 
     private Task(
         TaskName name,
@@ -113,6 +109,12 @@ public sealed class Task : Entity<TaskId>, IAuditEntity
 
         return task;
     }
+
+    public void ChangeCategory(CategoryId categoryId)
+        => CategoryId = categoryId;
+
+    public void ChangeProject(ProjectId projectId)
+        => ProjectId = projectId;
     
     public Result AddTag(Tag tag)
     {
@@ -139,27 +141,7 @@ public sealed class Task : Entity<TaskId>, IAuditEntity
         _tags.Remove(tagResult.Value);
         return Result.Ok();
     }
-    public Result DeleteSubTask(Task task)
-    {
-        var taskResult = GetTask(task.Id);
-
-        if (taskResult.IsFailed)
-            return Result.Fail(taskResult.Errors);
-
-        _subTasks.Remove(taskResult.Value);
-        return Result.Ok();
-    }
-    public Result AddSubTask(Task task)
-    {
-        var alreadyExist = _subTasks.Any(t => t == task);
-        if (alreadyExist)       
-        {
-            return Result.Fail(
-                new TaskAlreadyExistsError(task.Id));
-        }
-        _subTasks.Add(task);
-        return Result.Ok();
-    }
+    
     public void ChangePriority(Priority priority)
     => Priority = priority;
     public Result UpdateDueDate(DateTime dueDate)
@@ -207,12 +189,5 @@ public sealed class Task : Entity<TaskId>, IAuditEntity
         return tag ?? Result.Fail<Tag>(
             new NotFoundError(nameof(Tag), id));
     }
-    private Result<Task> GetTask(TaskId id)
-    {
-        var task = _subTasks.SingleOrDefault(t => t.Id == id);
-
-        return task ?? Result.Fail<Task>(
-            new NotFoundError(nameof(Task), id));
-    }
-
+    
 } 

@@ -2,6 +2,7 @@
 using TaskPlusPlus.Domain.Errors;
 using TaskPlusPlus.Domain.Primitives;
 using TaskPlusPlus.Domain.ValueObjects;
+using TaskPlusPlus.Domain.ValueObjects.Category;
 using TaskPlusPlus.Domain.ValueObjects.Project;
 using TaskPlusPlus.Domain.ValueObjects.Tag;
 using TaskPlusPlus.Domain.ValueObjects.Task;
@@ -14,13 +15,11 @@ public sealed class Project : Entity<ProjectId>, IAuditEntity
     public Notes Notes { get; private set; }
     public DueDate? DueDate { get; private set; }
     public bool IsCompleted { get; private set; }
-    public ColorHex ColorHex { get; private set; }
-    public IReadOnlyCollection<Tag> Tags => _tags;
     public IReadOnlyCollection<Task> Tasks => _tasks;
     public UserId UserId { get; private set; }
+    public CategoryId CategoryId { get; private set; }
 
     private readonly List<Task> _tasks = new();
-    private readonly List<Tag> _tags = new();
 
     public DateTime CreatedOnUtc { get; set; }
     public DateTime? LastModifiedOnUtc { get; set; }
@@ -30,23 +29,23 @@ public sealed class Project : Entity<ProjectId>, IAuditEntity
         ProjectName name,
         Notes notes, 
         DueDate? dueDate,
-        ColorHex colorHex,
-        UserId userId)
+        UserId userId, 
+        CategoryId categoryId)
     {
         Name = name;
         Notes = notes;
         DueDate = dueDate;
-        ColorHex = colorHex;
         UserId = userId;
+        CategoryId = categoryId;
         IsCompleted = false;
     }
 
-    public Result<Project> Create(
+    public static Result<Project> Create(
         string name,
         string notes,
         DateTime? dueDate,
-        string colorHex,
-        string userId)
+        string userId,
+        CategoryId categoryId)
     {
 
         var errors = new List<IError>();
@@ -71,9 +70,6 @@ public sealed class Project : Entity<ProjectId>, IAuditEntity
         if (notesResult.IsFailed)
             errors.AddRange(notesResult.Errors);
 
-        var colorResult = ColorHex.Create(colorHex);
-        if(colorResult.IsFailed)
-            errors.AddRange(colorResult.Errors);
 
         if (errors.Any())
             return Result.Fail<Project>(errors);
@@ -82,8 +78,8 @@ public sealed class Project : Entity<ProjectId>, IAuditEntity
             nameResult.Value,
             notesResult.Value,
             dueDate == null ? null : dueDateResult!.Value,
-            colorResult.Value,
-            userIdResult.Value);
+            userIdResult.Value,
+            categoryId);
 
         return project;
     }
@@ -146,38 +142,7 @@ public sealed class Project : Entity<ProjectId>, IAuditEntity
         _tasks.Add(task);
         return Result.Ok();
     }
-    public Result AddTag(Tag tag)
-    {
-        var alreadyExist = _tags.Any(t => t == tag);
-        if (alreadyExist)
-            return Result.Ok();
-        _tags.Add(tag);
-        return Result.Ok();
-    }
-    public void AddTags(IEnumerable<Tag> tags)
-    {
-        foreach (var tag in tags)
-        {
-            AddTag(tag);
-        }
-    }
-    public Result DeleteTag(Tag tag)
-    {
-        var tagResult = GetTag(tag.Id);
-
-        if (tagResult.IsFailed)
-            return Result.Fail(tagResult.Errors);
-
-        _tags.Remove(tagResult.Value);
-        return Result.Ok();
-    }
-    private Result<Tag> GetTag(TagId id)
-    {
-        var tag = _tags.SingleOrDefault(t => t.Id == id);
-
-        return tag ?? Result.Fail<Tag>(
-            new NotFoundError(nameof(Tag), id));
-    }
+    
     private Result<Task> GetTask(TaskId id)
     {
         var task = _tasks.SingleOrDefault(t => t.Id == id);

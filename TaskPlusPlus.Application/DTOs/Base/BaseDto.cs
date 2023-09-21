@@ -1,4 +1,4 @@
-﻿namespace TaskPlusPlus.Application.DTOs.Common;
+﻿namespace TaskPlusPlus.Application.DTOs.Base;
 
 public class BaseDto
 {

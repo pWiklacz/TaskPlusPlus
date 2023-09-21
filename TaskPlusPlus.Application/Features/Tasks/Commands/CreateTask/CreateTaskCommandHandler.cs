@@ -1,13 +1,10 @@
 ﻿using FluentResults;
 using TaskPlusPlus.Application.Contracts.Persistence;
 using TaskPlusPlus.Application.Contracts.Persistence.Repositories;
-using TaskPlusPlus.Application.DTOs.Tag.Validators;
 using TaskPlusPlus.Application.DTOs.Task.Validators;
 using TaskPlusPlus.Application.Messaging;
 using TaskPlusPlus.Application.Responses.Errors;
 using TaskPlusPlus.Application.Responses.Successes;
-using TaskPlusPlus.Domain.Entities;
-using TaskPlusPlus.Domain.Enums;
 using Task = TaskPlusPlus.Domain.Entities.Task;
 
 namespace TaskPlusPlus.Application.Features.Tasks.Commands.CreateTask;

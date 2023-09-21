@@ -29,4 +29,5 @@ public class TaskPlusPlusDbContext : DbContext
     public DbSet<Tag> Tags { get; set; } = null!;
     public DbSet<Task> Tasks { get; set; } = null!;
     public DbSet<Project> Projects { get; set; } = null!;
+    public DbSet<Category> Categories { get; set; } = null!;
 }

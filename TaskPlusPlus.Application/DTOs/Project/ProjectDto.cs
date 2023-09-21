@@ -1,18 +1,17 @@
-﻿using TaskPlusPlus.Application.DTOs.Common;
-using TaskPlusPlus.Application.DTOs.Tag;
+﻿using TaskPlusPlus.Application.DTOs.Base;
 using TaskPlusPlus.Application.DTOs.Task;
 
 namespace TaskPlusPlus.Application.DTOs.Project;
 
-public sealed class ProjectDto : BaseDto
+public sealed class ProjectDto : BaseDto, IProjectDto
 {
     public string Name { get; set; } = null!;
     public string Notes { get; set; } = string.Empty;
     public DateTime? DueDate { get; set; }
     public bool IsCompleted { get; set; }
-    public string ColorHex { get; set; } = null!;
     public string UserId { get; set; } = null!;
+    public ulong CategoryId { get; set; }
+    public DateTime? CompletedOnUtc { get; set; }
 
     public List<TaskDto> Tasks = new();
-    public List<TagDto> Tags = new();
 }
