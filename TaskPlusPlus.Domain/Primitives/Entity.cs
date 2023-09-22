@@ -3,9 +3,9 @@
 namespace TaskPlusPlus.Domain.Primitives;
 
 public abstract class Entity<TEntityId> : IEquatable<Entity<TEntityId>>, IEntity
-    where TEntityId : class
+    where TEntityId : struct
 {
-    public TEntityId Id { get; } = null!;
+    public TEntityId Id { get; } 
     private readonly List<DomainEvent> _domainEvents = new();
     public ICollection<DomainEvent> GetDomainEvents() => _domainEvents;
 
@@ -28,7 +28,7 @@ public abstract class Entity<TEntityId> : IEquatable<Entity<TEntityId>>, IEntity
         if (obj is not Entity<TEntityId> entity)
             return false;
 
-        return entity.Id == Id;
+        return entity.Id.Equals(Id);
 
     }
     public bool Equals(Entity<TEntityId>? other)
@@ -39,7 +39,7 @@ public abstract class Entity<TEntityId> : IEquatable<Entity<TEntityId>>, IEntity
         if (other.GetType() != GetType())
             return false;
 
-        return other.Id == Id;
+        return other.Id.Equals(Id);
 
     }
     public override int GetHashCode()

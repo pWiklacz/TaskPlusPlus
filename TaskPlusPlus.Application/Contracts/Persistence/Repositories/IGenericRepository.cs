@@ -2,14 +2,14 @@
 
 namespace TaskPlusPlus.Application.Contracts.Persistence.Repositories;
 
-public interface IGenericRepository<T, TEntityId>
-    where T : Entity<TEntityId>
-    where TEntityId : class
+public interface IGenericRepository<TEntity, TEntityId>
+    where TEntity : Entity<TEntityId>
+    where TEntityId : struct
 {
-    Task<T?> GetByIdAsync(TEntityId id);
-    Task<IReadOnlyList<T>> GetAllAsync();
+    Task<TEntity?> GetByIdAsync(TEntityId id);
+    Task<IReadOnlyList<TEntity>> GetAllAsync();
     Task<bool> ExistsByIdAsync(TEntityId id);
-    T Add(T entity);
-    void Update(T entity);
-    void Remove(T entity);
+    TEntity Add(TEntity entity);
+    void Update(TEntity entity);
+    void Remove(TEntity entity);
 }

@@ -1,6 +1,6 @@
 ﻿namespace TaskPlusPlus.Domain.ValueObjects.Project;
 
-public sealed record ProjectId(ulong Value)
+public record struct ProjectId(ulong Value)
 {
     public static implicit operator ulong(ProjectId id)
         => id.Value;

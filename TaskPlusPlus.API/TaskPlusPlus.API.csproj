@@ -7,7 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.11">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="FluentResults" Version="3.15.2" />
     <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
@@ -15,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TaskPlusPlus.Application\TaskPlusPlus.Application.csproj" />
+    <ProjectReference Include="..\TaskPlusPlus.Identity\TaskPlusPlus.Identity.csproj" />
     <ProjectReference Include="..\TaskPlusPlus.Infrastructure\TaskPlusPlus.Infrastructure.csproj" />
     <ProjectReference Include="..\TaskPlusPlus.Persistence\TaskPlusPlus.Persistence.csproj" />
   </ItemGroup>

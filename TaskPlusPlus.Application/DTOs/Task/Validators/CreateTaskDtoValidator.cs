@@ -3,6 +3,7 @@ using FluentValidation;
 using TaskPlusPlus.Application.Contracts.Persistence.Repositories;
 using TaskPlusPlus.Application.DTOs.Tag;
 using TaskPlusPlus.Domain.Enums;
+using TaskPlusPlus.Domain.ValueObjects.Project;
 
 namespace TaskPlusPlus.Application.DTOs.Task.Validators;
 public class CreateTaskDtoValidator : AbstractValidator<CreateTaskDto>
@@ -51,7 +52,7 @@ public class CreateTaskDtoValidator : AbstractValidator<CreateTaskDto>
             .When(dto => dto.ProjectId.HasValue)
             .MustAsync(async (id, token) =>
             {
-                var projectExist = id != null && await projectRepository.ExistsByIdAsync(id);
+                var projectExist = id != null && await projectRepository.ExistsByIdAsync((ProjectId)id);
                 return projectExist;
             })
             .WithMessage("{PropertyName} does not exist.");

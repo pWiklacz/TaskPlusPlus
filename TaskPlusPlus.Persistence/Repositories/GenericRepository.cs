@@ -4,9 +4,9 @@ using TaskPlusPlus.Domain.Primitives;
 
 namespace TaskPlusPlus.Persistence.Repositories;
 
-internal abstract class GenericRepository<TEntity, TEntityId> : IGenericRepository<TEntity, TEntityId>
+internal  class GenericRepository<TEntity, TEntityId> : IGenericRepository<TEntity, TEntityId>
     where TEntity : Entity<TEntityId>
-    where TEntityId : class
+    where TEntityId : struct
 {
     protected readonly TaskPlusPlusDbContext DbContext;
 
@@ -18,7 +18,7 @@ internal abstract class GenericRepository<TEntity, TEntityId> : IGenericReposito
     public virtual async Task<TEntity?> GetByIdAsync(TEntityId id)
     {
         return await DbContext.Set<TEntity>()
-            .SingleOrDefaultAsync(e => e.Id == id);
+            .SingleOrDefaultAsync(e => e.Id.Equals(id));
     }
 
     public async Task<IReadOnlyList<TEntity>> GetAllAsync()

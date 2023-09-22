@@ -12,15 +12,15 @@ namespace TaskPlusPlus.Domain.Entities;
 
 public sealed class Task : Entity<TaskId>, IAuditEntity
 {
-    public TaskName Name { get; private set; }
+    public TaskName Name { get; private set; } = null!;
     public DueDate? DueDate { get; private set; }
-    public Notes Notes { get; private set; }
+    public Notes Notes { get; private set; } = null!;
     public bool IsCompleted { get; private set; }
     public TimeOnly? DurationTime { get; private set; }
-    public Priority Priority { get; private set; }
-    public Energy Energy { get; private set; }
+    public Priority Priority { get; private set; } = null!;
+    public Energy Energy { get; private set; } = null!;
     public ProjectId? ProjectId { get; private set; }
-    public UserId UserId { get; private set; }
+    public UserId UserId { get; private set; } = null!;
     public CategoryId CategoryId { get; private set; }
     public IReadOnlyCollection<Tag> Tags => _tags;
 
@@ -28,6 +28,9 @@ public sealed class Task : Entity<TaskId>, IAuditEntity
     public DateTime CreatedOnUtc { get; set; }
     public DateTime? LastModifiedOnUtc { get; set; }
     public DateTime? CompletedOnUtc { get; private set; }
+
+    private Task()
+    {}
 
     private Task(
         TaskName name,

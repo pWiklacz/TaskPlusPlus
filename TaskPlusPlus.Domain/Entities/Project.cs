@@ -11,12 +11,12 @@ namespace TaskPlusPlus.Domain.Entities;
 
 public sealed class Project : Entity<ProjectId>, IAuditEntity
 {
-    public ProjectName Name { get; private set; }
-    public Notes Notes { get; private set; }
+    public ProjectName Name { get; private set; } = null!;
+    public Notes Notes { get; private set; } = null!;
     public DueDate? DueDate { get; private set; }
     public bool IsCompleted { get; private set; }
     public IReadOnlyCollection<Task> Tasks => _tasks;
-    public UserId UserId { get; private set; }
+    public UserId UserId { get; private set; } = null!;
     public CategoryId CategoryId { get; private set; }
 
     private readonly List<Task> _tasks = new();
@@ -25,6 +25,10 @@ public sealed class Project : Entity<ProjectId>, IAuditEntity
     public DateTime? LastModifiedOnUtc { get; set; }
     public DateTime? CompletedOnUtc { get; private set; }
 
+    private Project()
+    {
+
+    }
     public Project(
         ProjectName name,
         Notes notes, 
