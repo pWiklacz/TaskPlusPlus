@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -18,7 +19,11 @@ public static class DependencyInjection
 
         services.AddDbContext<TaskPlusPlusIdentityDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("TaskPlusPlusConnectionString"),
-                b => b.MigrationsAssembly(typeof(TaskPlusPlusIdentityDbContext).Assembly.FullName)));
+                b =>
+                {
+                    b.MigrationsAssembly(typeof(TaskPlusPlusIdentityDbContext).Assembly.FullName);
+                    b.MigrationsHistoryTable(HistoryRepository.DefaultTableName, "identity");
+                }));
 
         services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<TaskPlusPlusIdentityDbContext>().AddDefaultTokenProviders();

@@ -1,22 +1,20 @@
 ﻿using FluentResults;
 using TaskPlusPlus.Application.Contracts.Persistence;
-using TaskPlusPlus.Application.Contracts.Persistence.Repositories;
 using TaskPlusPlus.Application.DTOs.Category.Validators;
 using TaskPlusPlus.Application.Messaging;
 using TaskPlusPlus.Application.Responses.Errors;
 using TaskPlusPlus.Application.Responses.Successes;
 using TaskPlusPlus.Domain.Entities;
 using TaskPlusPlus.Domain.Errors;
+using TaskPlusPlus.Domain.ValueObjects.Category;
 
 namespace TaskPlusPlus.Application.Features.Categories.Commands.EditCategory;
 internal sealed class EditCategoryCommandHandler : ICommandHandler<EditCategoryCommand>
 {
-    private readonly ICategoryRepository _categoryRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public EditCategoryCommandHandler(ICategoryRepository categoryRepository, IUnitOfWork unitOfWork)
+    public EditCategoryCommandHandler(IUnitOfWork unitOfWork)
     {
-        _categoryRepository = categoryRepository;
         _unitOfWork = unitOfWork;
     }
     public async Task<Result> Handle(EditCategoryCommand request, CancellationToken cancellationToken)
@@ -30,7 +28,7 @@ internal sealed class EditCategoryCommandHandler : ICommandHandler<EditCategoryC
             return Result.Fail(new ValidationError(validationResult, nameof(Category)));
         }
 
-        var category = await _categoryRepository.GetByIdAsync(dto.Id);
+        var category = await _unitOfWork.Repository<Category, CategoryId>().GetByIdAsync(dto.Id);
 
         if (category is null)
         {
@@ -51,7 +49,7 @@ internal sealed class EditCategoryCommandHandler : ICommandHandler<EditCategoryC
         if (errors.Any())
             return Result.Fail(errors);
 
-        _categoryRepository.Update(category);
+        _unitOfWork.Repository<Category, CategoryId>().Update(category);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Ok()

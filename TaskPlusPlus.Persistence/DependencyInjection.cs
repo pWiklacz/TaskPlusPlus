@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TaskPlusPlus.Application.Contracts.Persistence;
-using TaskPlusPlus.Application.Contracts.Persistence.Repositories;
 using TaskPlusPlus.Persistence.Interceptors;
 using TaskPlusPlus.Persistence.Repositories;
 
@@ -18,15 +18,12 @@ public static class DependencyInjection
             var auditInterceptor = sp.GetService<UpdateAuditEntitiesInterceptor>()!;
 
             options.UseSqlServer(
-                configuration.GetConnectionString("TaskPlusPlusConnectionString"))
+                configuration.GetConnectionString("TaskPlusPlusConnectionString"),
+                o => o.MigrationsHistoryTable(HistoryRepository.DefaultTableName, "application"))
                 .AddInterceptors(auditInterceptor);
         });
 
         services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
-        services.AddScoped<ITagRepository, TagRepository>();
-        services.AddScoped<ITaskRepository, TaskRepository>();
-        services.AddScoped<IProjectRepository, ProjectRepository>();
-        services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         return services;
     }

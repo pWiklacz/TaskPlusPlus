@@ -1,6 +1,11 @@
-﻿namespace TaskPlusPlus.Application.Contracts.Persistence;
+﻿using TaskPlusPlus.Domain.Primitives;
 
-public interface IUnitOfWork
+namespace TaskPlusPlus.Application.Contracts.Persistence;
+
+public interface IUnitOfWork : IDisposable
 {
+    IGenericRepository<TEntity, TEntityId> Repository<TEntity, TEntityId>() 
+        where TEntity : Entity<TEntityId>
+        where TEntityId : struct;
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

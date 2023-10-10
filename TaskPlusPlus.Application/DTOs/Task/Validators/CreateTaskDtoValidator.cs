@@ -1,21 +1,21 @@
-﻿
-using FluentValidation;
-using TaskPlusPlus.Application.Contracts.Persistence.Repositories;
+﻿using FluentValidation;
+using TaskPlusPlus.Application.Contracts.Persistence;
 using TaskPlusPlus.Application.DTOs.Tag;
 using TaskPlusPlus.Domain.Enums;
+using TaskPlusPlus.Domain.ValueObjects.Category;
 using TaskPlusPlus.Domain.ValueObjects.Project;
+using TaskPlusPlus.Domain.ValueObjects.Tag;
 
 namespace TaskPlusPlus.Application.DTOs.Task.Validators;
 public class CreateTaskDtoValidator : AbstractValidator<CreateTaskDto>
 {
+    private readonly IUnitOfWork _unitOfWork;
     private const short MaxNameLength = 500;
     private const short MaxNotesLength = 10000;
 
-    public CreateTaskDtoValidator(
-        ICategoryRepository categoryRepository, 
-        IProjectRepository projectRepository,
-        ITagRepository tagRepository)
+    public CreateTaskDtoValidator(IUnitOfWork unitOfWork)
     {
+        _unitOfWork = unitOfWork;
         RuleFor(dto => dto.Name)
             .NotEmpty().WithMessage("{PropertyName} is required")
             .NotNull()
@@ -42,7 +42,8 @@ public class CreateTaskDtoValidator : AbstractValidator<CreateTaskDto>
             .GreaterThan(0UL) 
             .MustAsync(async (id, token) =>
             {
-                var categoryExists = await categoryRepository.ExistsByIdAsync(id);
+                var categoryExists = await _unitOfWork.Repository<Domain.Entities.Category,CategoryId>()
+                    .ExistsByIdAsync(id);
                 return categoryExists;
             })
             .WithMessage("{PropertyName} does not exist.");
@@ -52,7 +53,8 @@ public class CreateTaskDtoValidator : AbstractValidator<CreateTaskDto>
             .When(dto => dto.ProjectId.HasValue)
             .MustAsync(async (id, token) =>
             {
-                var projectExist = id != null && await projectRepository.ExistsByIdAsync((ProjectId)id);
+                var projectExist = id != null && await _unitOfWork.Repository<Domain.Entities.Project, ProjectId>()
+                    .ExistsByIdAsync((ProjectId)id);
                 return projectExist;
             })
             .WithMessage("{PropertyName} does not exist.");
@@ -69,7 +71,8 @@ public class CreateTaskDtoValidator : AbstractValidator<CreateTaskDto>
 
                 foreach (var tag in tags)
                 {
-                    var tagExists = await tagRepository.ExistsByIdAsync(tag.Id);
+                    var tagExists = await _unitOfWork.Repository<Domain.Entities.Tag, TagId>()
+                        .ExistsByIdAsync(tag.Id);
                     if (!tagExists)
                     {
                         invalidTags.Add(tag); 

@@ -1,26 +1,22 @@
 ﻿using FluentResults;
-using Microsoft.AspNetCore.Http;
 using TaskPlusPlus.Application.Contracts.Persistence;
-using TaskPlusPlus.Application.Contracts.Persistence.Repositories;
 using TaskPlusPlus.Application.DTOs.Category.Validators;
 using TaskPlusPlus.Application.Messaging;
 using TaskPlusPlus.Application.Models.Identity.ApplicationUser;
 using TaskPlusPlus.Application.Responses.Errors;
 using TaskPlusPlus.Application.Responses.Successes;
 using TaskPlusPlus.Domain.Entities;
+using TaskPlusPlus.Domain.ValueObjects.Category;
 
 namespace TaskPlusPlus.Application.Features.Categories.Commands.CreateCategory;
 internal sealed class CreateCategoryCommandHandler : ICommandHandler<CreateCategoryCommand>
 {
-    private readonly ICategoryRepository _categoryRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IUserContext _userContext;
  
 
-    public CreateCategoryCommandHandler(
-        ICategoryRepository categoryRepository, IUnitOfWork unitOfWork, IUserContext userContext)
+    public CreateCategoryCommandHandler(IUnitOfWork unitOfWork, IUserContext userContext)
     {
-        _categoryRepository = categoryRepository;
         _unitOfWork = unitOfWork;
         _userContext = userContext;
     }
@@ -50,7 +46,7 @@ internal sealed class CreateCategoryCommandHandler : ICommandHandler<CreateCateg
             return result.ToResult();
 
         var category = result.Value;
-        _categoryRepository.Add(category);
+        _unitOfWork.Repository<Category,CategoryId>().Add(category);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

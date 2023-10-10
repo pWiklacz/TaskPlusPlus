@@ -1,23 +1,21 @@
 ﻿using FluentResults;
 using TaskPlusPlus.Application.Contracts.Persistence;
-using TaskPlusPlus.Application.Contracts.Persistence.Repositories;
 using TaskPlusPlus.Application.DTOs.Tag.Validators;
 using TaskPlusPlus.Application.Messaging;
 using TaskPlusPlus.Application.Models.Identity.ApplicationUser;
 using TaskPlusPlus.Application.Responses.Errors;
 using TaskPlusPlus.Application.Responses.Successes;
 using TaskPlusPlus.Domain.Entities;
+using TaskPlusPlus.Domain.ValueObjects.Tag;
 
 namespace TaskPlusPlus.Application.Features.Tags.Commands.CreateTag;
 
 internal sealed class CreateTagCommandHandler : ICommandHandler<CreateTagCommand>
 {
-    private readonly ITagRepository _tagRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IUserContext _userContext;
-    public CreateTagCommandHandler(ITagRepository tagRepository, IUnitOfWork unitOfWork, IUserContext userContext)
+    public CreateTagCommandHandler(IUnitOfWork unitOfWork, IUserContext userContext)
     {
-        _tagRepository = tagRepository;
         _unitOfWork = unitOfWork;
         _userContext = userContext;
     }
@@ -49,7 +47,7 @@ internal sealed class CreateTagCommandHandler : ICommandHandler<CreateTagCommand
 
         var tag = result.Value;
 
-        _tagRepository.Add(tag);
+        _unitOfWork.Repository<Tag, TagId>().Add(tag);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         

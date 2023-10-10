@@ -1,24 +1,21 @@
 ﻿using FluentResults;
-using TaskPlusPlus.Application.Contracts.Persistence.Repositories;
 using TaskPlusPlus.Application.Contracts.Persistence;
 using TaskPlusPlus.Application.DTOs.Tag.Validators;
 using TaskPlusPlus.Application.Messaging;
 using TaskPlusPlus.Application.Responses.Errors;
 using TaskPlusPlus.Application.Responses.Successes;
 using TaskPlusPlus.Domain.Entities;
-using Task = TaskPlusPlus.Domain.Entities.Task;
 using TaskPlusPlus.Domain.Errors;
+using TaskPlusPlus.Domain.ValueObjects.Tag;
 
 namespace TaskPlusPlus.Application.Features.Tags.Commands.EditTag;
 
 internal sealed class EditTagCommandHandler : ICommandHandler<EditTagCommand>
 {
-    private readonly ITagRepository _tagRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public EditTagCommandHandler(ITagRepository tagRepository, IUnitOfWork unitOfWork)
+    public EditTagCommandHandler(IUnitOfWork unitOfWork)
     {
-        _tagRepository = tagRepository;
         _unitOfWork = unitOfWork;
     }
     public async Task<Result> Handle(EditTagCommand request, CancellationToken cancellationToken)
@@ -32,7 +29,7 @@ internal sealed class EditTagCommandHandler : ICommandHandler<EditTagCommand>
             return Result.Fail(new ValidationError(validationResult, nameof(Tag)));
         }
 
-        var tag = await _tagRepository.GetByIdAsync(dto.Id);
+        var tag = await _unitOfWork.Repository<Tag, TagId>().GetByIdAsync(dto.Id);
 
         if (tag is null)
         {
@@ -53,7 +50,7 @@ internal sealed class EditTagCommandHandler : ICommandHandler<EditTagCommand>
         if (errors.Any())
             return Result.Fail(errors);
 
-        _tagRepository.Update(tag);
+        _unitOfWork.Repository<Tag, TagId>().Update(tag);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Ok()

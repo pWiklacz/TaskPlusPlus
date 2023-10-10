@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TaskPlusPlus.Domain.Entities;
-using TaskPlusPlus.Domain.Primitives;
 using TaskPlusPlus.Persistence.Extensions;
 using Task = TaskPlusPlus.Domain.Entities.Task;
 
@@ -17,6 +16,7 @@ public class TaskPlusPlusDbContext : DbContext
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasDefaultSchema("application");
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(TaskPlusPlusDbContext).Assembly);
     }
 

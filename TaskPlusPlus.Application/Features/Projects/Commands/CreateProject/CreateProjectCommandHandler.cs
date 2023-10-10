@@ -1,23 +1,21 @@
 ﻿using FluentResults;
 using TaskPlusPlus.Application.Contracts.Persistence;
-using TaskPlusPlus.Application.Contracts.Persistence.Repositories;
 using TaskPlusPlus.Application.DTOs.Project.Validators;
 using TaskPlusPlus.Application.Messaging;
 using TaskPlusPlus.Application.Models.Identity.ApplicationUser;
 using TaskPlusPlus.Application.Responses.Errors;
 using TaskPlusPlus.Application.Responses.Successes;
 using TaskPlusPlus.Domain.Entities;
+using TaskPlusPlus.Domain.ValueObjects.Project;
 
 namespace TaskPlusPlus.Application.Features.Projects.Commands.CreateProject;
 internal sealed class CreateProjectCommandHandler : ICommandHandler<CreateProjectCommand>
 {
-    private readonly IProjectRepository _projectRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IUserContext _userContext;
 
-    public CreateProjectCommandHandler(IProjectRepository projectRepository, IUnitOfWork unitOfWork, IUserContext userContext)
+    public CreateProjectCommandHandler(IUnitOfWork unitOfWork, IUserContext userContext)
     {
-        _projectRepository = projectRepository;
         _unitOfWork = unitOfWork;
         _userContext = userContext;
     }
@@ -50,7 +48,7 @@ internal sealed class CreateProjectCommandHandler : ICommandHandler<CreateProjec
 
         var project = result.Value;
 
-        _projectRepository.Add(project);
+        _unitOfWork.Repository<Project, ProjectId>().Add(project);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Ok()

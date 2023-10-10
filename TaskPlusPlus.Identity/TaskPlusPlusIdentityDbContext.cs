@@ -13,6 +13,8 @@ public class TaskPlusPlusIdentityDbContext : IdentityDbContext<ApplicationUser>
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasDefaultSchema("identity");
+
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.ApplyConfiguration(new RoleConfiguration());
