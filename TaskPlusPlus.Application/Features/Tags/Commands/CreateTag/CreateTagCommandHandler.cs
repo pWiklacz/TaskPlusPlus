@@ -49,8 +49,13 @@ internal sealed class CreateTagCommandHandler : ICommandHandler<CreateTagCommand
 
         _unitOfWork.Repository<Tag, TagId>().Add(tag);
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
-        
+        var saveResult = await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        if (saveResult <= 0)
+        {
+            return Result.Fail(new CreatingProblemError(nameof(Tag)));
+        }
+
         return Result.Ok()
             .WithSuccess(new CreationSuccess(nameof(Tag)));
     }

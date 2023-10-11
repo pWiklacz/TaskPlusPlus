@@ -50,7 +50,13 @@ internal sealed class EditCategoryCommandHandler : ICommandHandler<EditCategoryC
             return Result.Fail(errors);
 
         _unitOfWork.Repository<Category, CategoryId>().Update(category);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        var saveResult = await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        if (saveResult <= 0)
+        {
+            return Result.Fail(new UpdatingProblemError(nameof(Category)));
+        }
 
         return Result.Ok()
             .WithSuccess(new UpdateSuccess(nameof(Category))); ;

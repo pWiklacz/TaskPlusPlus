@@ -13,7 +13,7 @@ internal sealed class CreateCategoryCommandHandler : ICommandHandler<CreateCateg
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IUserContext _userContext;
- 
+
 
     public CreateCategoryCommandHandler(IUnitOfWork unitOfWork, IUserContext userContext)
     {
@@ -46,9 +46,15 @@ internal sealed class CreateCategoryCommandHandler : ICommandHandler<CreateCateg
             return result.ToResult();
 
         var category = result.Value;
-        _unitOfWork.Repository<Category,CategoryId>().Add(category);
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        _unitOfWork.Repository<Category, CategoryId>().Add(category);
+
+        var saveResult = await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        if (saveResult <= 0)
+        {
+            return Result.Fail(new CreatingProblemError(nameof(Category)));
+        }
 
         return Result.Ok()
             .WithSuccess(new CreationSuccess(nameof(Category)));

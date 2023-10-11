@@ -3,10 +3,10 @@ using TaskPlusPlus.Domain.Extensions;
 
 namespace TaskPlusPlus.Domain.Errors;
 
-public class EmptyStringError : Error
+public class EmptyStringError : BaseError
 {
     public EmptyStringError(string fieldName)
-    : base($"{fieldName.SplitCamelCase()} cannot be empty.")
+    : base(400,$"{fieldName.SplitCamelCase()} cannot be empty.")
     {
         
     }

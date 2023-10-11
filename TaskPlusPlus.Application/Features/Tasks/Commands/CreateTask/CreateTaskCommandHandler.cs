@@ -58,7 +58,13 @@ internal sealed class CreateTaskCommandHandler : ICommandHandler<CreateTaskComma
         var task = result.Value;
 
         _unitOfWork.Repository<Task, TaskId>().Add(task);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        var saveResult = await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        if (saveResult <= 0)
+        {
+            return Result.Fail(new CreatingProblemError(nameof(Task)));
+        }
 
         return Result.Ok()
             .WithSuccess(new CreationSuccess(nameof(Task)));

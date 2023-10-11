@@ -5,6 +5,7 @@ using TaskPlusPlus.Domain.Entities;
 using TaskPlusPlus.Domain.Errors;
 using TaskPlusPlus.Application.Responses.Successes;
 using TaskPlusPlus.Domain.ValueObjects.Category;
+using TaskPlusPlus.Application.Responses.Errors;
 
 namespace TaskPlusPlus.Application.Features.Categories.Commands.DeleteCategory;
 internal sealed class DeleteCategoryCommandHandler : ICommandHandler<DeleteCategoryCommand>
@@ -27,8 +28,12 @@ internal sealed class DeleteCategoryCommandHandler : ICommandHandler<DeleteCateg
 
         _unitOfWork.Repository<Category, CategoryId>().Remove(category);
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        var saveResult = await _unitOfWork.SaveChangesAsync(cancellationToken);
 
+        if (saveResult <= 0)
+        {
+            return Result.Fail(new DeletingProblemError(nameof(Category)));
+        }
         return Result.Ok()
             .WithSuccess(new DeleteSuccess(nameof(Category)));
     }

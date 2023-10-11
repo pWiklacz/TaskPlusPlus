@@ -49,7 +49,12 @@ internal sealed class CreateProjectCommandHandler : ICommandHandler<CreateProjec
         var project = result.Value;
 
         _unitOfWork.Repository<Project, ProjectId>().Add(project);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        var saveResult = await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        if (saveResult <= 0)
+        {
+            return Result.Fail(new CreatingProblemError(nameof(Project)));
+        }
 
         return Result.Ok()
             .WithSuccess(new CreationSuccess(nameof(Project)));

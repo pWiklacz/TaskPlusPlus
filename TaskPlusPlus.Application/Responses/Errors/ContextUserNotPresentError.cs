@@ -1,10 +1,11 @@
 ﻿using FluentResults;
+using TaskPlusPlus.Domain.Errors;
 
 namespace TaskPlusPlus.Application.Responses.Errors;
-internal class ContextUserNotPresentError : Error
+internal class ContextUserNotPresentError : BaseError
 {
     public ContextUserNotPresentError()
-        : base("Context user is not present")
+        : base(401,"Context user is not present")
     {
     }
 }

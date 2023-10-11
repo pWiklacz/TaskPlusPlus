@@ -14,12 +14,7 @@ public class CategoryMappingProfile : Profile
                 opt => opt.MapFrom(src => src.Name.Value))
             .ForMember(dest => dest.IsFavorite,
                 opt => opt.MapFrom(src => src.IsFavorite))
-            .ForMember(dest => dest.IsImmutable,
-                opt => opt.MapFrom(src => src.IsImmutable))
             .ForMember(dest => dest.ColorHex,
-                opt => opt.MapFrom(src => src.ColorHex.Value))
-            .ForMember(dest => dest.UserId,
-                opt => opt.MapFrom(src => src.UserId));
-
+                opt => opt.MapFrom(src => src.ColorHex.Value));
     }
 }

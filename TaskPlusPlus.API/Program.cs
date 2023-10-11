@@ -1,11 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 using Serilog;
-using TaskPlusPlus.Application;
 using TaskPlusPlus.Identity;
 using TaskPlusPlus.Identity.Models;
-using TaskPlusPlus.Infrastructure;
 using TaskPlusPlus.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);

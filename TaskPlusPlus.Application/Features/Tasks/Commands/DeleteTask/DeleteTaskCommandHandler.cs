@@ -1,6 +1,7 @@
 ﻿using FluentResults;
 using TaskPlusPlus.Application.Contracts.Persistence;
 using TaskPlusPlus.Application.Messaging;
+using TaskPlusPlus.Application.Responses.Errors;
 using TaskPlusPlus.Application.Responses.Successes;
 using TaskPlusPlus.Domain.Errors;
 using TaskPlusPlus.Domain.ValueObjects.Task;
@@ -26,8 +27,12 @@ internal sealed class DeleteTaskCommandHandler : ICommandHandler<DeleteTaskComma
         }
 
         _unitOfWork.Repository<Task, TaskId>().Remove(task);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        var result = await _unitOfWork.SaveChangesAsync(cancellationToken);
 
+        if (result <= 0)
+        {
+            return Result.Fail(new DeletingProblemError(nameof(Task)));
+        }
 
         return Result.Ok()
             .WithSuccess(new DeleteSuccess(nameof(Task)));

@@ -1,6 +1,7 @@
 ﻿using FluentResults;
 using TaskPlusPlus.Application.Contracts.Persistence;
 using TaskPlusPlus.Application.Messaging;
+using TaskPlusPlus.Application.Responses.Errors;
 using TaskPlusPlus.Application.Responses.Successes;
 using TaskPlusPlus.Domain.Entities;
 using TaskPlusPlus.Domain.Errors;
@@ -27,7 +28,12 @@ internal sealed class DeleteTagCommandHandler : ICommandHandler<DeleteTagCommand
         }
 
         _unitOfWork.Repository<Tag, TagId>().Remove(tag);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        var saveResult = await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        if (saveResult <= 0)
+        {
+            return Result.Fail(new DeletingProblemError(nameof(Tag)));
+        }
 
         return Result.Ok()
             .WithSuccess(new DeleteSuccess(nameof(Tag)));

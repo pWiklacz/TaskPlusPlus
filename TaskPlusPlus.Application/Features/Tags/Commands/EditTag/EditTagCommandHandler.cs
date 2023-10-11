@@ -51,7 +51,12 @@ internal sealed class EditTagCommandHandler : ICommandHandler<EditTagCommand>
             return Result.Fail(errors);
 
         _unitOfWork.Repository<Tag, TagId>().Update(tag);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        var saveResult = await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        if (saveResult <= 0)
+        {
+            return Result.Fail(new UpdatingProblemError(nameof(Tag)));
+        }
 
         return Result.Ok()
             .WithSuccess(new UpdateSuccess(nameof(Tag))); ;
