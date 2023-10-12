@@ -28,8 +28,6 @@ public class TaskMappingProfile : Profile
                 opt => opt.MapFrom(src => src.IsCompleted))
             .ForMember(dest => dest.DurationTime,
                 opt => opt.MapFrom(src => src.DurationTime))
-            .ForMember(dest => dest.UserId,
-                opt => opt.MapFrom(src => src.UserId))
             .ForMember(dest => dest.CategoryId,
                 opt => opt.MapFrom(src => src.CategoryId))
             .ForMember(dest => dest.CompletedOnUtc,

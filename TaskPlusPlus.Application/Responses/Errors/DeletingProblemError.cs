@@ -2,9 +2,9 @@
 using TaskPlusPlus.Domain.Errors;
 
 namespace TaskPlusPlus.Application.Responses.Errors;
-internal class DeleteProblemError : BaseError
+internal class DeletingProblemError : BaseError
 {
-    public DeleteProblemError(string entityName)
+    public DeletingProblemError(string entityName)
         : base(400, $"Problem deleting {entityName}")
     {
     }

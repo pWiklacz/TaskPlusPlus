@@ -14,7 +14,6 @@ public class TaskDto : BaseDto
     public string Priority { get; set; } = null!;
     public string Energy { get; set; } = null!;
     public ulong? ProjectId { get; set; }
-    public string UserId { get; set; } = null!;
     public ulong CategoryId { get; set; }
     public DateTime? CompletedOnUtc { get; set; }
 

@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using TaskPlusPlus.Application.Contracts.Persistence;
 
-namespace TaskPlusPlus.Persistence.Specifications;
+namespace TaskPlusPlus.Application.Specifications;
 internal abstract class Specification<T> : ISpecification<T>
 {
     public Expression<Func<T, bool>>? Criteria { get; }

@@ -16,8 +16,6 @@ public class TagMappingProfile : Profile
             .ForMember(dest => dest.IsFavorite,
                 opt => opt.MapFrom(src => src.IsFavorite))
             .ForMember(dest => dest.Id,
-                opt => opt.MapFrom(src => src.Id.Value))
-            .ForMember(dest => dest.UserId,
-            opt => opt.MapFrom(src => src.UserId.Value));
+                opt => opt.MapFrom(src => src.Id.Value));
     }
 }
