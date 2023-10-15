@@ -6,19 +6,21 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TaskPlusPlus.API.Controllers;
 
-public class BaseController : Controller
+[ApiController]
+[Route("api/[controller]")]
+public class BaseController : ControllerBase
 {
-    protected new IActionResult Ok()
+    protected new ActionResult Ok()
     {
         return base.Ok();
     }
 
-    protected IActionResult Ok<T>(T result)
+    protected ActionResult Ok<T>(T result)
     {
         return base.Ok(result);
     }
 
-    protected IActionResult FromResult<T>(Result<T> result)
+    protected ActionResult FromResult<T>(Result<T> result)
     {
         if (result.IsSuccess)
             return Ok(result.Value); //Think about it later. Idk is better to just return result or value from result.
