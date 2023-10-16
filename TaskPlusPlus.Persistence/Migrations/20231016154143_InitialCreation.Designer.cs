@@ -12,14 +12,15 @@ using TaskPlusPlus.Persistence;
 namespace TaskPlusPlus.Persistence.Migrations
 {
     [DbContext(typeof(TaskPlusPlusDbContext))]
-    [Migration("20230922120628_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20231016154143_InitialCreation")]
+    partial class InitialCreation
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("application")
                 .HasAnnotation("ProductVersion", "7.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
@@ -37,13 +38,16 @@ namespace TaskPlusPlus.Persistence.Migrations
 
                     b.HasIndex("TaskId");
 
-                    b.ToTable("TagTask");
+                    b.ToTable("TagTask", "application");
                 });
 
             modelBuilder.Entity("TaskPlusPlus.Domain.Entities.Category", b =>
                 {
                     b.Property<ulong>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(20,0)");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<ulong>("Id"));
 
                     b.Property<string>("ColorHex")
                         .IsRequired()
@@ -65,13 +69,16 @@ namespace TaskPlusPlus.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", "application");
                 });
 
             modelBuilder.Entity("TaskPlusPlus.Domain.Entities.Project", b =>
                 {
                     b.Property<ulong>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(20,0)");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<ulong>("Id"));
 
                     b.Property<ulong>("CategoryId")
                         .HasColumnType("decimal(20,0)");
@@ -109,13 +116,16 @@ namespace TaskPlusPlus.Persistence.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Projects");
+                    b.ToTable("Projects", "application");
                 });
 
             modelBuilder.Entity("TaskPlusPlus.Domain.Entities.Tag", b =>
                 {
                     b.Property<ulong>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(20,0)");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<ulong>("Id"));
 
                     b.Property<string>("ColorHex")
                         .IsRequired()
@@ -134,13 +144,16 @@ namespace TaskPlusPlus.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", "application");
                 });
 
             modelBuilder.Entity("TaskPlusPlus.Domain.Entities.Task", b =>
                 {
                     b.Property<ulong>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(20,0)");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<ulong>("Id"));
 
                     b.Property<ulong>("CategoryId")
                         .HasColumnType("decimal(20,0)");
@@ -192,7 +205,7 @@ namespace TaskPlusPlus.Persistence.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Tasks");
+                    b.ToTable("Tasks", "application");
                 });
 
             modelBuilder.Entity("TagTask", b =>

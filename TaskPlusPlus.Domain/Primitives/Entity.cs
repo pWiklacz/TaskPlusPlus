@@ -1,11 +1,12 @@
-﻿using System.Runtime.ExceptionServices;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.ExceptionServices;
 
 namespace TaskPlusPlus.Domain.Primitives;
 
 public abstract class Entity<TEntityId> : IEquatable<Entity<TEntityId>>, IEntity
     where TEntityId : struct
 {
-    public TEntityId Id { get; } 
+    public TEntityId Id { get; }
     private readonly List<DomainEvent> _domainEvents = new();
     public ICollection<DomainEvent> GetDomainEvents() => _domainEvents;
 

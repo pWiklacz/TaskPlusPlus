@@ -17,6 +17,7 @@ namespace TaskPlusPlus.Identity.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("identity")
                 .HasAnnotation("ProductVersion", "7.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
@@ -46,7 +47,7 @@ namespace TaskPlusPlus.Identity.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("AspNetRoles", (string)null);
+                    b.ToTable("AspNetRoles", "identity");
 
                     b.HasData(
                         new
@@ -85,7 +86,7 @@ namespace TaskPlusPlus.Identity.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims", (string)null);
+                    b.ToTable("AspNetRoleClaims", "identity");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -110,7 +111,7 @@ namespace TaskPlusPlus.Identity.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims", (string)null);
+                    b.ToTable("AspNetUserClaims", "identity");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -132,7 +133,7 @@ namespace TaskPlusPlus.Identity.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins", (string)null);
+                    b.ToTable("AspNetUserLogins", "identity");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -147,7 +148,7 @@ namespace TaskPlusPlus.Identity.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles", (string)null);
+                    b.ToTable("AspNetUserRoles", "identity");
 
                     b.HasData(
                         new
@@ -178,7 +179,7 @@ namespace TaskPlusPlus.Identity.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens", (string)null);
+                    b.ToTable("AspNetUserTokens", "identity");
                 });
 
             modelBuilder.Entity("TaskPlusPlus.Identity.Models.ApplicationUser", b =>
@@ -251,14 +252,14 @@ namespace TaskPlusPlus.Identity.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("AspNetUsers", (string)null);
+                    b.ToTable("AspNetUsers", "identity");
 
                     b.HasData(
                         new
                         {
                             Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2cee0895-74ba-4a94-bb70-f9e530f02d4a",
+                            ConcurrencyStamp = "a134d10d-eb6d-456e-a448-08d818a0a9c7",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "System",
@@ -266,9 +267,9 @@ namespace TaskPlusPlus.Identity.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPbJm2rKZRfPNtbTZ+3nTR0EFF8GD0XzezE0B/aX0GebE/B7CG6JxJpAxL/WyvNe0Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDy0ob80j+eZrJP/+cQNoHYI/i3vNyq0W/nQLP1xqiHxcMttLrzOX0J0pD8jBjJ5IQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a1e3c5dd-9654-48c4-8728-7b9f341ab4f8",
+                            SecurityStamp = "a1cc006e-239c-4107-ba1f-4fc61c9135a7",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         },
@@ -276,7 +277,7 @@ namespace TaskPlusPlus.Identity.Migrations
                         {
                             Id = "9e224968-33e4-4652-b7b7-8574d048cdb9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "07c5407f-059d-48fc-8036-2281980ceff3",
+                            ConcurrencyStamp = "c761527e-6ca2-4aea-97d2-10f4eaef8483",
                             Email = "user@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "System",
@@ -284,9 +285,9 @@ namespace TaskPlusPlus.Identity.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@LOCALHOST.COM",
                             NormalizedUserName = "USER@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAELhyXH9TkxIunn5GsbPPGVFTDdJ3cKKGc/R6xGyKvJQ6OlOmoxhKprXZiT/6svqLsw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPMeGAiKy7wwOpCp34ZhXfYbvCKxO9HmGzRoVCosQBXy+E9OItoP2f16EcDVS/ExiQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "566ccfcf-8db9-4047-b851-0142184a0862",
+                            SecurityStamp = "da207849-711c-4918-af85-95c36684a6af",
                             TwoFactorEnabled = false,
                             UserName = "user@localhost.com"
                         });

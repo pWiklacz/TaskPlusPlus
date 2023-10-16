@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using FluentResults;
 using Microsoft.AspNetCore.Http;
+using TaskPlusPlus.Application.Constants;
 using TaskPlusPlus.Application.Responses.Errors;
 
 namespace TaskPlusPlus.Application.Models.Identity.ApplicationUser;
@@ -15,7 +16,8 @@ public class UserContext : IUserContext
 
     public Result<CurrentUser> GetCurrentUser()
     {
-        var user = _httpContextAccessor?.HttpContext?.User;
+        var user = _httpContextAccessor.HttpContext?.User;
+
         if (user == null)
         {
             return Result.Fail(new ContextUserNotPresentError());
@@ -26,7 +28,7 @@ public class UserContext : IUserContext
             return Result.Fail(new AuthenticationRequiredError());
         }
 
-        var id = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
+        var id = user.FindFirst(c => c.Type == CustomClaimTypes.Uid)!.Value;
         var email = user.FindFirst(c => c.Type == ClaimTypes.Email)!.Value;
         var roles = user.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value);
 

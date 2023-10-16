@@ -50,7 +50,8 @@ public class TaskConfiguration : IEntityTypeConfiguration<Domain.Entities.Task>
             .HasDefaultValue(false);
 
         builder.Property(t => t.Id)
-            .HasConversion(idConverter);
+            .HasConversion(idConverter)
+            .ValueGeneratedOnAdd();
 
         builder.Property(t => t.Name)
             .HasConversion(nameConverter);

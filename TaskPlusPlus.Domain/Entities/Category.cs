@@ -1,4 +1,5 @@
-﻿using FluentResults;
+﻿using System.Text.Json.Serialization;
+using FluentResults;
 using TaskPlusPlus.Domain.Primitives;
 using TaskPlusPlus.Domain.ValueObjects;
 using TaskPlusPlus.Domain.ValueObjects.Category;

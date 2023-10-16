@@ -1,14 +1,18 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using TaskPlusPlus.API.Extensions;
 using TaskPlusPlus.Identity;
 using TaskPlusPlus.Identity.Models;
 using TaskPlusPlus.Persistence;
+using TaskPlusPlus.Persistence.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
+
+builder.Services.AddApplicationServices(builder.Configuration);
 
 var app = builder.Build();
 
@@ -44,11 +48,12 @@ async Task UpdateDataBase(WebApplication webApplication)
     {
         await context.Database.MigrateAsync();
         await identityContext.Database.MigrateAsync();
-        //TODO:: SeedDatabaseHere
+        await TaskPlusPlusDbContextSeed.SeedAsync(context);
+
     }
     catch (Exception ex)
     {
-        logger.LogError(ex, "An error occured during migration");
+        logger.LogError(ex, "An error occurred during migration");
     }
 }
 

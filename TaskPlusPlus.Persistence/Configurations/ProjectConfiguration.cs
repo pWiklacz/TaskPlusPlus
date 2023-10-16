@@ -36,7 +36,8 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
             .HasDefaultValue(false);
 
         builder.Property(p => p.Id)
-            .HasConversion(idConverter);
+            .HasConversion(idConverter)
+            .ValueGeneratedOnAdd();
 
         builder.Property(p => p.Name)
             .HasConversion(nameConverter);

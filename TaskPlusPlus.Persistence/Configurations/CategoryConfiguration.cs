@@ -27,7 +27,8 @@ public class CategoryConfiguration  : IEntityTypeConfiguration<Category>
         builder.HasKey(c => c.Id);
 
         builder.Property(c => c.Id)
-            .HasConversion(idConverter);
+            .HasConversion(idConverter)
+            .ValueGeneratedOnAdd();
 
         builder.Property(c => c.Name)
             .HasConversion(nameConverter);

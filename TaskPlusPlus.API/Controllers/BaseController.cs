@@ -34,4 +34,19 @@ public class BaseController : ControllerBase
 
         return BadRequest(result.Errors);
     }
+
+    protected ActionResult FromResult(Result result)
+    {
+        if (result.IsSuccess)
+            return Ok(result); //Think about it later. Idk is better to just return result or value from result.
+
+        if (result.HasError<BaseError>(e => e.Code == 401, out var errors))
+            return Unauthorized(errors);
+        if (result.HasError(e => e.Code == 404, out errors))
+            return NotFound(errors);
+        if (result.HasError(e => e.Code == 409, out errors))
+            return Conflict(errors);
+
+        return BadRequest(result.Errors);
+    }
 }

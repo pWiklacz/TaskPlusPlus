@@ -28,7 +28,8 @@ public class TagConfiguration : IEntityTypeConfiguration<Tag>
         builder.HasKey(p => p.Id);
 
         builder.Property(p => p.Id)
-            .HasConversion(idConverter);
+            .HasConversion(idConverter)
+            .ValueGeneratedOnAdd();
 
         builder.Property(p => p.Name)
             .HasConversion(nameConverter);

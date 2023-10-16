@@ -14,7 +14,7 @@ public static class ApplicationServicesExtensions
         services.AddHttpContextAccessor();
         AddSwaggerDoc(services);
         services
-             .AddApplication()
+            .AddApplication()
             .AddInfrastructure(config)
             .AddPersistence(config)
             .AddIdentity(config);
@@ -66,7 +66,7 @@ public static class ApplicationServicesExtensions
             c.SwaggerDoc("v1", new OpenApiInfo
             {
                 Version = "v1",
-                Title = "HR Leave Management Api",
+                Title = "TaskPlusPlus API",
 
             });
 

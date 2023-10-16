@@ -35,7 +35,7 @@ public sealed class UnitOfWork : IUnitOfWork
             return (IGenericRepository<TEntity, TEntityId>)_repositories[type]!;
 
         var repositoryType = typeof(GenericRepository<,>);
-        var repositoryInstance = Activator.CreateInstance(repositoryType.MakeGenericType(typeof(TEntity)), _context);
+        var repositoryInstance = Activator.CreateInstance(repositoryType.MakeGenericType(typeof(TEntity),typeof(TEntityId)), _context);
 
         _repositories.Add(type, repositoryInstance);
 

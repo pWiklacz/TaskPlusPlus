@@ -55,7 +55,7 @@ internal sealed class CreateCategoryCommandHandler : ICommandHandler<CreateCateg
         {
             return Result.Fail(new CreatingProblemError(nameof(Category)));
         }
-
+       
         return Result.Ok()
             .WithSuccess(new CreationSuccess(nameof(Category)));
     }

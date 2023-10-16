@@ -6,16 +6,21 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TaskPlusPlus.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class InitialCreation : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "application");
+
             migrationBuilder.CreateTable(
                 name: "Categories",
+                schema: "application",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsImmutable = table.Column<bool>(type: "bit", nullable: false),
                     IsFavorite = table.Column<bool>(type: "bit", nullable: false),
@@ -29,9 +34,11 @@ namespace TaskPlusPlus.Persistence.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Tags",
+                schema: "application",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ColorHex = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsFavorite = table.Column<bool>(type: "bit", nullable: false),
@@ -44,9 +51,11 @@ namespace TaskPlusPlus.Persistence.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Projects",
+                schema: "application",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DueDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -63,6 +72,7 @@ namespace TaskPlusPlus.Persistence.Migrations
                     table.ForeignKey(
                         name: "FK_Projects_Categories_CategoryId",
                         column: x => x.CategoryId,
+                        principalSchema: "application",
                         principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -70,9 +80,11 @@ namespace TaskPlusPlus.Persistence.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Tasks",
+                schema: "application",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DueDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Notes = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -93,6 +105,7 @@ namespace TaskPlusPlus.Persistence.Migrations
                     table.ForeignKey(
                         name: "FK_Tasks_Projects_ProjectId",
                         column: x => x.ProjectId,
+                        principalSchema: "application",
                         principalTable: "Projects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -100,6 +113,7 @@ namespace TaskPlusPlus.Persistence.Migrations
 
             migrationBuilder.CreateTable(
                 name: "TagTask",
+                schema: "application",
                 columns: table => new
                 {
                     TagsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
@@ -111,12 +125,14 @@ namespace TaskPlusPlus.Persistence.Migrations
                     table.ForeignKey(
                         name: "FK_TagTask_Tags_TagsId",
                         column: x => x.TagsId,
+                        principalSchema: "application",
                         principalTable: "Tags",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_TagTask_Tasks_TaskId",
                         column: x => x.TaskId,
+                        principalSchema: "application",
                         principalTable: "Tasks",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -124,16 +140,19 @@ namespace TaskPlusPlus.Persistence.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Projects_CategoryId",
+                schema: "application",
                 table: "Projects",
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TagTask_TaskId",
+                schema: "application",
                 table: "TagTask",
                 column: "TaskId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tasks_ProjectId",
+                schema: "application",
                 table: "Tasks",
                 column: "ProjectId");
         }
@@ -142,19 +161,24 @@ namespace TaskPlusPlus.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "TagTask");
+                name: "TagTask",
+                schema: "application");
 
             migrationBuilder.DropTable(
-                name: "Tags");
+                name: "Tags",
+                schema: "application");
 
             migrationBuilder.DropTable(
-                name: "Tasks");
+                name: "Tasks",
+                schema: "application");
 
             migrationBuilder.DropTable(
-                name: "Projects");
+                name: "Projects",
+                schema: "application");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "Categories",
+                schema: "application");
         }
     }
 }
