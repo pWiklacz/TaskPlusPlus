@@ -77,9 +77,6 @@ namespace TaskPlusPlus.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<ulong>("Id"));
 
-                    b.Property<ulong>("CategoryId")
-                        .HasColumnType("decimal(20,0)");
-
                     b.Property<DateTime?>("CompletedOnUtc")
                         .HasColumnType("datetime2");
 
@@ -110,8 +107,6 @@ namespace TaskPlusPlus.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
 
                     b.ToTable("Projects", "application");
                 });
@@ -216,15 +211,6 @@ namespace TaskPlusPlus.Persistence.Migrations
                     b.HasOne("TaskPlusPlus.Domain.Entities.Task", null)
                         .WithMany()
                         .HasForeignKey("TaskId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("TaskPlusPlus.Domain.Entities.Project", b =>
-                {
-                    b.HasOne("TaskPlusPlus.Domain.Entities.Category", null)
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

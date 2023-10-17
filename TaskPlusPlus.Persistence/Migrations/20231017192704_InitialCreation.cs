@@ -33,6 +33,27 @@ namespace TaskPlusPlus.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Projects",
+                schema: "application",
+                columns: table => new
+                {
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DueDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsCompleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModifiedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CompletedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Projects", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tags",
                 schema: "application",
                 columns: table => new
@@ -47,35 +68,6 @@ namespace TaskPlusPlus.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tags", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Projects",
-                schema: "application",
-                columns: table => new
-                {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DueDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsCompleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CategoryId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    CreatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModifiedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CompletedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Projects", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Projects_Categories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalSchema: "application",
-                        principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -139,12 +131,6 @@ namespace TaskPlusPlus.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Projects_CategoryId",
-                schema: "application",
-                table: "Projects",
-                column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_TagTask_TaskId",
                 schema: "application",
                 table: "TagTask",
@@ -161,6 +147,10 @@ namespace TaskPlusPlus.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Categories",
+                schema: "application");
+
+            migrationBuilder.DropTable(
                 name: "TagTask",
                 schema: "application");
 
@@ -174,10 +164,6 @@ namespace TaskPlusPlus.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "Projects",
-                schema: "application");
-
-            migrationBuilder.DropTable(
-                name: "Categories",
                 schema: "application");
         }
     }

@@ -3,7 +3,7 @@ using TaskPlusPlus.Application.Helpers;
 
 namespace TaskPlusPlus.Application.Specifications.Task;
 
-internal class TasksWithTagsSpecification : Specification<Domain.Entities.Task>
+internal class TasksWithTagsSpecification : Specification<Domain.Entities.Task>  
 {
     public TasksWithTagsSpecification(TaskQueryParameters queryParams)
         : base(task =>

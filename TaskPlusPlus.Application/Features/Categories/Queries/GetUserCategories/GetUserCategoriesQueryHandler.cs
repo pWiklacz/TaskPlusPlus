@@ -31,7 +31,7 @@ internal sealed class GetUserCategoriesQueryHandler : IQueryHandler<GetUserCateg
         }
 
         var userId = userResult.Value.Id;
-        var spec = new CategoriesByUserIdSpecification(userId);
+        var spec = new UserCategoriesSpecification(userId);
         var categories = await _unitOfWork.Repository<Category, CategoryId>().ListAsync(spec);
         return _mapper.Map<List<CategoryDto>>(categories);
     }

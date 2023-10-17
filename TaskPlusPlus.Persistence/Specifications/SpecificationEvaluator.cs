@@ -30,6 +30,7 @@ internal static class SpecificationEvaluator<TEntity, TEntityId>
         {
             query = query.Skip(spec.Skip).Take(spec.Take);
         }
+
         query = spec.Includes.Aggregate(query, (current, include) 
             => current.Include(include));
 

@@ -47,6 +47,6 @@ public class BaseController : ControllerBase
         if (result.HasError(e => e.Code == 409, out errors))
             return Conflict(errors);
 
-        return BadRequest(result.Errors);
+        return BadRequest(result);
     }
 }

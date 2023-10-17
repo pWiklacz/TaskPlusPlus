@@ -32,8 +32,8 @@ internal sealed class GetCategoryByIdQueryHandler : IQueryHandler<GetCategoryByI
         }
 
         var userId = userResult.Value.Id;
-        var spec = new CategoriesByUserIdSpecification(request.Id, userId);
-
+        var spec = new UserCategoriesSpecification(request.Id, userId);
+            
         var category = await _unitOfWork.Repository<Category, CategoryId>().GetEntityWithSpec(spec);
 
         if (category is null)

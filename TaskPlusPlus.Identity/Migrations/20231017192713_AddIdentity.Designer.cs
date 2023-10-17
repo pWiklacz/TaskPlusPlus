@@ -12,7 +12,7 @@ using TaskPlusPlus.Identity;
 namespace TaskPlusPlus.Identity.Migrations
 {
     [DbContext(typeof(TaskPlusPlusIdentityDbContext))]
-    [Migration("20231016154153_AddIdentity")]
+    [Migration("20231017192713_AddIdentity")]
     partial class AddIdentity
     {
         /// <inheritdoc />
@@ -262,7 +262,7 @@ namespace TaskPlusPlus.Identity.Migrations
                         {
                             Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a134d10d-eb6d-456e-a448-08d818a0a9c7",
+                            ConcurrencyStamp = "849cb110-c2b1-4976-b842-7d0a28a84430",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "System",
@@ -270,9 +270,9 @@ namespace TaskPlusPlus.Identity.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDy0ob80j+eZrJP/+cQNoHYI/i3vNyq0W/nQLP1xqiHxcMttLrzOX0J0pD8jBjJ5IQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGtKEx6GijsXaAmtu0wki5nBCliPEH4+yAJe+J0btDzyFO/xGkYmcDuX27TOoYXvVA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a1cc006e-239c-4107-ba1f-4fc61c9135a7",
+                            SecurityStamp = "0fd32a67-e7bf-4013-b69e-45bd73f4a284",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         },
@@ -280,7 +280,7 @@ namespace TaskPlusPlus.Identity.Migrations
                         {
                             Id = "9e224968-33e4-4652-b7b7-8574d048cdb9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c761527e-6ca2-4aea-97d2-10f4eaef8483",
+                            ConcurrencyStamp = "0b6ce28d-103c-4127-bf91-6592c8eafee4",
                             Email = "user@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "System",
@@ -288,9 +288,9 @@ namespace TaskPlusPlus.Identity.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@LOCALHOST.COM",
                             NormalizedUserName = "USER@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPMeGAiKy7wwOpCp34ZhXfYbvCKxO9HmGzRoVCosQBXy+E9OItoP2f16EcDVS/ExiQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFC6mAEaXM3wMd18Hy5LeziLBp12nMJ3vfzgWci1GolA6LX1OMN8vPgD7wpsXCc7GQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "da207849-711c-4918-af85-95c36684a6af",
+                            SecurityStamp = "01370318-de62-436a-b929-22603b7dd875",
                             TwoFactorEnabled = false,
                             UserName = "user@localhost.com"
                         });

@@ -46,9 +46,10 @@ public class CategoryController : BaseController
         return FromResult(result); 
     }
 
-    [HttpPut]
-    public async Task<ActionResult> Put([FromBody] UpdateCategoryDto dto)
+    [HttpPut("{id}")]
+    public async Task<ActionResult> Put([FromBody] UpdateCategoryDto dto, ulong id)
     {
+        dto.Id = id;
         var command = new EditCategoryCommand(dto);
         var result = await _mediator.Send(command);
 

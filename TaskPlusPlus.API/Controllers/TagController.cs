@@ -47,7 +47,8 @@ public class TagController : BaseController
         return FromResult(result);
     }
 
-    [HttpPut]
+
+    [HttpPut("{id}")]
     public async Task<ActionResult> Put([FromBody] UpdateTagDto dto)
     {
         var command = new EditTagCommand(dto);
