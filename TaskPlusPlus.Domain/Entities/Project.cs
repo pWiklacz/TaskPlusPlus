@@ -4,7 +4,6 @@ using TaskPlusPlus.Domain.Primitives;
 using TaskPlusPlus.Domain.ValueObjects;
 using TaskPlusPlus.Domain.ValueObjects.Category;
 using TaskPlusPlus.Domain.ValueObjects.Project;
-using TaskPlusPlus.Domain.ValueObjects.Tag;
 using TaskPlusPlus.Domain.ValueObjects.Task;
 
 namespace TaskPlusPlus.Domain.Entities;
@@ -17,7 +16,6 @@ public sealed class Project : Entity<ProjectId>, IAuditEntity
     public bool IsCompleted { get; private set; }
     public IReadOnlyCollection<Task> Tasks => _tasks;
     public UserId UserId { get; private set; } = null!;
-    public CategoryId CategoryId { get; private set; }
 
     private readonly List<Task> _tasks = new();
 
@@ -33,14 +31,12 @@ public sealed class Project : Entity<ProjectId>, IAuditEntity
         ProjectName name,
         Notes notes, 
         DueDate? dueDate,
-        UserId userId, 
-        CategoryId categoryId)
+        UserId userId)
     {
         Name = name;
         Notes = notes;
         DueDate = dueDate;
         UserId = userId;
-        CategoryId = categoryId;
         IsCompleted = false;
     }
 
@@ -48,8 +44,7 @@ public sealed class Project : Entity<ProjectId>, IAuditEntity
         string name,
         string notes,
         DateTime? dueDate,
-        string userId,
-        CategoryId categoryId)
+        string userId)
     {
 
         var errors = new List<IError>();
@@ -82,8 +77,7 @@ public sealed class Project : Entity<ProjectId>, IAuditEntity
             nameResult.Value,
             notesResult.Value,
             dueDate == null ? null : dueDateResult!.Value,
-            userIdResult.Value,
-            categoryId);
+            userIdResult.Value);
 
         return project;
     }
@@ -111,16 +105,20 @@ public sealed class Project : Entity<ProjectId>, IAuditEntity
         Notes = notesResult.Value;
         return Result.Ok();
     }
-    public void ChangeCompleteState()
+    public void ChangeCompleteState(bool isCompleted)
     {
         switch (IsCompleted)
         {
             case false:
-                IsCompleted = true;
+                if (!isCompleted)
+                    break;
+                IsCompleted = isCompleted;
                 CompletedOnUtc = DateTime.UtcNow;
                 break;
             case true:
-                IsCompleted = false;
+                if (isCompleted)
+                    break;
+                IsCompleted = isCompleted;
                 CompletedOnUtc = null;
                 break;
         }

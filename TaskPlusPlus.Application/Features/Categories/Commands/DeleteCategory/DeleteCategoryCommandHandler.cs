@@ -10,7 +10,6 @@ using TaskPlusPlus.Application.Responses.Errors;
 namespace TaskPlusPlus.Application.Features.Categories.Commands.DeleteCategory;
 internal sealed class DeleteCategoryCommandHandler : ICommandHandler<DeleteCategoryCommand>
 {
-
     private readonly IUnitOfWork _unitOfWork;
 
     public DeleteCategoryCommandHandler(IUnitOfWork unitOfWork)
@@ -24,6 +23,11 @@ internal sealed class DeleteCategoryCommandHandler : ICommandHandler<DeleteCateg
         if (category is null)
         {
             return Result.Fail(new NotFoundError(nameof(Category), request.Id));
+        }
+
+        if (category.IsImmutable)
+        {
+            return Result.Fail(new ImmutableCategoryError());
         }
 
         _unitOfWork.Repository<Category, CategoryId>().Remove(category);

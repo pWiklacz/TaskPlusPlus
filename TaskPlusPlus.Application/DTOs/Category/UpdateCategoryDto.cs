@@ -1,4 +1,4 @@
-﻿using TaskPlusPlus.Application.DTOs.Base;
+﻿using TaskPlusPlus.Application.DTOs.Common;
 
 namespace TaskPlusPlus.Application.DTOs.Category;
 public class UpdateCategoryDto : BaseDto, ICategoryDto

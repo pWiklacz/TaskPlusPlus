@@ -35,6 +35,11 @@ internal sealed class EditCategoryCommandHandler : ICommandHandler<EditCategoryC
             return Result.Fail(new NotFoundError(nameof(Category), dto.Id));
         }
 
+        if (category.IsImmutable)
+        {
+            return Result.Fail(new ImmutableCategoryError());
+        }
+
         var errors = new List<IError>();
 
         category.ChangeFavoriteState(dto.IsFavorite);

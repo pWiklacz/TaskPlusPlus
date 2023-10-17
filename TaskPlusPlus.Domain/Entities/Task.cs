@@ -171,16 +171,20 @@ public sealed class Task : Entity<TaskId>, IAuditEntity
         Notes = notesResult.Value;
         return Result.Ok();
     }
-    public void ChangeCompleteState()
+    public void ChangeCompleteState(bool isCompleted)
     {
         switch (IsCompleted)
         {
             case false:
-                IsCompleted = true;
+                if (!isCompleted)
+                    break;
+                IsCompleted = isCompleted;
                 CompletedOnUtc = DateTime.UtcNow;
                 break;
             case true:
-                IsCompleted = false;
+                if (isCompleted)
+                    break;
+                IsCompleted = isCompleted;
                 CompletedOnUtc = null;
                 break;
         }

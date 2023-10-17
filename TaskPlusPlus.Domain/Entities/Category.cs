@@ -14,7 +14,7 @@ public class Category : Entity<CategoryId>
     public ColorHex ColorHex { get; private set; } = null!;
     public UserId UserId { get; private set; } = null!;
 
-    public const string SystemOwner = "system";
+    public const string SystemOwner = "SystemCategory";
 
     private Category() { }
 

@@ -40,8 +40,7 @@ internal sealed class CreateProjectCommandHandler : ICommandHandler<CreateProjec
             return Result.Fail(new ValidationError(validationResult, nameof(Project)));
         }
 
-        //TODO:: ProjectCategoryId
-        var result = Project.Create(dto.Name, dto.Notes, dto.DueDate, userId, 1);
+        var result = Project.Create(dto.Name, dto.Notes, dto.DueDate, userId);
 
         if (result.IsFailed)
             return result.ToResult();

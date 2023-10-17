@@ -29,7 +29,6 @@ internal sealed class CreateTaskCommandHandler : ICommandHandler<CreateTaskComma
 
     public async Task<Result> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
     {
-
         var userResult = _userContext.GetCurrentUser();
         if (userResult.IsFailed)
         {
@@ -48,7 +47,6 @@ internal sealed class CreateTaskCommandHandler : ICommandHandler<CreateTaskComma
             return Result.Fail(new ValidationError(validationResult, nameof(Task)));
         }
 
-        //TODO:: UserID
         var result = Task.Create(dto.Name, dto.DueDate, dto.Notes, dto.Priority, dto.ProjectId,
             dto.Energy, dto.DurationTime, userId, dto.CategoryId);
 

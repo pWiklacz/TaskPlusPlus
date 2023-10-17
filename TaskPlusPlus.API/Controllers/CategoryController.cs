@@ -1,13 +1,12 @@
-﻿using FluentResults;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskPlusPlus.Application.DTOs.Category;
 using TaskPlusPlus.Application.Features.Categories.Commands.CreateCategory;
 using TaskPlusPlus.Application.Features.Categories.Commands.DeleteCategory;
 using TaskPlusPlus.Application.Features.Categories.Commands.EditCategory;
-using TaskPlusPlus.Application.Features.Categories.Queries.GetCategories;
 using TaskPlusPlus.Application.Features.Categories.Queries.GetCategoryById;
+using TaskPlusPlus.Application.Features.Categories.Queries.GetUserCategories;
 
 namespace TaskPlusPlus.API.Controllers;
 
@@ -24,7 +23,7 @@ public class CategoryController : BaseController
     [HttpGet]
     public async Task<ActionResult<List<CategoryDto>>> Get()
     {
-        var categories = await _mediator.Send(new GetCategoriesQuery());
+        var categories = await _mediator.Send(new GetUserCategoriesQuery());
 
         return FromResult(categories);
     }

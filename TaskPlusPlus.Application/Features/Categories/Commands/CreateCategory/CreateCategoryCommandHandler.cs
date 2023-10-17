@@ -14,7 +14,6 @@ internal sealed class CreateCategoryCommandHandler : ICommandHandler<CreateCateg
     private readonly IUnitOfWork _unitOfWork;
     private readonly IUserContext _userContext;
 
-
     public CreateCategoryCommandHandler(IUnitOfWork unitOfWork, IUserContext userContext)
     {
         _unitOfWork = unitOfWork;

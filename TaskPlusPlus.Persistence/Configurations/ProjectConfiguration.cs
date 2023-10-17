@@ -51,14 +51,6 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
         builder.Property(p => p.DueDate)
             .HasConversion(dueDateConverter!);
 
-        builder.Property(p => p.CategoryId)
-            .HasConversion(categoryIdConverter);
-
-        builder.HasOne<Category>()
-            .WithMany()
-            .HasForeignKey(p => p.CategoryId)
-            .IsRequired();
-
         builder.HasMany(p => p.Tasks)
             .WithOne()
             .HasForeignKey(t => t.ProjectId)

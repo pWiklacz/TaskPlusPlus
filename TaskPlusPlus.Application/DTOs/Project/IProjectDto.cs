@@ -1,7 +1,6 @@
-﻿namespace TaskPlusPlus.Application.DTOs.Project;
-public interface IProjectDto
+﻿using TaskPlusPlus.Application.DTOs.Common.IDto;
+
+namespace TaskPlusPlus.Application.DTOs.Project;
+internal interface IProjectDto : INameAndNotesDto , IDueDateDto
 {
-    public string Name { get; set; } 
-    public string Notes { get; set; }
-    public DateTime? DueDate { get; set; }
 }
