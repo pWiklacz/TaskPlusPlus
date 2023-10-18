@@ -5,6 +5,7 @@ using TaskPlusPlus.Application.Contracts.Persistence;
 using TaskPlusPlus.Application.DTOs.Tag;
 using TaskPlusPlus.Application.DTOs.Task;
 using TaskPlusPlus.Application.Messaging;
+using TaskPlusPlus.Application.Models.Identity.ApplicationUser;
 using TaskPlusPlus.Application.Responses.Errors;
 using TaskPlusPlus.Application.Specifications.Task;
 using TaskPlusPlus.Domain.ValueObjects.Task;
@@ -15,15 +16,24 @@ internal sealed class GetGroupedTasksQueryHandler : IQueryHandler<GetGroupedTask
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IUserContext _userContext;
 
-    public GetGroupedTasksQueryHandler(IMapper mapper, IUnitOfWork unitOfWork)
+    public GetGroupedTasksQueryHandler(IMapper mapper, IUnitOfWork unitOfWork, IUserContext userContext)
     {
         _mapper = mapper;
         _unitOfWork = unitOfWork;
+        _userContext = userContext;
     }
     public async Task<Result<Dictionary<object, List<TaskDto>>>> Handle(GetGroupedTasksQuery request, CancellationToken cancellationToken)
     {
-        var spec = new TasksWithTagsSpecification(request.QueryParams);
+        var userResult = _userContext.GetCurrentUser();
+        if (userResult.IsFailed)
+        {
+            return userResult.ToResult();
+        }
+
+        var userId = userResult.Value.Id;
+        var spec = new TasksWithTagsSpecification(request.QueryParams, userId);
         var tasksFromDb = await _unitOfWork.Repository<Task, TaskId>().ListAsync(spec);
         var tasksDto = _mapper.Map<List<TaskDto>>(tasksFromDb);
 

@@ -3,6 +3,7 @@ using FluentResults;
 using TaskPlusPlus.Application.Contracts.Persistence;
 using TaskPlusPlus.Application.DTOs.Task;
 using TaskPlusPlus.Application.Messaging;
+using TaskPlusPlus.Application.Models.Identity.ApplicationUser;
 using TaskPlusPlus.Application.Specifications.Task;
 using TaskPlusPlus.Domain.ValueObjects.Task;
 using Task = TaskPlusPlus.Domain.Entities.Task;
@@ -12,15 +13,25 @@ internal sealed class GetTaskByIdQueryHandler : IQueryHandler<GetTaskByIdQuery, 
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IUserContext _userContext;
 
-    public GetTaskByIdQueryHandler(IMapper mapper, IUnitOfWork unitOfWork)
+    public GetTaskByIdQueryHandler(IMapper mapper, IUnitOfWork unitOfWork, IUserContext userContext)
     {
         _mapper = mapper;
         _unitOfWork = unitOfWork;
+        _userContext = userContext;
     }
     public async Task<Result<TaskDto>> Handle(GetTaskByIdQuery request, CancellationToken cancellationToken)
     {
-        var spec = new TasksWithTagsSpecification(request.Id);
+        var userResult = _userContext.GetCurrentUser();
+        if (userResult.IsFailed)
+        {
+            return userResult.ToResult();
+        }
+
+        var userId = userResult.Value.Id;
+
+        var spec = new TasksWithTagsSpecification(request.Id, userId);
         var taskFromDb = await _unitOfWork.Repository<Task, TaskId>().GetEntityWithSpec(spec);
         return _mapper.Map<TaskDto>(taskFromDb);
     }

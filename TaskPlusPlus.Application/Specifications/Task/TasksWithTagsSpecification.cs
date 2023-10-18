@@ -5,10 +5,11 @@ namespace TaskPlusPlus.Application.Specifications.Task;
 
 internal class TasksWithTagsSpecification : Specification<Domain.Entities.Task>  
 {
-    public TasksWithTagsSpecification(TaskQueryParameters queryParams)
+    public TasksWithTagsSpecification(TaskQueryParameters queryParams, string userId)
         : base(task =>
             (string.IsNullOrEmpty(queryParams.Search) || task.Name.Value.ToLower().Contains(queryParams.Search)) &&
-            (task.CategoryId == queryParams.CategoryId))
+            (task.CategoryId == queryParams.CategoryId)
+            && task.UserId == userId)
     {
         AddInclude(t => t.Tags);
         AddOrderBy(t => t.Name);
@@ -23,7 +24,10 @@ internal class TasksWithTagsSpecification : Specification<Domain.Entities.Task>
         }
     }
 
-    public TasksWithTagsSpecification(ulong id) : base(t => t.Id == id)
+    public TasksWithTagsSpecification(ulong id, string userId) 
+        : base(t => 
+            (t.Id == id)
+            && t.UserId == userId)
     {
         AddInclude(t => t.Tags);
     }
