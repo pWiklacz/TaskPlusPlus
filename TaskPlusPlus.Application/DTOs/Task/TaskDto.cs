@@ -1,6 +1,5 @@
 ﻿using TaskPlusPlus.Application.DTOs.Common;
 using TaskPlusPlus.Application.DTOs.Tag;
-using TaskPlusPlus.Domain.Enums;
 
 namespace TaskPlusPlus.Application.DTOs.Task;
 
@@ -16,6 +15,5 @@ public class TaskDto : BaseDto
     public ulong? ProjectId { get; set; }
     public ulong CategoryId { get; set; }
     public DateTime? CompletedOnUtc { get; set; }
-
-    public List<TagDto> Tags = new();
+    public List<TagDto> Tags { get; set; } = new();
 }

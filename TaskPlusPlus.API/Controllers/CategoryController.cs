@@ -47,9 +47,8 @@ public class CategoryController : BaseController
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult> Put([FromBody] UpdateCategoryDto dto, ulong id)
+    public async Task<ActionResult> Put([FromBody] UpdateCategoryDto dto)
     {
-        dto.Id = id;
         var command = new EditCategoryCommand(dto);
         var result = await _mediator.Send(command);
 

@@ -1,26 +1,26 @@
 ﻿using FluentResults;
 using TaskPlusPlus.Application.Contracts.Persistence;
-using TaskPlusPlus.Application.DTOs.Common.Validators;
+using TaskPlusPlus.Application.DTOs.Task.Validators;
 using TaskPlusPlus.Application.Messaging;
 using TaskPlusPlus.Application.Responses.Errors;
 using TaskPlusPlus.Application.Responses.Successes;
+using TaskPlusPlus.Domain.Enums;
 using TaskPlusPlus.Domain.Errors;
 using TaskPlusPlus.Domain.ValueObjects.Task;
 using Task = TaskPlusPlus.Domain.Entities.Task;
 
-namespace TaskPlusPlus.Application.Features.Tasks.Commands.UpdateTaskNameAndNotes;
-
-internal sealed class UpdateTaskNameAndNotesCommandHandler : ICommandHandler<UpdateTaskNameAndNotesCommand>
+namespace TaskPlusPlus.Application.Features.Tasks.Commands.ChangeTaskPriority;
+internal sealed class ChangeTaskPriorityCommandHandler : ICommandHandler<ChangeTaskPriorityCommand>
 {
     private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateTaskNameAndNotesCommandHandler(IUnitOfWork unitOfWork)
+    public ChangeTaskPriorityCommandHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
     }
-    public async Task<Result> Handle(UpdateTaskNameAndNotesCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(ChangeTaskPriorityCommand request, CancellationToken cancellationToken)
     {
-        var validator = new NameAndNotesValidator();
+        var validator = new TaskPriorityDtoValidator();
         var validationResult = await validator.ValidateAsync(request.Dto, cancellationToken);
 
         if (validationResult.IsValid is false)
@@ -35,21 +35,11 @@ internal sealed class UpdateTaskNameAndNotesCommandHandler : ICommandHandler<Upd
             return Result.Fail(new NotFoundError(nameof(Task), request.Dto.Id));
         }
 
-        var errors = new List<IError>();
-
-        var updateNameResult = task.UpdateName(request.Dto.Name);
-        if (updateNameResult.IsFailed)
-            errors.AddRange(updateNameResult.Errors);
-
-        var updateNotesResult = task.UpdateNotes(request.Dto.Notes);
-        if (updateNotesResult.IsFailed)
-            errors.AddRange(updateNotesResult.Errors);
-
-        if (errors.Any())
-            return Result.Fail(errors);
+        var priorityUpdateResult = Priority.FromName(request.Dto.Priority);
+        if (priorityUpdateResult.IsFailed)
+            return priorityUpdateResult.ToResult();
 
         _unitOfWork.Repository<Task, TaskId>().Update(task);
-
         var saveResult = await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         if (saveResult <= 0)
@@ -61,4 +51,3 @@ internal sealed class UpdateTaskNameAndNotesCommandHandler : ICommandHandler<Upd
             .WithSuccess(new UpdateSuccess(nameof(Task)));
     }
 }
-

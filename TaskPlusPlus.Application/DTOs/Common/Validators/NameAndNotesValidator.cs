@@ -11,10 +11,10 @@ internal class NameAndNotesValidator : AbstractValidator<INameAndNotesDto>
         RuleFor(dto => dto.Name)
             .NotEmpty().WithMessage("{PropertyName} is required")
             .NotNull()
-            .MaximumLength(MaxNameLength).WithMessage($"Tag name character limit {{PropertyValue}}/{MaxNameLength}");
+            .MaximumLength(MaxNameLength).WithMessage($"Name character limit {{PropertyValue}}/{MaxNameLength}");
 
         RuleFor(dto => dto.Notes)
             .NotNull()
-            .MaximumLength(MaxNameLength).WithMessage($"Tag name character limit {{PropertyValue}}/{MaxNotesLength}");
+            .MaximumLength(MaxNameLength).WithMessage($"Notes character limit {{PropertyValue}}/{MaxNotesLength}");
     }
 }

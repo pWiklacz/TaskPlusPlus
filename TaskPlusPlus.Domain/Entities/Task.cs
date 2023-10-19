@@ -127,12 +127,28 @@ public sealed class Task : Entity<TaskId>, IAuditEntity
         _tags.Add(tag);
         return Result.Ok();
     }
-    public void AddTags(IEnumerable<Tag> tags)
+    public Result UpdateTags(IEnumerable<Tag> tags)
     {
-        foreach (var tag in tags)
+        var enumerable = tags.ToList();
+
+        var tagsToDelete = _tags.Except(enumerable).ToList();
+
+        var errors = new List<IError>();
+
+        foreach (var deleteResult in tagsToDelete.Select(DeleteTag).Where(deleteResult => deleteResult.IsFailed))
+        {
+            errors.AddRange(deleteResult.Errors);
+        }
+
+        if (errors.Any())
+            return Result.Fail(errors);
+
+        foreach (var tag in enumerable)
         {
             AddTag(tag);
         }
+
+        return Result.Ok();
     }
     public Result DeleteTag(Tag tag)
     {
