@@ -2,7 +2,6 @@
 using System.Text.RegularExpressions;
 using TaskPlusPlus.Domain.Errors;
 using TaskPlusPlus.Domain.Primitives;
-using TaskPlusPlus.Domain.ValueObjects.Task;
 
 namespace TaskPlusPlus.Domain.ValueObjects;
 

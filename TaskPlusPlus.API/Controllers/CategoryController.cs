@@ -55,7 +55,6 @@ public class CategoryController : BaseController
         return FromResult(result);
     }
 
-
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(ulong id)
     {

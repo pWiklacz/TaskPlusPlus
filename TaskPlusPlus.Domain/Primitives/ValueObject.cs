@@ -34,5 +34,4 @@ public abstract class ValueObject : IEquatable<ValueObject>
     //{
     //    return !(left == right);
     //}
-
 }
