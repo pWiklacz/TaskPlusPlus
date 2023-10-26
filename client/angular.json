@@ -31,6 +31,7 @@
             ],
             "styles": [
               "src/styles.scss",
+              "node_modules/bootswatch/dist/pulse/bootstrap.min.css",
               "node_modules/font-awesome/css/font-awesome.min.css"
               
             ],

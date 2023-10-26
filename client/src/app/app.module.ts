@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { faHouse, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { NavBarComponent } from './core/nav-bar/nav-bar.component';
+import { faSquarePlus } from '@fortawesome/free-regular-svg-icons';
+import { CoreModule } from './core/core.module';
 
 
 @NgModule({
@@ -16,7 +18,8 @@ import { faTwitter } from '@fortawesome/free-brands-svg-icons';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    CoreModule
   ],
   providers: [],
   bootstrap: [AppComponent]
@@ -24,6 +27,6 @@ import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 export class AppModule { 
   constructor(library: FaIconLibrary)
   {
-    library.addIcons(faTwitter)
+    library.addIcons(faHouse, faPlus)
   }
 }
