@@ -1,11 +1,9 @@
-<nav class="px-3 border-bottom bg-white fixed-top shadow-sm">
+<header class="px-3 border-bottom bg-white fixed-top shadow-sm">
   <div class="d-flex my-1 flex-wrap align-items-center justify-content-center">
-    <a class="logo navbar-brand " href="#">
-      <img class="border" src="assets/images/logo.png" alt="Bootstrap" width="40" height="40">
+    <a class="logo navbar-brand " routerLink="/">
+      <img class="border logo" src="assets/images/logo.png" alt="Bootstrap" width="40" height="40" >
     </a>
   
-
-
     <ul class="nav col-3 ms-2 me-auto">
       <!-- <li><a href="#" class="nav-link px-2 link-secondary" style="font-size: 20px;">
           <fa-icon [fixedWidth]="true" icon="house"></fa-icon>
@@ -35,8 +33,9 @@
       </ul>
     </div> -->
     <div class="text-end">
-      <button type="button" class="btn btn-outline me-2">Login</button>
-      <button type="button" class="btn btn-primary">Sign-up</button>
+      <a routerLink="/account/login" class="btn btn-outline me-2">Login</a>
+      <a routerLink="/account/register" class="btn btn-primary me-3">Sign-up</a>
     </div>
   </div>
-</nav>
+
+</header>

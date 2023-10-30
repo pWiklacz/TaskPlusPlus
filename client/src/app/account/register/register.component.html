@@ -1,0 +1,73 @@
+<div class="outer">
+    <div class="container">
+        <div class="row">
+            <div class="offset-md-2 col-lg-5 col-md-7 offset-lg-4 offset-md-3">
+                <div class="panel border bg-white">
+                    <div class="panel-heading">
+                        <h3 class="pt-3 font-weight-bold">Sign Up</h3>
+                    </div>
+                    <div class="panel-body p-3">
+                        <form>
+                        <div class="row">
+                            <div class="form-group pt-3 col-md-6 mb-2">
+                                <div class="input-field">
+                                    <span class="fa fa-user fa-fw me-1 text-primary"></span>
+                                    <input type="text" placeholder="FirstName">
+                                </div>
+                            </div>
+                            <div class="form-group pt-3 col-md-6 mb-2">
+                                <div class="input-field">
+                                    <span class="fa fa-user fa-fw me-1  text-primary" ></span>
+                                    <input type="text" placeholder="LastName">
+                                </div>
+                            </div>
+                        </div>
+                            <div class="form-group pt-3">
+                                <div class="input-field">
+                                    <span class="fa fa-envelope fa-fw me-1  text-primary"></span>
+                                    <input type="text" placeholder="Email">
+                                </div>
+                            </div>
+                            <div class="form-group pt-3">
+                                <div class="input-field">
+                                    <span class="fa fa-lock fa-fw me-1 text-primary"></span>
+                                    <input [type]="type" placeholder="Password">
+                                    <span (click)="hideShowPass()" class="fa {{eyeIcon}} text-primary"></span>
+                                </div>
+                            </div>
+                            <div class="form-group pt-3">
+                                <div class="input-field">
+                                    <span class="fa fa-key fa-fw me-1  text-primary"></span>
+                                    <input [type]="type" placeholder="Confirm password">
+                                    <span (click)="hideShowPass()" class="fa {{eyeIcon}} text-primary"></span>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block mt-4 w-100">Sign Up</button>
+                            <div class="mx-3 ">
+                                <div class="text-center py-3">
+                                    <button type="button" class="btn btn-link btn-floating mx-1">
+                                        <i class="fa fa-facebook-f fa-lg text-primary"></i>
+                                      </button>
+                                  
+                                      <button type="button" class="btn btn-link btn-floating mx-1">
+                                        <i class="fa fa-google fa-lg text-primary"></i>
+                                      </button>
+                                  
+                                      <button type="button" class="btn btn-link btn-floating mx-1">
+                                        <i class="fa fa-twitter fa-lg text-primary"></i>
+                                      </button>
+                                  
+                                      <button type="button" class="btn btn-link btn-floating mx-1">
+                                        <i class="fa fa-github fa-lg text-primary"></i>
+                                      </button>
+                                </div>
+                             </div>
+                            <div class="text-center text-muted">Already have account? <a id="forget" routerLink="/account/login">Login</a></div>
+                        </form>
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
