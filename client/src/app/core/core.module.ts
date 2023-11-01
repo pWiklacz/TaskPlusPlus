@@ -1,14 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NavBarComponent } from './nav-bar/nav-bar.component';
+import { NavBarUnloggedComponent } from './nav-bar-unlogged/nav-bar-unlogged.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RouterModule } from '@angular/router';
+import { NavBarLoggedComponent } from './nav-bar-logged/nav-bar-logged.component';
 
 
 
 @NgModule({
   declarations: [
-    NavBarComponent
+    NavBarUnloggedComponent,
+    NavBarLoggedComponent
   ],
   imports: [
     CommonModule,
@@ -16,7 +18,8 @@ import { RouterModule } from '@angular/router';
     RouterModule
   ],
   exports: [
-    NavBarComponent
+    NavBarUnloggedComponent,
+    NavBarLoggedComponent
   ]
 })
 export class CoreModule { }

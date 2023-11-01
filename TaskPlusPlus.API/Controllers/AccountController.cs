@@ -15,7 +15,7 @@ public class AccountController : BaseController
     [HttpPost("login")]
     public async Task<ActionResult<AuthResponse>> Login(AuthRequest request)
     {
-        return Ok(await _authenticationService.Login(request));
+        return FromResult(await _authenticationService.Login(request));
     }
 
     [HttpPost("register")]

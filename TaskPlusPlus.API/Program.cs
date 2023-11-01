@@ -18,6 +18,7 @@ var app = builder.Build();
 
 app.UseAuthentication();
 
+app.UseCors("CorsPolicy");
 app.UseSwagger();
 app.UseSwaggerUI();
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using FluentResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -7,6 +8,8 @@ using System.Text;
 using TaskPlusPlus.Application.Constants;
 using TaskPlusPlus.Application.Contracts.Identity;
 using TaskPlusPlus.Application.Models.Identity;
+using TaskPlusPlus.Identity.Errors;
+using TaskPlusPlus.Identity.Extensions;
 using TaskPlusPlus.Identity.Models;
 
 namespace TaskPlusPlus.Identity;
@@ -25,14 +28,22 @@ public class AuthService : IAuthService
         _signInManager = signInManager;
     }
 
-    public async Task<AuthResponse> Login(AuthRequest request)
+    // public Task<AuthResponse> GetCurrentUser(AuthRequest request)
+    // {
+    //   var user = await _userManager.FindByEmailFromClaimsPrincipal();
+    // }
+
+    public async Task<Result<AuthResponse>> Login(AuthRequest request)
     {
-        var user = await _userManager.FindByEmailAsync(request.Email) ?? throw new Exception($"User with {request.Email} not found.");
+        var user = await _userManager.FindByEmailAsync(request.Email);
+
+        if (user == null)
+            return Result.Fail(new LoginError());
         var result = await _signInManager.PasswordSignInAsync(user.UserName!, request.Password, false, lockoutOnFailure: false);
 
         if (!result.Succeeded)
         {
-            throw new Exception($"Credentials for '{request.Email} aren't valid'.");
+            return Result.Fail(new LoginError());
         }
 
         JwtSecurityToken jwtSecurityToken = await GenerateToken(user);
