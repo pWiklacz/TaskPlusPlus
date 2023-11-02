@@ -28,11 +28,6 @@ public class AuthService : IAuthService
         _signInManager = signInManager;
     }
 
-    // public Task<AuthResponse> GetCurrentUser(AuthRequest request)
-    // {
-    //   var user = await _userManager.FindByEmailFromClaimsPrincipal();
-    // }
-
     public async Task<Result<AuthResponse>> Login(AuthRequest request)
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
@@ -59,21 +54,14 @@ public class AuthService : IAuthService
         return response;
     }
 
-    public async Task<RegistrationResponse> Register(RegistrationRequest request)
+    public async Task<Result<RegistrationResponse>> Register(RegistrationRequest request)
     {
-        var existingUser = await _userManager.FindByNameAsync(request.UserName);
-
-        if (existingUser != null)
-        {
-            throw new Exception($"Username '{request.UserName}' already exists.");
-        }
-
         var user = new ApplicationUser
         {
             Email = request.Email,
             FirstName = request.FirstName,
             LastName = request.LastName,
-            UserName = request.UserName,
+            UserName = request.Email,
             EmailConfirmed = true
         };
 
@@ -85,12 +73,12 @@ public class AuthService : IAuthService
 
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, "Employee");
+                await _userManager.AddToRoleAsync(user, "User");
                 return new RegistrationResponse() { UserId = user.Id };
             }
             else
             {
-                throw new Exception($"{result.Errors}");
+                return Result.Fail(result.ToString());
             }
         }
         else

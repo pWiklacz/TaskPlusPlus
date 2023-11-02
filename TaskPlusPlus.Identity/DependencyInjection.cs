@@ -29,7 +29,13 @@ public static class DependencyInjection
             .AddEntityFrameworkStores<TaskPlusPlusIdentityDbContext>().AddDefaultTokenProviders();
 
         services.AddTransient<IAuthService, AuthService>();
-        
+
+        services.Configure<IdentityOptions>(options =>
+        {
+            options.User.RequireUniqueEmail = true; // Ensure that email addresses are unique.
+            // Other identity options...
+        });
+
         services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

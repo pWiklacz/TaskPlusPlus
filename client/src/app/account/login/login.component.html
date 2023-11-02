@@ -1,7 +1,7 @@
 <div class="outer">
     <div class="container">
-        <div class="row">
-            <div class="offset-md-2 col-lg-5 col-md-7 offset-lg-4 offset-md-3">
+        <div class="row d-flex align-items-center justify-content-center">
+            <div class="col-lg-5 col-md-7 ">
                 <div class="panel border bg-white">
                     <div class="panel-heading">
                         <h3 class="pt-3 font-weight-bold">Login</h3>
@@ -9,17 +9,31 @@
                     <div class="panel-body p-3">
                         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
                             <div class="form-group pt-3">
-                                <div class="input-field">
+                                <div class="input-field" [class.error]="submitted && form.email.invalid">
                                     <span class="fa fa-envelope p-2 text-primary"></span>
-                                    <input formControlName="email" type="text" placeholder="Email">
+                                    <input class="form-control"
+                                        [class.is-invalid]="submitted && form.email.invalid"
+                                        formControlName="email" type="text" placeholder="Email">
+                                </div>
+                                <div *ngIf="submitted && form.email.errors" class="errorMessage">
+                                    <div *ngIf="form.email.errors?.['required']"> <i class="fa fa-exclamation-circle"
+                                            aria-hidden="true"></i> Email is required</div>
+                                    <div *ngIf="form.email.errors?.['email']"> <i class="fa fa-exclamation-circle"
+                                            aria-hidden="true"></i> Email must be a valid email address</div>
                                 </div>
                             </div>
-                    
                             <div class="form-group pt-3">
-                                <div class="input-field">
+                                <div class="input-field"
+                                    [class.error]="submitted && form.password.invalid">
                                     <span class="fa fa-lock p-2 text-primary"></span>
-                                    <input formControlName="password" [type]="type" placeholder="Password">
+                                    <input [class.is-invalid]="submitted && form.password.invalid"
+                                        class="form-control" formControlName="password" [type]="type"
+                                        placeholder="Password">
                                     <span (click)="hideShowPass()" class="fa {{eyeIcon}} text-primary"></span>
+                                </div>
+                                <div *ngIf="submitted && form.email.errors" class="errorMessage">
+                                    <div *ngIf="form.password.errors?.['required']"> <i class="fa fa-exclamation-circle"
+                                            aria-hidden="true"></i> Password is required</div>
                                 </div>
                             </div>
                             <div class="form-inline fr mt-4">
@@ -30,25 +44,26 @@
                                 <div class="text-center py-3">
                                     <button type="button" class="btn btn-link btn-floating mx-1">
                                         <i class="fa fa-facebook-f fa-lg text-primary"></i>
-                                      </button>
-                                  
-                                      <button type="button" class="btn btn-link btn-floating mx-1">
+                                    </button>
+
+                                    <button type="button" class="btn btn-link btn-floating mx-1">
                                         <i class="fa fa-google fa-lg text-primary"></i>
-                                      </button>
-                                  
-                                      <button type="button" class="btn btn-link btn-floating mx-1">
+                                    </button>
+
+                                    <button type="button" class="btn btn-link btn-floating mx-1">
                                         <i class="fa fa-twitter fa-lg text-primary"></i>
-                                      </button>
-                                  
-                                      <button type="button" class="btn btn-link btn-floating mx-1">
+                                    </button>
+
+                                    <button type="button" class="btn btn-link btn-floating mx-1">
                                         <i class="fa fa-github fa-lg text-primary"></i>
-                                      </button>
+                                    </button>
                                 </div>
-                             </div>
-                            <div class="text-center text-muted">Don't have account? <a id="forget" routerLink="/account/register">Sign Up</a></div>
+                            </div>
+                            <div class="text-center text-muted">Don't have account? <a id="forget"
+                                    routerLink="/account/register">Sign Up</a></div>
                         </form>
                     </div>
-                   
+
                 </div>
             </div>
         </div>

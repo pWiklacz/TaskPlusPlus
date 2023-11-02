@@ -17,13 +17,22 @@ export class LoginComponent {
     password: new FormControl('', Validators.required)
   })
   returnUrl: string;
+  submitted = false;
 
   constructor(private accountService: AccountService, private router: Router,
     private activatedRoute: ActivatedRoute) {
-    this.returnUrl = this.activatedRoute.snapshot.queryParams['returnUrl'] || '/shop'
+    this.returnUrl = this.activatedRoute.snapshot.queryParams['returnUrl'] || '/'
   }
 
+  get form() { return this.loginForm.controls; }
+
   onSubmit() {
+    this.submitted = true;
+ 
+    if (this.loginForm.invalid) {
+        return;
+    }
+    
     this.accountService.login(this.loginForm.value).subscribe({
       next: () => this.router.navigateByUrl(this.returnUrl)
     })

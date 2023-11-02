@@ -30,6 +30,11 @@ a:hover {
     border-radius: 15px;
 }
 
+.errorMessage{
+    color: red;
+    padding-left: 10px;
+}
+
 .panel {
     min-height: 380px;
     box-shadow: 20px 20px 80px rgb(218, 218, 218);
@@ -59,7 +64,6 @@ input[type='password'] {
     box-shadow: none;
     width: 100%;
 }
-
 
 
 .fa-eye-slash.btn {

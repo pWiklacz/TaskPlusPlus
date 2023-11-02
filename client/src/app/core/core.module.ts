@@ -4,6 +4,7 @@ import { NavBarUnloggedComponent } from './nav-bar-unlogged/nav-bar-unlogged.com
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RouterModule } from '@angular/router';
 import { NavBarLoggedComponent } from './nav-bar-logged/nav-bar-logged.component';
+import { SharedModule } from '../shared/shared.module';
 
 
 
@@ -15,7 +16,8 @@ import { NavBarLoggedComponent } from './nav-bar-logged/nav-bar-logged.component
   imports: [
     CommonModule,
     FontAwesomeModule,
-    RouterModule
+    RouterModule,
+    SharedModule
   ],
   exports: [
     NavBarUnloggedComponent,

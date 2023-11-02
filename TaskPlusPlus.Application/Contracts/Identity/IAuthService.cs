@@ -6,5 +6,5 @@ public interface IAuthService
 {
     // Task<AuthResponse> GetCurrentUser(AuthRequest request);
     Task<Result<AuthResponse>> Login(AuthRequest request);
-    Task<RegistrationResponse> Register(RegistrationRequest request);
+    Task<Result<RegistrationResponse>> Register(RegistrationRequest request);
 }
