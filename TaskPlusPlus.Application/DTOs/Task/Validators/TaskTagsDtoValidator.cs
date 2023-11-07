@@ -9,6 +9,8 @@ internal class TaskTagsDtoValidator : AbstractValidator<ITaskTagsDto>
 {
     public TaskTagsDtoValidator(IUnitOfWork unitOfWork)
     {
+        var invalidTags = new List<TagDto>();
+
         RuleFor(dto => dto.Tags)
             .MustAsync(async (tags, token) =>
             {
@@ -16,8 +18,6 @@ internal class TaskTagsDtoValidator : AbstractValidator<ITaskTagsDto>
                 {
                     return true;
                 }
-
-                var invalidTags = new List<TagDto>();
 
                 foreach (var tag in tags)
                 {
@@ -31,6 +31,7 @@ internal class TaskTagsDtoValidator : AbstractValidator<ITaskTagsDto>
 
                 return !invalidTags.Any();
             })
-            .WithMessage("One or more tags do not exist in the database. Invalid tags: {InvalidTags}");
+            .WithMessage("One or more tags do not exist in the database.");
+
     }
 }

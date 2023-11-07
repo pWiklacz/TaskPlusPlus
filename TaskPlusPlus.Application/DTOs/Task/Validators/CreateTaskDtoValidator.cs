@@ -28,7 +28,7 @@ public class CreateTaskDtoValidator : AbstractValidator<CreateTaskDto>
                     .ExistsByIdAsync(id);
                 return categoryExists;
             })
-            .WithMessage("{PropertyName} does not exist.");
+            .WithMessage("Category with id {PropertyValue} does not exist.");
 
         RuleFor(dto => dto.ProjectId)
             .GreaterThan(0UL)
@@ -39,7 +39,7 @@ public class CreateTaskDtoValidator : AbstractValidator<CreateTaskDto>
                     .ExistsByIdAsync((ProjectId)id);
                 return projectExist;
             })
-            .WithMessage("{PropertyName} does not exist.");
+            .WithMessage("Project with id {PropertyValue} does not exist.");
 
         Include(new TaskTagsDtoValidator(unitOfWork));
     }

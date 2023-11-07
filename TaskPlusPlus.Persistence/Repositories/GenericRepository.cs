@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.IO.Pipelines;
+using Microsoft.EntityFrameworkCore;
 using TaskPlusPlus.Application.Contracts.Persistence;
 using TaskPlusPlus.Domain.Primitives;
 using TaskPlusPlus.Persistence.Specifications;
@@ -29,8 +30,7 @@ internal class GenericRepository<TEntity, TEntityId> : IGenericRepository<TEntit
 
     public async Task<bool> ExistsByIdAsync(TEntityId id)
     {
-        var entity = await GetByIdAsync(id);
-        return entity != null;
+        return await _dbContext.Set<TEntity>().AnyAsync(e => e.Id.Equals(id));
     }
 
     public async Task<TEntity?> GetEntityWithSpec(ISpecification<TEntity> spec)

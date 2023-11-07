@@ -17,6 +17,6 @@ public class InterfaceCategoryDtoValidator : AbstractValidator<ICategoryDto>
         RuleFor(dto => dto.Name)
             .NotEmpty().WithMessage("{PropertyName} is required")
             .NotNull()
-            .MaximumLength(MaxNameLength).WithMessage($"Tag name character limit {{PropertyValue}}/{MaxNameLength}");
+            .MaximumLength(MaxNameLength).WithMessage($"Category name character limit {{PropertyValue}}/{MaxNameLength}");
     }
 }

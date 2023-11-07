@@ -21,7 +21,7 @@ public abstract class Enumeration<TEnum> : IEquatable<Enumeration<TEnum>>
             value,
             out TEnum? enumeration)
             ? enumeration
-            : Result.Fail<TEnum?>(new Error($"The {nameof(TEnum)} does not exist."));
+            : Result.Fail<TEnum?>(new Error($"The {typeof(TEnum)} does not exist."));
     }
     public static Result<TEnum?> FromName(string name)
     {
@@ -29,7 +29,7 @@ public abstract class Enumeration<TEnum> : IEquatable<Enumeration<TEnum>>
             .Values
             .SingleOrDefault(e => e.Name == name);
 
-        return @enum ?? Result.Fail<TEnum?>(new Error($"The {nameof(TEnum)} does not exist."));
+        return @enum ?? Result.Fail<TEnum?>(new Error($"The {typeof(TEnum)} does not exist."));
     }
     public bool Equals(Enumeration<TEnum>? other)
     {

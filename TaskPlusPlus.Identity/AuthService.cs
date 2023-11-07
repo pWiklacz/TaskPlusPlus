@@ -78,12 +78,12 @@ public class AuthService : IAuthService
             }
             else
             {
-                return Result.Fail(result.ToString());
+                return Result.Fail(new RegistrationError(result.Errors.ToList()));
             }
         }
         else
         {
-            throw new Exception($"Email {request.Email} already exists.");
+            return Result.Fail(new EmailAlreadyExistError());
         }
     }
 

@@ -1,6 +1,6 @@
 ﻿using FluentResults;
 using Microsoft.AspNetCore.Mvc;
-
+using TaskPlusPlus.API.Errors;
 using TaskPlusPlus.Domain.Errors;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -23,30 +23,34 @@ public class BaseController : ControllerBase
     protected ActionResult FromResult<T>(Result<T> result)
     {
         if (result.IsSuccess)
-            return Ok(result.Value); //Think about it later. Idk is better to just return result or value from result.
+            return Ok(new ApiResponse<T>(result));
 
-        if (result.HasError<BaseError>(e => e.Code == 401, out var errors))
-            return Unauthorized(errors);
-        if (result.HasError(e => e.Code == 404, out errors))
-            return NotFound(errors);
-        if (result.HasError(e => e.Code == 409, out errors))
-            return Conflict(errors);
+        if (result.HasError<BaseError>(e => e.Code == 401, out _))
+            return Unauthorized(new ApiResponse<T>(result));
+        if (result.HasError(e => e.Code == 404, out IEnumerable<BaseError> _))
+            return NotFound(new ApiResponse<T>(result));
+        if (result.HasError(e => e.Code == 409, out IEnumerable<BaseError> _))
+            return Conflict(new ApiResponse<T>(result));
 
-        return BadRequest(result.Reasons);
+        return BadRequest(new ApiResponse<T>(result));
     }
 
     protected ActionResult FromResult(Result result)
     {
+        var apiResponse = new ApiResponse<object>(result); 
+
         if (result.IsSuccess)
-            return Ok(result); //Think about it later. Idk is better to just return result or value from result.
+            return Ok(apiResponse);
 
-        if (result.HasError<BaseError>(e => e.Code == 401, out var errors))
-            return Unauthorized(errors);
-        if (result.HasError(e => e.Code == 404, out errors))
-            return NotFound(errors);
-        if (result.HasError(e => e.Code == 409, out errors))
-            return Conflict(errors);
+        if (result.HasError<BaseError>(e => e.Code == 401, out _))
+            return Unauthorized(apiResponse);
 
-        return BadRequest(result);
+        if (result.HasError(e => e.Code == 404, out IEnumerable<BaseError> _))
+            return NotFound(apiResponse);
+
+        if (result.HasError(e => e.Code == 409, out IEnumerable<BaseError> _))
+            return Conflict(apiResponse);
+
+        return BadRequest(apiResponse);
     }
 }

@@ -8,8 +8,11 @@ internal class TaskEnergyDtoValidator : AbstractValidator<ITaskEnergyDto>
     public TaskEnergyDtoValidator()
     {
         RuleFor(dto => dto.Energy)
-            .NotNull()
-            .Must(e => Energy.FromName(e) != null).WithMessage("There is no Energy value name {PropertyName}");
+            .Must(e =>
+            {
+                var result = Energy.FromName(e);
+                return result.IsSuccess;
+            }).WithMessage("There is no Energy value name {PropertyValue}");
 
     }
 }

@@ -51,7 +51,7 @@ internal class UpdateProjectDueDateCommandHandler : ICommandHandler<UpdateProjec
         }
 
         return Result.Ok()
-            .WithSuccess(new CompleteSuccess(nameof(Project)));
+            .WithSuccess(new UpdateSuccess(nameof(Project)));
 
     }
 }
