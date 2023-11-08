@@ -2,9 +2,6 @@
     height: 100vh;
     background: linear-gradient(to top, #c9c9ff 50%, #6e6ef6 90%) no-repeat;
 }
-.fa{
-    color:#4c2a80;
-}
 
 .panel-heading{
     text-align: center;
@@ -49,6 +46,12 @@ a:hover{
     border: 1px solid #ddd;
     color: #4343ff
 }
+
+.errorMessage{
+    color: red;
+    padding-left: 10px;
+}
+
 
 .input-field.error{
     border: 1px solid red;

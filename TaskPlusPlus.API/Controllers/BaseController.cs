@@ -1,6 +1,7 @@
 ﻿using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 using TaskPlusPlus.API.Errors;
+using TaskPlusPlus.Domain.Entities;
 using TaskPlusPlus.Domain.Errors;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -22,6 +23,12 @@ public class BaseController : ControllerBase
 
     protected ActionResult FromResult<T>(Result<T> result)
     {
+        if (!ModelState.IsValid)
+        {
+            var errors = (from state in ModelState from error in state.Value.Errors select error.ErrorMessage).ToList();
+            return BadRequest(new ApiResponse<T>(Result.Fail(new ModelStateInvalidError(errors))));
+        }
+
         if (result.IsSuccess)
             return Ok(new ApiResponse<T>(result));
 
@@ -37,6 +44,12 @@ public class BaseController : ControllerBase
 
     protected ActionResult FromResult(Result result)
     {
+        if (!ModelState.IsValid)
+        {
+            var errors = (from state in ModelState from error in state.Value.Errors select error.ErrorMessage).ToList();
+            return BadRequest(new ApiResponse<object>(Result.Fail(new ModelStateInvalidError(errors))));
+        }
+
         var apiResponse = new ApiResponse<object>(result); 
 
         if (result.IsSuccess)

@@ -6,6 +6,9 @@
                     <div class="panel-heading">
                         <h3 class="pt-3 font-weight-bold">Login</h3>
                     </div>
+                    <div *ngIf="errorMessage" class="text-danger ps-3" role="alert">
+                        <span>{{errorMessage}}</span>
+                    </div>
                     <div class="panel-body p-3">
                         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
                             <div class="form-group pt-3">

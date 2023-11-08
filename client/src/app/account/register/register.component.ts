@@ -32,15 +32,18 @@ export class RegisterComponent {
   get form() { return this.registerForm.controls; }
 
   onSubmit() {
-    // this.submitted = true;
+    this.submitted = true;
 
-    // if (this.registerForm.invalid) {
-    //   return;
-    // }
-
+    if (this.registerForm.invalid) {
+      return;
+    }
+    this.errors = [];
     this.accountService.register(this.registerForm.value).subscribe({
       next: () => this.router.navigateByUrl('/dashboard'),
-      error: error => this.errors = error.errors
+      error: error => {
+        if(error.value) this.errors = error.value
+        else this.errors?.push(error.message)
+        }
     })
   }
 

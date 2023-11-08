@@ -9,6 +9,7 @@ import { faHouse, faPlus, faKey } from '@fortawesome/free-solid-svg-icons';
 import { CoreModule } from './core/core.module';
 import { HomeModule } from './home/home.module';
 import { TokenInterceptor } from './core/interceptors/token.interceptor';
+import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { TokenInterceptor } from './core/interceptors/token.interceptor';
     CoreModule
   ],
   providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},
   ],
   bootstrap: [AppComponent]

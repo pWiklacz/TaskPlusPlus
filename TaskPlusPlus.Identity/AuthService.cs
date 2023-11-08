@@ -1,13 +1,19 @@
 ﻿using FluentResults;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Encodings.Web;
 using TaskPlusPlus.Application.Constants;
 using TaskPlusPlus.Application.Contracts.Identity;
+using TaskPlusPlus.Application.Contracts.Infrastructure;
 using TaskPlusPlus.Application.Models.Identity;
+using TaskPlusPlus.Application.Models.Mail;
+using TaskPlusPlus.Domain.Errors;
 using TaskPlusPlus.Identity.Errors;
 using TaskPlusPlus.Identity.Extensions;
 using TaskPlusPlus.Identity.Models;
@@ -17,15 +23,21 @@ public class AuthService : IAuthService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly IEmailSender _emailSender;
     private readonly JwtSettings _jwtSettings;
+    private readonly IWebHostEnvironment _environment;
 
     public AuthService(UserManager<ApplicationUser> userManager,
         IOptions<JwtSettings> jwtSettings,
-        SignInManager<ApplicationUser> signInManager)
+        SignInManager<ApplicationUser> signInManager,
+        IEmailSender emailSender, 
+        IWebHostEnvironment environment)
     {
         _userManager = userManager;
         _jwtSettings = jwtSettings.Value;
         _signInManager = signInManager;
+        _emailSender = emailSender;
+        _environment = environment;
     }
 
     public async Task<Result<AuthResponse>> Login(AuthRequest request)
@@ -85,6 +97,41 @@ public class AuthService : IAuthService
         {
             return Result.Fail(new EmailAlreadyExistError());
         }
+    }
+
+    public async Task<Result> ForgotPassword(ForgotPasswordRequest request)
+    {
+        var user = await _userManager.FindByEmailAsync(request.Email);
+
+        if (user == null)
+        {
+            return Result.Fail(new BaseError(400, "Invalid Request"));
+        }
+
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var param = new Dictionary<string, string?>
+        {
+            {"token", token },
+            {"email", request.Email }
+        };
+
+        string templateFolderPath = Path.Combine(_environment.ContentRootPath, "..", "TaskPlusPlus.Infrastructure", "Email", "EmailTemplates");
+        string templateFilePath = Path.Combine(templateFolderPath, "ForgotPasswordEmail.html");
+        string emailTemplate = await System.IO.File.ReadAllTextAsync(templateFilePath);
+        emailTemplate = emailTemplate.Replace("{{BackUrl}}", request.ClientUri);
+
+        var email = new Email
+        {
+            To = request.Email,
+            RecipientName = user.FirstName,
+            Subject = "Reset your Password",
+            Body = emailTemplate,
+            IsHtml = true
+        };
+
+        await _emailSender.SendEmailAsync(email);
+
+        return Result.Ok();
     }
 
     private async Task<JwtSecurityToken> GenerateToken(ApplicationUser user)

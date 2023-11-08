@@ -21,7 +21,14 @@ public class AccountController : BaseController
     [HttpPost("register")]
     public async Task<ActionResult<RegistrationResponse>> Register(RegistrationRequest request)
     {
+      
         return FromResult(await _authenticationService.Register(request));
+    }
+
+    [HttpPost("ForgotPassword")]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+    {
+        return FromResult(await _authenticationService.ForgotPassword(request));
     }
 }
 

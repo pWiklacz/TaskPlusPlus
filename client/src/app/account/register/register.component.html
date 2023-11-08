@@ -2,44 +2,87 @@
     <div class="container">
         <div class="row d-flex align-items-center justify-content-center">
             <div class="col-lg-5 col-md-7">
-                <div class="panel border bg-white">
+                <div class="panel border bg-white ">
                     <div class="panel-heading">
-                        <h3 class="pt-3 font-weight-bold">Sign Up</h3>
+                        <h3 class="py-3 font-weight-bold">Sign Up</h3>
                     </div>
-                    <div class="panel-body p-3">
+                    <ul class="text-danger list-unstyled" *ngIf="errors">
+                        <li class="ps-3" *ngFor="let error of errors">
+                            <b>{{error}}</b>
+                        </li>
+                    </ul>
+                    <div class="panel-body px-3 pb-3">
                         <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-                        <div class="row">
-                            <div class="form-group pt-3 col-md-6 mb-2">
-                                <div class="input-field">
-                                    <span class="fa fa-user fa-fw me-1 text-primary"></span>
-                                    <input class="form-control" formControlName="firstName"  type="text" placeholder="FirstName">
+                            <div class="row">
+                                <div class="form-group pt-3 col-md-6 mb-2">
+                                    <div class="input-field" [class.error]="submitted && form.firstName.invalid">
+                                        <span class="fa fa-user fa-fw me-1 text-primary"></span>
+                                        <input class="form-control"
+                                            [class.is-invalid]="submitted && form.firstName.invalid"
+                                            formControlName="firstName" type="text" placeholder="FirstName">
+                                    </div>
+                                    <div *ngIf="submitted && form.firstName.errors" class="errorMessage">
+                                        <div *ngIf="form.firstName.errors?.['required']"> <i
+                                                class="fa fa-exclamation-circle" aria-hidden="true"></i> First name is
+                                            required</div>
+                                    </div>
+                                </div>
+                                <div class="form-group pt-3 col-md-6 mb-2">
+                                    <div class="input-field" [class.error]="submitted && form.lastName.invalid">
+                                        <span class="fa fa-user fa-fw me-1  text-primary"></span>
+                                        <input class="form-control"
+                                            [class.is-invalid]="submitted && form.lastName.invalid"
+                                            formControlName="lastName" type="text" placeholder="LastName">
+                                    </div>
+                                    <div *ngIf="submitted && form.lastName.errors" class="errorMessage">
+                                        <div *ngIf="form.lastName.errors?.['required']"> <i
+                                                class="fa fa-exclamation-circle" aria-hidden="true"></i> Last name is
+                                            required</div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-group pt-3 col-md-6 mb-2">
-                                <div class="input-field">
-                                    <span class="fa fa-user fa-fw me-1  text-primary" ></span>
-                                    <input class="form-control" formControlName="lastName" type="text" placeholder="LastName">
-                                </div>
-                            </div>
-                        </div>
                             <div class="form-group pt-3">
-                                <div class="input-field">
-                                    <span class="fa fa-envelope fa-fw me-1  text-primary"></span>
-                                    <input class="form-control" formControlName="email"  type="text" placeholder="Email">
+                                <div class="input-field" [class.error]="submitted && form.email.invalid">
+                                    <span class="fa fa-envelope p-2 text-primary"></span>
+                                    <input class="form-control" [class.is-invalid]="submitted && form.email.invalid"
+                                        formControlName="email" type="text" placeholder="Email">
+                                </div>
+                                <div *ngIf="submitted && form.email.errors" class="errorMessage">
+                                    <div *ngIf="form.email.errors?.['required']"> <i class="fa fa-exclamation-circle"
+                                            aria-hidden="true"></i> Email is required</div>
+                                    <div *ngIf="form.email.errors?.['email']"> <i class="fa fa-exclamation-circle"
+                                            aria-hidden="true"></i> Email must be a valid email address</div>
                                 </div>
                             </div>
                             <div class="form-group pt-3">
-                                <div class="input-field">
-                                    <span class="fa fa-lock fa-fw me-1 text-primary"></span>
-                                    <input class="form-control" formControlName="password"  [type]="type" placeholder="Password">
+                                <div class="input-field" [class.error]="submitted && form.password.invalid">
+                                    <span class="fa fa-lock p-2 text-primary"></span>
+                                    <input [class.is-invalid]="submitted && form.password.invalid" class="form-control"
+                                        formControlName="password" [type]="type" placeholder="Password">
                                     <span (click)="hideShowPass()" class="fa {{eyeIcon}} text-primary"></span>
                                 </div>
+                                <div *ngIf="submitted && form.password.errors" class="errorMessage">
+                                    <div *ngIf="form.password.errors?.['required']"> <i class="fa fa-exclamation-circle"
+                                            aria-hidden="true"></i> Password is required</div>
+                                    <div *ngIf="form.password.errors?.['pattern']"> <i class="fa fa-exclamation-circle"
+                                            aria-hidden="true"></i> Password should have at least 6 characters long,
+                                        contain at least one digit, one lowercase letter, one uppercase letter, and one
+                                        special character</div>
+                                </div>
                             </div>
                             <div class="form-group pt-3">
-                                <div class="input-field">
+                                <div class="input-field" [class.error]="submitted && form.confirmPassword.invalid">
                                     <span class="fa fa-key fa-fw me-1  text-primary"></span>
-                                    <input class="form-control" formControlName="confirmPassword" [type]="type" placeholder="Confirm password">
+                                    <input [class.is-invalid]="submitted && form.confirmPassword.invalid"
+                                        class="form-control" formControlName="confirmPassword" [type]="type"
+                                        placeholder="Confirm password">
                                     <span (click)="hideShowPass()" class="fa {{eyeIcon}} text-primary"></span>
+                                </div>
+                                <div *ngIf="submitted && form.confirmPassword.errors" class="errorMessage">
+                                    <div *ngIf="form.confirmPassword.errors?.['required']"> <i class="fa fa-exclamation-circle"
+                                            aria-hidden="true"></i> Confirmation is required</div>
+                                    <div *ngIf="form.confirmPassword.errors?.['mustMatch']"> <i class="fa fa-exclamation-circle"
+                                            aria-hidden="true"></i> Passwords must match</div>
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary btn-block mt-4 w-100">Sign Up</button>
@@ -47,25 +90,26 @@
                                 <div class="text-center py-3">
                                     <button type="button" class="btn btn-link btn-floating mx-1">
                                         <i class="fa fa-facebook-f fa-lg text-primary"></i>
-                                      </button>
-                                  
-                                      <button type="button" class="btn btn-link btn-floating mx-1">
+                                    </button>
+
+                                    <button type="button" class="btn btn-link btn-floating mx-1">
                                         <i class="fa fa-google fa-lg text-primary"></i>
-                                      </button>
-                                  
-                                      <button type="button" class="btn btn-link btn-floating mx-1">
+                                    </button>
+
+                                    <button type="button" class="btn btn-link btn-floating mx-1">
                                         <i class="fa fa-twitter fa-lg text-primary"></i>
-                                      </button>
-                                  
-                                      <button type="button" class="btn btn-link btn-floating mx-1">
+                                    </button>
+
+                                    <button type="button" class="btn btn-link btn-floating mx-1">
                                         <i class="fa fa-github fa-lg text-primary"></i>
-                                      </button>
+                                    </button>
                                 </div>
-                             </div>
-                            <div class="text-center text-muted">Already have account? <a id="forget" routerLink="/account/login">Login</a></div>
+                            </div>
+                            <div class="text-center text-muted">Already have account? <a id="forget"
+                                    routerLink="/account/login">Login</a></div>
                         </form>
                     </div>
-                   
+
                 </div>
             </div>
         </div>

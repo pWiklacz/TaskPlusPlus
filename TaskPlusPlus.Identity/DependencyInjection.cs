@@ -28,11 +28,15 @@ public static class DependencyInjection
         services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<TaskPlusPlusIdentityDbContext>().AddDefaultTokenProviders();
 
+        services.Configure<DataProtectionTokenProviderOptions>(opt =>
+            opt.TokenLifespan = TimeSpan.FromHours(2));
+
         services.AddTransient<IAuthService, AuthService>();
 
         services.Configure<IdentityOptions>(options =>
         {
             options.User.RequireUniqueEmail = true; // Ensure that email addresses are unique.
+            
             // Other identity options...
         });
 

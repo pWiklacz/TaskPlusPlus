@@ -14,7 +14,7 @@ public class EmailSender : IEmailSender
     {
         _mailSettings = mailSettingsOptions.Value;
     }
-    public async Task<bool> SendEmail(Application.Models.Mail.Email email)
+    public async Task<bool> SendEmailAsync(Application.Models.Mail.Email email)
     {
         try
         {
@@ -26,10 +26,12 @@ public class EmailSender : IEmailSender
 
             emailMessage.Subject = email.Subject;
 
-            var emailBodyBuilder = new BodyBuilder
-            {
-                TextBody = email.Body
-            };
+            var emailBodyBuilder = new BodyBuilder();
+
+            if (!email.IsHtml)
+                emailBodyBuilder.TextBody = email.Body;
+            else
+                emailBodyBuilder.HtmlBody = email.Body;
 
             emailMessage.Body = emailBodyBuilder.ToMessageBody();
 
@@ -43,7 +45,7 @@ public class EmailSender : IEmailSender
         }
         catch (Exception ex)
         {
-  
+            
             return false;
         }
     }

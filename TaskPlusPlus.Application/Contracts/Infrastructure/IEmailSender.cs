@@ -4,5 +4,5 @@ namespace TaskPlusPlus.Application.Contracts.Infrastructure;
 
 public interface IEmailSender
 {
-    Task<bool> SendEmail(Email email);
+    Task<bool> SendEmailAsync(Email email);
 }
