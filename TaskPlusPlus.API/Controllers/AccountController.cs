@@ -21,14 +21,27 @@ public class AccountController : BaseController
     [HttpPost("register")]
     public async Task<ActionResult<RegistrationResponse>> Register(RegistrationRequest request)
     {
-      
+
         return FromResult(await _authenticationService.Register(request));
     }
 
-    [HttpPost("ForgotPassword")]
+    [HttpPost("forgotPassword")]
     public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
     {
         return FromResult(await _authenticationService.ForgotPassword(request));
+    }
+
+    [HttpPost("resetPassword")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+    {
+        return FromResult(await _authenticationService.ResetPassword(request));
+    }
+
+    
+    [HttpGet("emailConfirmation")]
+    public async Task<IActionResult> EmailConfirmation([FromQuery] EmailConfirmationRequest request)
+    {
+        return FromResult(await _authenticationService.EmailConfirmation(request));
     }
 }
 

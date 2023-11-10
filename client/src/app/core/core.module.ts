@@ -5,6 +5,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RouterModule } from '@angular/router';
 import { NavBarLoggedComponent } from './nav-bar-logged/nav-bar-logged.component';
 import { SharedModule } from '../shared/shared.module';
+import { ToastModule } from 'primeng/toast';
 
 
 
@@ -17,11 +18,12 @@ import { SharedModule } from '../shared/shared.module';
     CommonModule,
     FontAwesomeModule,
     RouterModule,
-    SharedModule
+    SharedModule,
   ],
   exports: [
     NavBarUnloggedComponent,
-    NavBarLoggedComponent
+    NavBarLoggedComponent,
+    ToastModule
   ]
 })
 export class CoreModule { }

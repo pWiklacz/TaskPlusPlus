@@ -1,0 +1,18 @@
+<div class="outer">
+    <div class="container">
+        <div class="row d-flex align-items-center justify-content-center">
+            <div class="col-lg-5 col-md-7">
+                <div class="panel border bg-white ">
+                    <div class="panel-heading">
+                        <h1 class="py-3 font-weight-bold">Email Confirmation</h1>
+                    </div>
+                    <div *ngIf="showError" class="alert alert-danger" role="alert">
+                        {{errorMessage}}
+                    </div>
+                    <div *ngIf="showSuccess" class="alert alert-success" role="alert">
+                        Your email has been successfully confirmed. Please <a [routerLink]="['/account/login']"> click here to log in. </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

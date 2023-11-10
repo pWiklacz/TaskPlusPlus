@@ -10,6 +10,9 @@ import { CoreModule } from './core/core.module';
 import { HomeModule } from './home/home.module';
 import { TokenInterceptor } from './core/interceptors/token.interceptor';
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+
 
 
 @NgModule({
@@ -23,11 +26,13 @@ import { ErrorInterceptor } from './core/interceptors/error.interceptor';
     FontAwesomeModule,
     HttpClientModule,
     HomeModule,
-    CoreModule
+    CoreModule,
+    ToastModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},
+    [MessageService]
   ],
   bootstrap: [AppComponent]
 })

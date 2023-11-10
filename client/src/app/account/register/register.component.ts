@@ -3,6 +3,8 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { AccountService } from '../account.service';
 import { Router } from '@angular/router';
 import { MustMatch } from 'src/app/shared/validators/passwords-must-match-validator';
+import { UserForRegistrationDto } from 'src/app/shared/models/UserForRegistraionDto';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-register',
@@ -10,6 +12,7 @@ import { MustMatch } from 'src/app/shared/validators/passwords-must-match-valida
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent {
+  clientUrl = environment.clientUrl;
   errors: string[] | null = null;
   submitted = false;
   type: string = "password";
@@ -38,7 +41,18 @@ export class RegisterComponent {
       return;
     }
     this.errors = [];
-    this.accountService.register(this.registerForm.value).subscribe({
+
+    const formValues = this.registerForm.value;
+
+    const user: UserForRegistrationDto = {
+      firstName: formValues.firstName!,
+      lastName: formValues.lastName!,
+      email: formValues.email!,
+      password: formValues.password!,
+      clientURI: this.clientUrl + 'account/emailconfirmation'
+    };
+
+    this.accountService.register(user).subscribe({
       next: () => this.router.navigateByUrl('/dashboard'),
       error: error => {
         if(error.value) this.errors = error.value

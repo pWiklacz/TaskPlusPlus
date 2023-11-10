@@ -16,4 +16,7 @@ public class RegistrationRequest
     [Required]
     [MinLength(6)]
     public string Password { get; set; } = null!;
+
+    [Required]
+    public string ClientURI { get; set; } = null!;
 }

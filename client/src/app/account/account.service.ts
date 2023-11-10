@@ -1,10 +1,16 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, map, of, ReplaySubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { User } from '../shared/models/user';
 import { ApiResponse } from '../shared/models/ApiResponse';
+import { ForgotPasswordDto } from '../shared/models/ForgotPasswordDto';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { ResetPasswordDto } from '../shared/models/ResetPasswordDto';
+import { UserForRegistrationDto } from '../shared/models/UserForRegistraionDto';
+import { EmailConfirmationDto } from '../shared/models/EmailConfirmationDto';
+import { CustomEncoder } from '../shared/custom-encoder';
 
 @Injectable({
   providedIn: 'root'
@@ -50,10 +56,10 @@ export class AccountService {
     )
   }
 
-  register(values: any) {
+  register(values: UserForRegistrationDto) {
     return this.http.post<any>(this.apiUrl + 'Account/register', values).pipe(
       map(user => {
-        
+
       })
     )
   }
@@ -67,5 +73,21 @@ export class AccountService {
 
   isLoggedIn() {
     return !!localStorage.getItem('token');
+  }
+
+  forgotPassword(values: ForgotPasswordDto) {
+    return this.http.post(this.apiUrl + 'Account/forgotPassword', values);
+  }
+
+  resetPassword(values: ResetPasswordDto) {
+    return this.http.post(this.apiUrl + 'Account/resetPassword', values);
+  }
+
+  confirmEmail(values: EmailConfirmationDto) {
+    let params = new HttpParams({ encoder: new CustomEncoder() })
+    params = params.append('token', values.token);
+    params = params.append('email', values.email);
+
+    return this.http.get(this.apiUrl + 'Account/emailConfirmation', { params: params })
   }
 }

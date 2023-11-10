@@ -3,11 +3,13 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { AccountService } from '../account.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
+  providers: [MessageService]
 })
 export class LoginComponent {
   public errorMessage?: string;
@@ -22,7 +24,8 @@ export class LoginComponent {
   submitted = false;
 
   constructor(private accountService: AccountService, private router: Router,
-    private activatedRoute: ActivatedRoute) {
+    private activatedRoute: ActivatedRoute,
+    private messageService: MessageService) {
     this.returnUrl = this.activatedRoute.snapshot.queryParams['returnUrl'] || '/'
   }
 

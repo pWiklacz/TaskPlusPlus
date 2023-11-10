@@ -30,7 +30,7 @@ public class AuthService : IAuthService
     public AuthService(UserManager<ApplicationUser> userManager,
         IOptions<JwtSettings> jwtSettings,
         SignInManager<ApplicationUser> signInManager,
-        IEmailSender emailSender, 
+        IEmailSender emailSender,
         IWebHostEnvironment environment)
     {
         _userManager = userManager;
@@ -46,9 +46,13 @@ public class AuthService : IAuthService
 
         if (user == null)
             return Result.Fail(new LoginError());
-        var result = await _signInManager.PasswordSignInAsync(user.UserName!, request.Password, false, lockoutOnFailure: false);
 
-        if (!result.Succeeded)
+        if (!await _userManager.IsEmailConfirmedAsync(user))
+        {
+            return Result.Fail(new EmailNotConfirmedError());
+        }
+
+        if (!await _userManager.CheckPasswordAsync(user, request.Password))
         {
             return Result.Fail(new LoginError());
         }
@@ -74,7 +78,7 @@ public class AuthService : IAuthService
             FirstName = request.FirstName,
             LastName = request.LastName,
             UserName = request.Email,
-            EmailConfirmed = true
+            EmailConfirmed = false
         };
 
         var existingEmail = await _userManager.FindByEmailAsync(request.Email);
@@ -85,6 +89,33 @@ public class AuthService : IAuthService
 
             if (result.Succeeded)
             {
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                var param = new Dictionary<string, string?>
+                {
+                    {"token", token },
+                    {"email", user.Email }
+                };
+
+                var callback = QueryHelpers.AddQueryString(request.ClientURI, param);
+
+                string templateFolderPath = Path.Combine(_environment.ContentRootPath, "..", "TaskPlusPlus.Infrastructure", "Email", "EmailTemplates");
+                string templateFilePath = Path.Combine(templateFolderPath, "ConfirmationEmail.html");
+                string emailTemplate = await System.IO.File.ReadAllTextAsync(templateFilePath);
+                emailTemplate = emailTemplate.Replace("{{BackUrl}}", callback);
+                emailTemplate = emailTemplate.Replace("{{UserName}}", user.FirstName);
+                emailTemplate = emailTemplate.Replace("{{HomeUrl}}", "https://localhost:4200/");
+
+                var email = new Email
+                {
+                    To = request.Email,
+                    RecipientName = user.FirstName,
+                    Subject = "Confirm your email",
+                    Body = emailTemplate,
+                    IsHtml = true
+                };
+
+                await _emailSender.SendEmailAsync(email);
+
                 await _userManager.AddToRoleAsync(user, "User");
                 return new RegistrationResponse() { UserId = user.Id };
             }
@@ -115,10 +146,12 @@ public class AuthService : IAuthService
             {"email", request.Email }
         };
 
+        var callback = QueryHelpers.AddQueryString(request.ClientUri, param);
+
         string templateFolderPath = Path.Combine(_environment.ContentRootPath, "..", "TaskPlusPlus.Infrastructure", "Email", "EmailTemplates");
         string templateFilePath = Path.Combine(templateFolderPath, "ForgotPasswordEmail.html");
         string emailTemplate = await System.IO.File.ReadAllTextAsync(templateFilePath);
-        emailTemplate = emailTemplate.Replace("{{BackUrl}}", request.ClientUri);
+        emailTemplate = emailTemplate.Replace("{{BackUrl}}", callback);
 
         var email = new Email
         {
@@ -131,7 +164,45 @@ public class AuthService : IAuthService
 
         await _emailSender.SendEmailAsync(email);
 
-        return Result.Ok();
+        return Result.Ok().WithSuccess("The link has been sent, please check your email to reset your password. \n" +
+        "Didn’t get them? Check the email address or ask to resend the instructions.");
+    }
+
+    public async Task<Result> ResetPassword(ResetPasswordRequest request)
+    {
+        var user = await _userManager.FindByEmailAsync(request.Email);
+
+        if (user == null)
+        {
+            return Result.Fail(new BaseError(400, "Invalid Request"));
+        }
+
+        var resetPassResult = await _userManager.ResetPasswordAsync(user, request.Token, request.Password);
+        if (!resetPassResult.Succeeded)
+        {
+            return Result.Fail(new ResetPasswordError(resetPassResult.Errors.ToList()));
+        }
+
+        return Result.Ok().WithSuccess("The password has been successfully reset");
+    }
+
+    public async Task<Result> EmailConfirmation(EmailConfirmationRequest request)
+    {
+        var user = await _userManager.FindByEmailAsync(request.Email);
+
+        if (user == null)
+        {
+            return Result.Fail(new BaseError(400, "Invalid Email Confirmation Request"));
+        }
+
+        var confirmResult = await _userManager.ConfirmEmailAsync(user, request.Token);
+
+        if (!confirmResult.Succeeded)
+        {
+            return Result.Fail(new BaseError(400, "Invalid Email Confirmation Request"));
+        }
+
+        return Result.Ok().WithSuccess("Email confirmed successfully");
     }
 
     private async Task<JwtSecurityToken> GenerateToken(ApplicationUser user)
@@ -148,11 +219,11 @@ public class AuthService : IAuthService
 
         var claims = new[]
         {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName!),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email!),
-                new Claim(CustomClaimTypes.Uid, user.Id)
-            }
+            new Claim(JwtRegisteredClaimNames.Sub, user.UserName!),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(JwtRegisteredClaimNames.Email, user.Email!),
+            new Claim(CustomClaimTypes.Uid, user.Id)
+        }
         .Union(userClaims)
         .Union(roleClaims);
 
