@@ -39,11 +39,15 @@ export class LoginComponent {
     }
     
     this.accountService.login(this.loginForm.value).subscribe({
-      next: () => this.router.navigateByUrl(this.returnUrl),
+      next: () => this.router.navigateByUrl('dashboard'),
       error: (err: HttpErrorResponse) => {
         console.log(err);
         this.errorMessage = err.message}
     })
+  }
+
+  externalLogin = () => {
+   this.accountService.signInWithFB();
   }
 
   hideShowPass() {

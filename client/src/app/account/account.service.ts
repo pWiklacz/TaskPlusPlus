@@ -1,57 +1,51 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, map, of, ReplaySubject } from 'rxjs';
+import { BehaviorSubject, map, of, ReplaySubject, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { User } from '../shared/models/user';
 import { ApiResponse } from '../shared/models/ApiResponse';
 import { ForgotPasswordDto } from '../shared/models/ForgotPasswordDto';
-import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ResetPasswordDto } from '../shared/models/ResetPasswordDto';
 import { UserForRegistrationDto } from '../shared/models/UserForRegistraionDto';
 import { EmailConfirmationDto } from '../shared/models/EmailConfirmationDto';
 import { CustomEncoder } from '../shared/custom-encoder';
+import { FacebookLoginProvider, SocialAuthService, SocialUser } from "@abacritt/angularx-social-login";
+import { GoogleLoginProvider } from "@abacritt/angularx-social-login";
+import { ExternalAuthDto } from '../shared/models/ExternalAuthDto';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
   apiUrl = environment.apiUrl;
-  private currentUserSource = new ReplaySubject<User | null>(1);
-  currentUser$ = this.currentUserSource.asObservable();
-
   isLoggedIn$ = new BehaviorSubject<boolean>(false);
+  isExternalAuth$ = new BehaviorSubject<boolean>(false);
+  private extAuthChangeSub = new Subject<SocialUser>();
+  public extAuthChanged = this.extAuthChangeSub.asObservable();
 
-  constructor(private http: HttpClient, private router: Router) { }
-
-  // loadCurrentUser(token: string | null) {
-  //   if (token == null) {
-  //     this.currentUserSource.next(null);
-  //     return of(null);
-  //   }
-
-  //   let headers = new HttpHeaders();
-  //   headers = headers.set('Authorization', `Bearer ${token}`);
-
-  //   return this.http.get<User>(this.apiUrl + 'Account', { headers }).pipe(
-  //     map(user => {
-  //       if (user) {
-  //         localStorage.setItem('token', user.token);
-  //         this.currentUserSource.next(user);
-  //         return user;
-  //       } else {
-  //         return null;
-  //       }
-  //     })
-  //   )
-  // }
+  constructor(private http: HttpClient, private router: Router, private externalAuthService: SocialAuthService) {
+    this.externalAuthService.authState.subscribe((user) => {
+      if (user) {
+        this.extAuthChangeSub.next(user);
+        const externalAuth: ExternalAuthDto = {
+          email: user.email,
+          provider: user.provider,
+          accessToken: user.idToken ?? user.authToken,
+          firstName: user.firstName,
+          lastName: user.lastName ?? ''
+        }
+        this.validateExternalAuth(externalAuth);
+      }
+    })
+  }
 
   login(values: any) {
     return this.http.post<ApiResponse<User>>(this.apiUrl + 'Account/login', values).pipe(
       map(response => {
         localStorage.setItem('token', response.value.token);
         this.isLoggedIn$.next(true);
-        this.currentUserSource.next(response.value);
+        this.isExternalAuth$.next(false);
       })
     )
   }
@@ -67,7 +61,11 @@ export class AccountService {
   logout() {
     localStorage.removeItem('token');
     this.isLoggedIn$.next(false);
-    this.currentUserSource.next(null);
+
+    if (this.isExternalAuth$.value) {
+      this.signOutExternal();
+    }
+
     this.router.navigateByUrl('/');
   }
 
@@ -90,4 +88,32 @@ export class AccountService {
 
     return this.http.get(this.apiUrl + 'Account/emailConfirmation', { params: params })
   }
+
+  externalLogin(values: ExternalAuthDto) {
+    return this.http.post<ApiResponse<User>>(this.apiUrl + 'Account/externalLogin', values);
+  }
+
+  signInWithFB(): void {
+    this.externalAuthService.signIn(FacebookLoginProvider.PROVIDER_ID);
+  }
+
+  signOutExternal = () => {
+    this.externalAuthService.signOut();
+  }
+
+  private validateExternalAuth(externalAuth: ExternalAuthDto) {
+    this.externalLogin(externalAuth)
+      .subscribe({
+        next: (res) => {
+          localStorage.setItem("token", res.value.token);
+          this.isLoggedIn$.next(true);
+          this.isExternalAuth$.next(true);
+          this.router.navigate(['dashboard']);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.signOutExternal();
+        }
+      });
+  }
+
 }

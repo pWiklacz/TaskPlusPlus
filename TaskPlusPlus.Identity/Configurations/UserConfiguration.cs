@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using TaskPlusPlus.Application.Constants;
 using TaskPlusPlus.Identity.Models;
 
 namespace TaskPlusPlus.Identity.Configurations;
@@ -17,7 +18,7 @@ public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
             FirstName = "System",
             LastName = "Admin",
             UserName = "admin@localhost.com",
-            NormalizedUserName = "ADMIN@LOCALHOST.COM"
+            NormalizedUserName = "ADMIN@LOCALHOST.COM",
         };
         admin.PasswordHash = hasher.HashPassword(admin, "P@ssword1");
         admin.EmailConfirmed = true;

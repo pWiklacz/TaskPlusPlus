@@ -20,7 +20,7 @@ public static class ApplicationServicesExtensions
             .AddIdentity(config);
 
         // Add services to the container.
-
+        services.AddHttpClient();
         services.AddControllers()
             .ConfigureApiBehaviorOptions(options =>
             {

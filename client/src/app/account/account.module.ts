@@ -10,6 +10,8 @@ import { CoreModule } from '../core/core.module';
 import { ToastModule } from 'primeng/toast';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { EmailConfirmationComponent } from './email-confirmation/email-confirmation.component';
+import { SocialLoginModule, SocialAuthServiceConfig, GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
+import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,8 @@ import { EmailConfirmationComponent } from './email-confirmation/email-confirmat
     CommonModule,
     AccountRoutingModule,
     SharedModule,
-    CoreModule
+    CoreModule,
+    GoogleSigninButtonModule,
   ]
 })
 export class AccountModule { }

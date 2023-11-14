@@ -10,4 +10,5 @@ public interface IAuthService
     Task<Result> ForgotPassword(ForgotPasswordRequest request);
     Task<Result> ResetPassword(ResetPasswordRequest request);
     Task<Result> EmailConfirmation(EmailConfirmationRequest request);
+    Task<Result<AuthResponse>> ExternalLogin(ExternalAuthRequest request);
 }

@@ -37,11 +37,17 @@ public class AccountController : BaseController
         return FromResult(await _authenticationService.ResetPassword(request));
     }
 
-    
     [HttpGet("emailConfirmation")]
     public async Task<IActionResult> EmailConfirmation([FromQuery] EmailConfirmationRequest request)
     {
         return FromResult(await _authenticationService.EmailConfirmation(request));
     }
+
+    [HttpPost("externalLogin")]
+    public async Task<IActionResult> ExternalLogin([FromBody] ExternalAuthRequest request)
+    {
+        return FromResult(await _authenticationService.ExternalLogin(request));
+    }
+
 }
 

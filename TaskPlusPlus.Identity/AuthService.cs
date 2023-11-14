@@ -1,10 +1,12 @@
 ﻿using FluentResults;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -12,6 +14,7 @@ using TaskPlusPlus.Application.Constants;
 using TaskPlusPlus.Application.Contracts.Identity;
 using TaskPlusPlus.Application.Contracts.Infrastructure;
 using TaskPlusPlus.Application.Models.Identity;
+using TaskPlusPlus.Application.Models.Identity.ExternalLogin;
 using TaskPlusPlus.Application.Models.Mail;
 using TaskPlusPlus.Domain.Errors;
 using TaskPlusPlus.Identity.Errors;
@@ -25,16 +28,25 @@ public class AuthService : IAuthService
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IEmailSender _emailSender;
     private readonly JwtSettings _jwtSettings;
+    private readonly FacebookSettings _facebookSettings;
+    private readonly GoogleSettings _googleSettings;
     private readonly IWebHostEnvironment _environment;
+    private readonly IHttpClientFactory _httpClientFactory;
 
     public AuthService(UserManager<ApplicationUser> userManager,
         IOptions<JwtSettings> jwtSettings,
+        IOptions<FacebookSettings> facebookSettings,
+        IOptions<GoogleSettings> googleSettings,
         SignInManager<ApplicationUser> signInManager,
         IEmailSender emailSender,
-        IWebHostEnvironment environment)
+        IWebHostEnvironment environment,
+        IHttpClientFactory httpClientFactory)
     {
         _userManager = userManager;
+        _httpClientFactory = httpClientFactory;
         _jwtSettings = jwtSettings.Value;
+        _googleSettings = googleSettings.Value;
+        _facebookSettings = facebookSettings.Value;
         _signInManager = signInManager;
         _emailSender = emailSender;
         _environment = environment;
@@ -205,6 +217,121 @@ public class AuthService : IAuthService
         return Result.Ok().WithSuccess("Email confirmed successfully");
     }
 
+    public async Task<Result<AuthResponse>> ExternalLogin(ExternalAuthRequest request)
+    {
+        var socialTokenValidateResult = await ValidateSocialToken(request);
+
+        if (socialTokenValidateResult.IsFailed)
+            return socialTokenValidateResult.ToResult();
+
+        var info = new UserLoginInfo(request.Provider, socialTokenValidateResult.Value, request.Provider);
+
+        var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+
+        if (user is null)
+        {
+            user = await _userManager.FindByEmailAsync(request.Email);
+
+            if (user is null)
+            {
+                var registerSocialUserResult = await RegisterSocialUser(request);
+
+                if (registerSocialUserResult.IsFailed)
+                    return registerSocialUserResult.ToResult();
+
+                user = registerSocialUserResult.Value;
+
+                await _userManager.AddLoginAsync(user, info);
+            }
+            else
+            {
+                await _userManager.AddLoginAsync(user, info);
+            }
+        }
+
+        if (user == null)
+            return Result.Fail(new BaseError(400, "Invalid External Authentication."));
+
+        JwtSecurityToken jwtSecurityToken = await GenerateToken(user);
+
+        AuthResponse response = new()
+        {
+            Id = user.Id,
+            Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
+            Email = user.Email!,
+            UserName = user.UserName!
+        };
+
+        return response;
+    }
+
+    private async Task<Result<string>> ValidateSocialToken(ExternalAuthRequest request)
+    {
+        return request.Provider switch
+        {
+            Constants.LoginProviders.Facebook => await ValidateFacebookToken(request),
+            Constants.LoginProviders.Google => await ValidateGoogleToken(request),
+            _ => Result.Fail(new BaseError(400, $"{request.Provider} provider is not supported."))
+        };
+    }
+
+    private async Task<Result<string>> ValidateGoogleToken(ExternalAuthRequest externalAuth)
+    {
+        try
+        {
+            var settings = new GoogleJsonWebSignature.ValidationSettings()
+            {
+                Audience = new List<string>() { _googleSettings.TokenAudience! }
+            };
+
+            var payload = await GoogleJsonWebSignature.ValidateAsync(externalAuth.AccessToken, settings);
+
+            return payload.Subject;
+        }
+        catch (Exception ex)
+        {
+            return Result.Fail(ex.Message);
+        }
+    }
+
+    private async Task<Result<string>> ValidateFacebookToken(ExternalAuthRequest request)
+    {
+        var httpClient = _httpClientFactory.CreateClient();
+        var appAccessTokenResponse = await httpClient.GetFromJsonAsync<FacebookAppAccessTokenResponse>(
+            $"https://graph.facebook.com/oauth/access_token?client_id={_facebookSettings.ClientId!}&client_secret={_facebookSettings.ClientSecret!}&grant_type=client_credentials");
+        var response =
+            await httpClient.GetFromJsonAsync<FacebookTokenValidationResult>(
+                $"https://graph.facebook.com/debug_token?input_token={request.AccessToken}&access_token={appAccessTokenResponse!.AccessToken}");
+
+        if (response is null || !response.Data.IsValid)
+        {
+            return Result.Fail(new BaseError(400, $"{request.Provider} access token is not valid."));
+        }
+
+        return response.Data.UserId;
+    }
+
+    private async Task<Result<ApplicationUser>> RegisterSocialUser(ExternalAuthRequest request)
+    {
+        var user = new ApplicationUser()
+        {
+            Email = request.Email,
+            FirstName = request.FirstName,
+            UserName = request.Email,
+            LastName = request.LastName ?? String.Empty,
+            SecurityStamp = Guid.NewGuid().ToString(),
+        };
+
+        var result = await _userManager.CreateAsync(user);
+
+        if (!result.Succeeded)
+            return Result.Fail(new RegistrationError(result.Errors.ToList()));
+
+        await _userManager.AddToRoleAsync(user, "User");
+
+        return user;
+    }
+    
     private async Task<JwtSecurityToken> GenerateToken(ApplicationUser user)
     {
         var userClaims = await _userManager.GetClaimsAsync(user);
