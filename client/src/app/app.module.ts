@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faHouse, faPlus, faKey } from '@fortawesome/free-solid-svg-icons';
+import { faHouse, faPlus, faKey, faBars } from '@fortawesome/free-solid-svg-icons';
 import { CoreModule } from './core/core.module';
 import { HomeModule } from './home/home.module';
 import { TokenInterceptor } from './core/interceptors/token.interceptor';
@@ -15,10 +15,16 @@ import { MessageService } from 'primeng/api';
 import { SocialLoginModule, SocialAuthServiceConfig, FacebookLoginProvider } from '@abacritt/angularx-social-login';
 import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { environment } from 'src/environments/environment';
+import { ThemeSwitcherComponent } from './settings/theme-switcher/theme-switcher.component';
+import { ThemeService } from './core/services/theme.service';
+import { SettingsComponent } from './settings/settings.component';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { SettingsModule } from './settings/settings.module';
+import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -29,10 +35,13 @@ import { environment } from 'src/environments/environment';
     HomeModule,
     CoreModule,
     ToastModule,
-    SocialLoginModule
+    SocialLoginModule,
+    SettingsModule,
+    ModalModule.forRoot()
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
     [MessageService],
     {
@@ -53,12 +62,13 @@ import { environment } from 'src/environments/environment';
           console.error(err);
         }
       } as SocialAuthServiceConfig,
-    }
+    },
+    ThemeService
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
   constructor(library: FaIconLibrary) {
-    library.addIcons(faHouse, faPlus, faKey)
+    library.addIcons(faHouse, faPlus, faKey, faBars)
   }
 }

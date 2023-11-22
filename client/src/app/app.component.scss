@@ -1,0 +1,42 @@
+app-nav-bar {
+    position: fixed;
+    width: 100%;
+    top: 0px;
+    z-index: 2;
+    height: 3.5rem;
+}
+
+main {
+    position: absolute;
+    width: 100%;
+    top: 3.5rem;
+    z-index: 1;
+}
+
+app-side-nav {
+    position: absolute;
+    left: 0rem;
+    width: 0px;
+    height: calc(100vh - 3.5rem);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    overflow-x: hidden;
+    white-space: nowrap;
+    transition: width 250ms linear;
+}
+
+.app-side-nav-open {
+    width: 250px;
+}
+
+.display-area {
+    position: absolute;
+    left:0px;
+    width: 100%;
+    transition: left 250ms linear, width 250ms linear;
+}
+
+.display-area-shrink {
+    left: 250px;
+    width: calc(100% - 250px);
+}
+

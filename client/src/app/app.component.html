@@ -1,11 +1,29 @@
-<ng-container *ngIf="!isLoggedIn">
-   <app-nav-bar-unlogged></app-nav-bar-unlogged>
-</ng-container>
-<ng-container *ngIf="isLoggedIn">
- <app-nav-bar-logged></app-nav-bar-logged>
-</ng-container>
+<ngx-spinner size="large" color="#fff" type="square-jelly-box" [fullScreen]="true" class="bg-primary">
+   <p style="color: white"> Loading... </p>
+</ngx-spinner>
 
-<p-toast></p-toast>
-<div style="margin-top: 48px;">
-   <router-outlet></router-outlet>
+<div *ngIf="contentLoaded">
+   <ng-container *ngIf="!isLoggedIn">
+      <app-nav-bar-unlogged></app-nav-bar-unlogged>
+   </ng-container>
+
+   <ng-container *ngIf="isLoggedIn">
+      <app-nav-bar-logged (sideNavToggled)="sideNavStatus = $event;"></app-nav-bar-logged>
+   </ng-container>
+
+   <div class="container-fluid g-0">
+      <p-toast></p-toast>
+      <main>
+         <ng-container *ngIf="isLoggedIn">
+            <app-side-nav [sideNavStatus]="sideNavStatus" class="bg-secondary"
+               [ngClass]="{'app-side-nav-open': sideNavStatus}">
+            </app-side-nav>
+         </ng-container>
+         <div class="display-area" [class.p-3]="isLoggedIn"
+            [ngClass]="{'display-area-shrink' : sideNavStatus && isLoggedIn}">
+            <router-outlet>
+            </router-outlet>
+         </div>
+      </main>
+   </div>
 </div>
