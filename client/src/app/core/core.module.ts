@@ -6,11 +6,8 @@ import { RouterModule } from '@angular/router';
 import { NavBarLoggedComponent } from './nav-bar-logged/nav-bar-logged.component';
 import { SharedModule } from '../shared/shared.module';
 import { ToastModule } from 'primeng/toast';
-import { ThemeSwitcherComponent } from '../settings/theme-switcher/theme-switcher.component';
 import { SideNavComponent } from './side-nav/side-nav.component';
-import { SettingsModule } from '../settings/settings.module';
 import { NgxSpinnerModule } from 'ngx-spinner';
-
 
 
 @NgModule({
@@ -24,7 +21,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     FontAwesomeModule,
     RouterModule,
     SharedModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
   ],
   exports: [
     NavBarUnloggedComponent,

@@ -69,8 +69,8 @@ $table-bg-scale:              0% !default;
 
 // Forms
 
-$input-bg:                          $white !default;
-$input-color:                       $gray-900 !default;
+$input-bg:                          $dark !default;
+$input-color:                       $gray-500 !default;
 $input-border-color:                rgba($black, .6) !default;
 $input-group-addon-color:           $gray-500 !default;
 $input-group-addon-bg:              $gray-700 !default;
@@ -172,8 +172,6 @@ $breadcrumb-border-radius:          .25rem !default;
 // Code
 
 $pre-color:                         inherit !default;
-
-
 
 
 @import 'node_modules/bootstrap/scss/bootstrap';

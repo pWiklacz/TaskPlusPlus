@@ -9,7 +9,7 @@ using TaskPlusPlus.Domain.Entities;
 using TaskPlusPlus.Domain.ValueObjects.Category;
 
 namespace TaskPlusPlus.Application.Features.Categories.Commands.CreateCategory;
-internal sealed class CreateCategoryCommandHandler : ICommandHandler<CreateCategoryCommand>
+internal sealed class CreateCategoryCommandHandler : ICommandHandler<CreateCategoryCommand, ulong>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IUserContext _userContext;
@@ -20,7 +20,7 @@ internal sealed class CreateCategoryCommandHandler : ICommandHandler<CreateCateg
         _userContext = userContext;
     }
 
-    public async Task<Result> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
+    public async Task<Result<ulong>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
     {
         var userResult = _userContext.GetCurrentUser();
         if (userResult.IsFailed)
@@ -39,7 +39,7 @@ internal sealed class CreateCategoryCommandHandler : ICommandHandler<CreateCateg
             return Result.Fail(new ValidationError(validationResult, nameof(Category)));
         }
 
-        var result = Category.Create(dto.Name, isImmutable: false, dto.IsFavorite, dto.ColorHex, userId);
+        var result = Category.Create(dto.Name, isImmutable: false, dto.IsFavorite, dto.ColorHex, userId, dto.Icon);
 
         if (result.IsFailed)
             return result.ToResult();
@@ -54,8 +54,8 @@ internal sealed class CreateCategoryCommandHandler : ICommandHandler<CreateCateg
         {
             return Result.Fail(new CreatingProblemError(nameof(Category)));
         }
-       
-        return Result.Ok()
+
+        return Result.Ok(category.Id.Value)
             .WithSuccess(new CreationSuccess(nameof(Category)));
     }
 }

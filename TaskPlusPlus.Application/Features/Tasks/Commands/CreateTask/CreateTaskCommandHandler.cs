@@ -14,7 +14,7 @@ using Task = TaskPlusPlus.Domain.Entities.Task;
 
 namespace TaskPlusPlus.Application.Features.Tasks.Commands.CreateTask;
 
-internal sealed class CreateTaskCommandHandler : ICommandHandler<CreateTaskCommand>
+internal sealed class CreateTaskCommandHandler : ICommandHandler<CreateTaskCommand, ulong>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IUserContext _userContext;
@@ -27,7 +27,7 @@ internal sealed class CreateTaskCommandHandler : ICommandHandler<CreateTaskComma
         _userContext = userContext;
     }
 
-    public async Task<Result> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
+    public async Task<Result<ulong>> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
     {
         var userResult = _userContext.GetCurrentUser();
         if (userResult.IsFailed)
@@ -71,7 +71,7 @@ internal sealed class CreateTaskCommandHandler : ICommandHandler<CreateTaskComma
             return Result.Fail(new CreatingProblemError(nameof(Task)));
         }
 
-        return Result.Ok()
+        return Result.Ok(task.Id.Value)
             .WithSuccess(new CreationSuccess(nameof(Task)));
     }
 }

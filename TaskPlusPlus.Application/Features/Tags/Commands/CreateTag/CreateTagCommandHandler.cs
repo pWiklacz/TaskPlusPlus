@@ -10,7 +10,7 @@ using TaskPlusPlus.Domain.ValueObjects.Tag;
 
 namespace TaskPlusPlus.Application.Features.Tags.Commands.CreateTag;
 
-internal sealed class CreateTagCommandHandler : ICommandHandler<CreateTagCommand>
+internal sealed class CreateTagCommandHandler : ICommandHandler<CreateTagCommand, ulong>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IUserContext _userContext;
@@ -20,7 +20,7 @@ internal sealed class CreateTagCommandHandler : ICommandHandler<CreateTagCommand
         _userContext = userContext;
     }
 
-    public async Task<Result> Handle(CreateTagCommand request, CancellationToken cancellationToken)
+    public async Task<Result<ulong>> Handle(CreateTagCommand request, CancellationToken cancellationToken)
     {
         var userResult = _userContext.GetCurrentUser();
         if (userResult.IsFailed)
@@ -56,7 +56,7 @@ internal sealed class CreateTagCommandHandler : ICommandHandler<CreateTagCommand
             return Result.Fail(new CreatingProblemError(nameof(Tag)));
         }
 
-        return Result.Ok()
+        return Result.Ok(tag.Id.Value)
             .WithSuccess(new CreationSuccess(nameof(Tag)));
     }
 }

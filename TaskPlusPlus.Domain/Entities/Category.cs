@@ -13,6 +13,7 @@ public class Category : Entity<CategoryId>
     public bool IsFavorite { get; private set; }
     public ColorHex ColorHex { get; private set; } = null!;
     public UserId UserId { get; private set; } = null!;
+    public string Icon { get; private set; } = null!;
 
     public const string SystemOwner = "SystemCategory";
 
@@ -23,6 +24,7 @@ public class Category : Entity<CategoryId>
         bool isImmutable,
         ColorHex colorHex,
         UserId userId,
+        string icon,
         bool isFavorite = false
         )
     {
@@ -31,6 +33,7 @@ public class Category : Entity<CategoryId>
         IsFavorite = isFavorite;
         ColorHex = colorHex;
         UserId = userId;
+        Icon = icon;
     }
 
     public static Result<Category> Create(
@@ -38,7 +41,8 @@ public class Category : Entity<CategoryId>
         bool isImmutable,
         bool isFavorite,
         string colorHex,
-        string userId)
+        string userId,
+        string icon)
     {
         var errors = new List<IError>();
 
@@ -62,7 +66,8 @@ public class Category : Entity<CategoryId>
             isImmutable,
             colorResult.Value,
             userIdResult.Value,
-            isFavorite
+            icon,
+            isFavorite      
             );
 
         return category;
@@ -70,7 +75,6 @@ public class Category : Entity<CategoryId>
 
     public void ChangeFavoriteState(bool favorite)
         => IsFavorite = favorite;
-
     public Result UpdateName(string name)
     {
         var nameResult = CategoryName.Create(name);
@@ -87,4 +91,7 @@ public class Category : Entity<CategoryId>
         ColorHex = colorResult.Value;
         return Result.Ok();
     }
+
+    public void ChangeIcon(string icon)
+    => Icon = icon;
 }

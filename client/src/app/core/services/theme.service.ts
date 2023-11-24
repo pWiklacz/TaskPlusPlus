@@ -7,6 +7,17 @@ export class ThemeService {
 
   public static default = 'default';
 
+  getColorPickerPanelBgColor(): string {
+    switch (this.current) {
+      case 'slate':
+        return '#323232';
+      case 'default':
+        return '#ffffff';
+      default:
+        return '#ffffff';
+    }
+  }
+
   getPrimaryColor(): string {
     switch (this.current) {
       case 'slate':

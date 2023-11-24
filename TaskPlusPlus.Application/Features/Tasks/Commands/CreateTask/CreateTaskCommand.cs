@@ -3,4 +3,4 @@ using TaskPlusPlus.Application.Messaging;
 
 namespace TaskPlusPlus.Application.Features.Tasks.Commands.CreateTask;
 
-public sealed record CreateTaskCommand(CreateTaskDto Dto) : ICommand;
+public sealed record CreateTaskCommand(CreateTaskDto Dto) : ICommand<ulong>;

@@ -21,6 +21,9 @@ import { SettingsComponent } from './settings/settings.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { SettingsModule } from './settings/settings.module';
 import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
+import { CategoryModule } from './category/category.module';
+import { ColorPickerModule } from 'primeng/colorpicker';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -37,7 +40,9 @@ import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
     ToastModule,
     SocialLoginModule,
     SettingsModule,
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    CategoryModule,
+    FormsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

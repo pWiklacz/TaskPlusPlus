@@ -1,10 +1,19 @@
 <div class="side-nav-content">
-    <ul class="nav-list" *ngFor="let item of list">
-        <li class="nav-list-item">
+    <ul class="nav-list" *ngFor="let item of systemCategories">
+        <li class="nav-list-item text-white" routerLink="dashboard/{{item.name | lowercase}}">
           <i class="{{item.icon}} fa-fw" [ngStyle]="{ 'color': item.color }"></i>
           <span>
-            <a href="#">{{item.name}}</a>
+            <a >{{item.name}}</a>
           </span>
         </li>
     </ul>
+    <hr class="hr" />
+    <ul class="nav-list" *ngFor="let item of this.categoryService.userCategories()">
+      <li class="nav-list-item">
+        <i class="{{item.icon}} fa-fw" [ngStyle]="{ 'color': item.colorHex }"></i>
+        <span>
+          <a href="#">{{item.name}}</a>
+        </span>
+      </li>
+  </ul>
 </div>

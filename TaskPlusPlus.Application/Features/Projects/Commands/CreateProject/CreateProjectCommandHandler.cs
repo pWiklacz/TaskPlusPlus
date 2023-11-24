@@ -9,7 +9,7 @@ using TaskPlusPlus.Domain.Entities;
 using TaskPlusPlus.Domain.ValueObjects.Project;
 
 namespace TaskPlusPlus.Application.Features.Projects.Commands.CreateProject;
-internal sealed class CreateProjectCommandHandler : ICommandHandler<CreateProjectCommand>
+internal sealed class CreateProjectCommandHandler : ICommandHandler<CreateProjectCommand, ulong>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IUserContext _userContext;
@@ -20,7 +20,7 @@ internal sealed class CreateProjectCommandHandler : ICommandHandler<CreateProjec
         _userContext = userContext;
     }
 
-    public async Task<Result> Handle(CreateProjectCommand request, CancellationToken cancellationToken)
+    public async Task<Result<ulong>> Handle(CreateProjectCommand request, CancellationToken cancellationToken)
     {
         var userResult = _userContext.GetCurrentUser();
         if (userResult.IsFailed)
@@ -55,7 +55,7 @@ internal sealed class CreateProjectCommandHandler : ICommandHandler<CreateProjec
             return Result.Fail(new CreatingProblemError(nameof(Project)));
         }
 
-        return Result.Ok()
+        return Result.Ok(project.Id.Value)
             .WithSuccess(new CreationSuccess(nameof(Project)));
     }
 }

@@ -9,6 +9,9 @@ public class InterfaceCategoryDtoValidator : AbstractValidator<ICategoryDto>
 
     public InterfaceCategoryDtoValidator()
     {
+        RuleFor(dto => dto.Icon).NotEmpty()
+            .WithMessage("{PropertyName} is required");
+
         RuleFor(dto => dto.ColorHex)
             .NotEmpty().WithMessage("{PropertyName} is required")
             .NotNull()
