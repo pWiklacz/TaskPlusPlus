@@ -24,6 +24,8 @@ import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
 import { CategoryModule } from './category/category.module';
 import { ColorPickerModule } from 'primeng/colorpicker';
 import { FormsModule } from '@angular/forms';
+import { TaskItemComponent } from './task/task-item/task-item.component';
+import { TaskModule } from './task/task.module';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,8 @@ import { FormsModule } from '@angular/forms';
     SettingsModule,
     ModalModule.forRoot(),
     CategoryModule,
-    FormsModule
+    FormsModule,
+    TaskModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

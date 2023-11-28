@@ -54,12 +54,16 @@ systemCategories = [
     icon: 'fa-solid fa-lightbulb',
     color: '#f3f316'
   }
-];
+]; 
 
   constructor(public categoryService: CategoryService) {}
 
   ngOnInit(): void {
     this.getCategories()
+  }
+
+  selectCategory(id: number){
+    this.categoryService.selecetCategory(id);
   }
 
   getCategories() {

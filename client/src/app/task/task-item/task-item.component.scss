@@ -1,12 +1,27 @@
-/* Stylizacja checkboxa */
-input[type="checkbox"] {
-  display: none;
+li {
+    list-style: none;
+    padding: 10px;
+    border: 1px solid #e3dada;
+    margin-top: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
 }
+
+li:hover{
+    transform: scaleX(1.05);
+}
+
+.date-time {
+    font-size: 12px;
+}
+
+input[type="checkbox"] { display: none; }
 
 input[type="checkbox"] + label {
   display: block;
   position: relative;
-  padding-left: 35px; /* Możesz dostosować to według potrzeb */
+  padding-left: 35px;
   margin-bottom: 20px;
   font: 14px/20px 'Open Sans', Arial, sans-serif;
   color: #ddd;
@@ -14,20 +29,17 @@ input[type="checkbox"] + label {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  text-decoration: none;
+  text-decoration: none; /* Dodane przekreślenie tekstu */
 }
 
-input[type="checkbox"] + label:last-child {
-  margin-bottom: 0;
-}
+input[type="checkbox"] + label:last-child { margin-bottom: 0; }
 
-/* Stylizacja pseudo-elementu przed etykietą (symulacja checkboxa) */
 input[type="checkbox"] + label:before {
   content: '';
   display: block;
   width: 20px;
   height: 20px;
-  border: 1px solid red;
+  border: 1px solid white;
   position: absolute;
   left: 0;
   top: 0;
@@ -36,7 +48,6 @@ input[type="checkbox"] + label:before {
   transition: all .12s, border-color .08s;
 }
 
-/* Zmiana wyglądu checkboxa po zaznaczeniu */
 input[type="checkbox"]:checked + label:before {
   width: 10px;
   top: -5px;
@@ -49,7 +60,7 @@ input[type="checkbox"]:checked + label:before {
   transform: rotate(45deg);
 }
 
-/* Zmiana wyglądu etykiety po zaznaczeniu checkboxa */
 input[type="checkbox"]:checked + label {
   text-decoration: line-through;
+  text-decoration-thickness: 1px;
 }

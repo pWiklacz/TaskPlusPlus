@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { TextInputComponent } from './components/text-input/text-input.component';
+import { ReplaceSpacesPipe } from './pipes/replace-spaces.pipe';
 
 
 @NgModule({
   declarations: [
-    TextInputComponent
+    ReplaceSpacesPipe
   ],
   imports: [
     CommonModule,
@@ -16,7 +16,8 @@ import { TextInputComponent } from './components/text-input/text-input.component
   ],
   exports:[
     ReactiveFormsModule,
-    BsDropdownModule
+    BsDropdownModule,
+    ReplaceSpacesPipe
   ]
 })
 export class SharedModule { }

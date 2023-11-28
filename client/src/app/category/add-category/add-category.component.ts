@@ -28,7 +28,7 @@ export class AddCategoryComponent implements OnInit {
     document.documentElement.style.setProperty('--some-var', this.colorPickerPanelBgColor);
     this.addCategoryForm = new FormGroup({
       name: new FormControl('', Validators.required),
-      color: new FormControl('#ffffff'),
+      color: new FormControl('#593196'),
     });
   }
 

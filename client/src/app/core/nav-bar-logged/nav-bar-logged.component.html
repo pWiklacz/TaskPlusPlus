@@ -1,6 +1,6 @@
 <header class="px-3 bg-primary fixed-top shadow" style="z-index: 2; height: 3.5rem;">
     <div class="d-flex my-1 flex-wrap align-items-center justify-content-center">
-        <ul class="nav col-4 me-auto">
+        <ul class="nav col-6 me-auto">
             <li>
                 <a class="nav-link px-2 link-secondary" style="font-size: 20px; cursor: pointer;"
                     (click)="SideNavToggle()">
@@ -35,8 +35,7 @@
                                 <i class="fa-solid fa-list-check me-2"></i>Project</a>
                         </li>
                         <li role="menuitem">
-                            <a class="dropdown-item"
-                            (click)="this.openAddCategoryModal()">
+                            <a class="dropdown-item" (click)="this.openAddCategoryModal()">
                                 <i class="fa-solid fa-shapes me-2"></i>
                                 Category
                             </a>
@@ -50,7 +49,7 @@
             </li>
         </ul>
 
-        
+
         <form class="col-3 mb-lg-0 me-3" role="search">
             <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
         </form>
@@ -60,8 +59,8 @@
                 (click)="false" aria-controls="basic-link-dropdown">
                 <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
             </a>
-            <ul id="basic-link-dropdown" *dropdownMenu class="me-3 dropdown-menu dropdown-menu-right border " role="menu"
-                aria-labelledby="userPicture">
+            <ul id="basic-link-dropdown" *dropdownMenu class="me-3 dropdown-menu dropdown-menu-right border "
+                role="menu" aria-labelledby="userPicture">
 
                 <li role="menuitem"><a class="dropdown-item"><i class="fa fa-user me-2"
                             aria-hidden="true"></i>Profile</a></li>
@@ -76,7 +75,5 @@
                 </li>
             </ul>
         </div>
-
     </div>
-
 </header>

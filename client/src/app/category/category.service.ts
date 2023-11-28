@@ -3,7 +3,7 @@ import { Injectable, signal } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { CategoryDto, CreateCategoryDto } from '../shared/models/CategoryDto';
 import { ApiResponse } from '../shared/models/ApiResponse';
-import { map } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,8 @@ import { map } from 'rxjs';
 export class CategoryService {
   apiUrl = environment.apiUrl;
   public userCategories = signal<CategoryDto[]>([]);
-
+  public selectedCategory = signal<CategoryDto | undefined>(undefined);
+ 
   addCategory(category: CategoryDto) {
     this.userCategories.mutate((val) => {
       val.push(category)
@@ -34,12 +35,20 @@ export class CategoryService {
       ));
   }
 
+  selecetCategory(id: number) {
+    this.selectedCategory.update(() => this.userCategories()[id])
+  }
+
   postCategory(values: CreateCategoryDto) {
     return this.http.post<ApiResponse<number>>(this.apiUrl + 'Category', values);
   }
 
   getCategory(id: number) {
-    return this.http.get<ApiResponse<CategoryDto>>(this.apiUrl + 'Category/' + id);
+    return this.http.get<ApiResponse<CategoryDto>>(this.apiUrl + 'Category/' + id).pipe(
+      map(category => {
+        this.selectedCategory.update(() => category.value)
+      })
+    );
   }
 
   deleteCategory(id: number) {

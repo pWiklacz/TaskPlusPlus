@@ -1,6 +1,6 @@
 <div class="side-nav-content">
     <ul class="nav-list" *ngFor="let item of systemCategories">
-        <li class="nav-list-item text-white" routerLink="dashboard/{{item.name | lowercase}}">
+        <li class="nav-list-item text-white" routerLink="dashboard/{{item.name | lowercase | replaceSpaces}}">
           <i class="{{item.icon}} fa-fw" [ngStyle]="{ 'color': item.color }"></i>
           <span>
             <a >{{item.name}}</a>
@@ -9,10 +9,10 @@
     </ul>
     <hr class="hr" />
     <ul class="nav-list" *ngFor="let item of this.categoryService.userCategories()">
-      <li class="nav-list-item">
+      <li class="nav-list-item  text-white" routerLink="dashboard/category/{{item.id}}">
         <i class="{{item.icon}} fa-fw" [ngStyle]="{ 'color': item.colorHex }"></i>
         <span>
-          <a href="#">{{item.name}}</a>
+          <a >{{item.name}}</a>
         </span>
       </li>
   </ul>

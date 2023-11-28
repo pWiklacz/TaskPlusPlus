@@ -1,1 +1,25 @@
-<p>dashboard works!</p>
+<!--For Page-->
+<div class="page">
+    <!--Card-->
+    <div class="card bg-primary">
+        <!--Card Header-->
+        <div class="card-header bg-primary border-bottom align-items-center">
+            <div class="col-6">
+                <h1 class="text-white">{{this.categoryService.selectedCategory()?.name}}</h1>
+            </div>
+            <div class="col-6 icons text-white text-end">
+                <i class="fa-solid fa-gear mx-3"></i>
+                <i class="fa-solid fa-ellipsis"></i>
+            </div>
+        </div>
+        <!--Card Body-->
+        <div class="card-body">
+            <div class="col-md-12">
+                <ul class="list list-inline">
+                    <app-task-item></app-task-item>
+                    <app-task-item></app-task-item>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

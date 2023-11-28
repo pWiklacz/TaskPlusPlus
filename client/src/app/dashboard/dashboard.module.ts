@@ -6,6 +6,12 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { TodayComponent } from './today/today.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { ProjectsComponent } from './projects/projects.component';
+import { InboxComponent } from './inbox/inbox.component';
+import { NextActionsComponent } from './next-actions/next-actions.component';
+import { WaitingForComponent } from './waiting-for/waiting-for.component';
+import { SomedayMaybeComponent } from './someday-maybe/someday-maybe.component';
+import { AppComponent } from '../app.component';
+import { TaskModule } from '../task/task.module';
 
 
 
@@ -14,12 +20,17 @@ import { ProjectsComponent } from './projects/projects.component';
     DashboardComponent,
     TodayComponent,
     CalendarComponent,
-    ProjectsComponent
+    ProjectsComponent,
+    InboxComponent,
+    NextActionsComponent,
+    WaitingForComponent,
+    SomedayMaybeComponent
   ],
   imports: [
     CommonModule,
     SharedModule,
-    DashboardRoutingModule
+    DashboardRoutingModule,
+    TaskModule
   ],
   exports: [
   ]
