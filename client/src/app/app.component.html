@@ -8,19 +8,20 @@
    </ng-container>
 
    <ng-container *ngIf="isLoggedIn">
-      <app-nav-bar-logged (sideNavToggled)="sideNavStatus = $event;"></app-nav-bar-logged>
+      <app-nav-bar-logged></app-nav-bar-logged>
    </ng-container>
 
    <div class="container-fluid g-0">
       <p-toast position="bottom-left"></p-toast>
+      <div class="overlay" *ngIf="this.sideNavService.sidNavOpenStatus() && isLoggedIn" (click)="closeSideNav()"></div>
       <main>
          <ng-container *ngIf="isLoggedIn">
-            <app-side-nav [sideNavStatus]="sideNavStatus" class="bg-secondary"
-               [ngClass]="{'app-side-nav-open': sideNavStatus}">
+            <app-side-nav class="bg-secondary"
+               [ngClass]="{'app-side-nav-open': this.sideNavService.sidNavOpenStatus()}">
             </app-side-nav>
          </ng-container>
-         <div class="display-area" [class.p-3]="isLoggedIn"
-            [ngClass]="{'display-area-shrink' : sideNavStatus && isLoggedIn}">
+         <div class="display-area" 
+            [ngClass]="{'display-area-shrink' : this.sideNavService.sidNavOpenStatus() && isLoggedIn}">       
             <router-outlet>
             </router-outlet>
          </div>

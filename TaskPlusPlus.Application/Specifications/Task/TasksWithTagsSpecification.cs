@@ -1,9 +1,12 @@
-﻿using System.Reflection;
+﻿using System.Linq.Expressions;
+using System.Reflection;
 using TaskPlusPlus.Application.Helpers;
+using TaskPlusPlus.Domain.ValueObjects.Category;
+using TaskPlusPlus.Domain.ValueObjects.Project;
 
 namespace TaskPlusPlus.Application.Specifications.Task;
 
-internal class TasksWithTagsSpecification : Specification<Domain.Entities.Task>  
+internal class TasksWithTagsSpecification : Specification<Domain.Entities.Task>
 {
     public TasksWithTagsSpecification(TaskQueryParameters queryParams, string userId)
         : base(task =>
@@ -17,15 +20,43 @@ internal class TasksWithTagsSpecification : Specification<Domain.Entities.Task>
         var sortBy = typeof(Domain.Entities.Task).GetProperty(queryParams.SortBy);
         if (sortBy is not null)
         {
-            if (queryParams.SortDescending)
-                AddOrderByDescending(t => sortBy.GetValue(t)!);
-            else
-                AddOrderBy(t => sortBy.GetValue(t)!);
+            switch (sortBy.PropertyType)
+            {
+                case { } type when type == typeof(TimeOnly?):
+                    if (queryParams.SortDescending)
+                        AddOrderByDescending(t => t.DurationTime!);
+                    else
+                        AddOrderBy(t => t.DurationTime!);
+                    break;
+                case { } type when type == typeof(ProjectId?):
+                    if (queryParams.SortDescending)
+                        AddOrderByDescending(t => t.ProjectId!);
+                    else
+                        AddOrderBy(t => t.ProjectId!);
+                    break;
+                case { } type when type == typeof(CategoryId):
+                    if (queryParams.SortDescending)
+                        AddOrderByDescending(t => t.CategoryId);
+                    else
+                        AddOrderBy(t => t.CategoryId);
+                    break;
+                default:
+                    var parameter = Expression.Parameter(typeof(Domain.Entities.Task), "t");
+                    var property = Expression.Property(parameter, sortBy);
+                    var lambda = Expression.Lambda<Func<Domain.Entities.Task, object>>(property, parameter);
+
+                    if (queryParams.SortDescending)
+                        AddOrderByDescending(lambda);
+                    else
+                        AddOrderBy(lambda);
+                    break;
+            }
         }
+
     }
 
-    public TasksWithTagsSpecification(ulong id, string userId) 
-        : base(t => 
+    public TasksWithTagsSpecification(ulong id, string userId)
+        : base(t =>
             (t.Id == id)
             && t.UserId == userId)
     {

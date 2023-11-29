@@ -1,6 +1,8 @@
 li {
     list-style: none;
-    padding: 10px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding: 3px;
     border: 1px solid #e3dada;
     margin-top: 12px;
     border-radius: 5px;
@@ -14,6 +16,23 @@ li:hover{
 
 .date-time {
     font-size: 12px;
+}
+
+.tags{
+  font-size: 10px;
+}
+
+.fa-battery-half{
+ 
+  font-size: 20px;
+}
+
+.tag {
+  margin-right: 3px;
+}
+.fa-tag{
+  padding-left: 3px;
+  padding-top: 1px;
 }
 
 input[type="checkbox"] { display: none; }

@@ -31,9 +31,9 @@ public class TaskConfiguration : IEntityTypeConfiguration<Domain.Entities.Task>
         var categoryIdConverter = new ValueConverter<CategoryId, ulong>(
             categoryId => categoryId.Value,
             value => new CategoryId(value));
-        var projectIdConverter = new ValueConverter<ProjectId, ulong>(
-            projectId => projectId.Value,
-            value => new ProjectId(value));
+        var projectIdConverter = new ValueConverter<ProjectId?, ulong?>(
+            projectId => projectId,
+            value => value.HasValue ? new ProjectId(value.Value) : null);
         var priorityConverter = new ValueConverter<Priority, string>(
             priority => priority.Name,
             value => Priority.FromName(value).Value!);
@@ -69,7 +69,8 @@ public class TaskConfiguration : IEntityTypeConfiguration<Domain.Entities.Task>
             .HasConversion(categoryIdConverter);
 
         builder.Property(t => t.ProjectId)
-            .HasConversion(projectIdConverter);
+            .HasConversion(projectIdConverter)
+            .IsRequired(false);
 
         builder.Property(t => t.Priority)
             .HasConversion(priorityConverter);

@@ -8,7 +8,7 @@ import { CategoryDto } from 'src/app/shared/models/CategoryDto';
   styleUrls: ['./side-nav.component.scss']
 })
 export class SideNavComponent implements OnInit {
-@Input() sideNavStatus: boolean = true;
+//@Input() sideNavStatus: boolean = true;
 userCategories: CategoryDto[] = [];
 
 systemCategories = [

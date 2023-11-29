@@ -8,9 +8,6 @@ using TaskPlusPlus.Domain.ValueObjects.Project;
 namespace TaskPlusPlus.Application.DTOs.Task.Validators;
 public class CreateTaskDtoValidator : AbstractValidator<CreateTaskDto>
 {
-    private const short MaxNameLength = 500;
-    private const short MaxNotesLength = 10000;
-
     public CreateTaskDtoValidator(IUnitOfWork unitOfWork)
     {
         Include(new DueDateDtoValidator());
@@ -30,16 +27,21 @@ public class CreateTaskDtoValidator : AbstractValidator<CreateTaskDto>
             })
             .WithMessage("Category with id {PropertyValue} does not exist.");
 
-        RuleFor(dto => dto.ProjectId)
-            .GreaterThan(0UL)
-            .When(dto => dto.ProjectId.HasValue)
-            .MustAsync(async (id, token) =>
-            {
-                var projectExist = id != null && await unitOfWork.Repository<Domain.Entities.Project, ProjectId>()
-                    .ExistsByIdAsync((ProjectId)id);
-                return projectExist;
-            })
-            .WithMessage("Project with id {PropertyValue} does not exist.");
+        When(dto => dto.ProjectId != null, () =>
+        {
+            RuleFor(dto => dto.ProjectId)
+                .Cascade(CascadeMode.Stop)
+                .NotNull()
+                .GreaterThan(0UL)
+                .When(dto => dto.ProjectId.HasValue)
+                .MustAsync(async (id, token) =>
+                {
+                    var projectExist = id != null && await unitOfWork.Repository<Domain.Entities.Project, ProjectId>()
+                        .ExistsByIdAsync((ProjectId)id);
+                    return projectExist;
+                })
+                .WithMessage("Project with id {PropertyValue} does not exist.");
+        });
 
         Include(new TaskTagsDtoValidator(unitOfWork));
     }
