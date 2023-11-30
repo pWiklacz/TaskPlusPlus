@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CategoryService } from 'src/app/category/category.service';
 import { CategoryDto } from 'src/app/shared/models/CategoryDto';
+import { TaskService } from 'src/app/task/task.service';
 
 @Component({
   selector: 'app-side-nav',
@@ -56,10 +57,10 @@ systemCategories = [
   }
 ]; 
 
-  constructor(public categoryService: CategoryService) {}
+  constructor(public categoryService: CategoryService, private taskService: TaskService) {}
 
   ngOnInit(): void {
-    this.getCategories()
+    this.getCategories();
   }
 
   selectCategory(id: number){

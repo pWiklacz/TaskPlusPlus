@@ -19,11 +19,11 @@ public class TaskMappingProfile : Profile
             .ForMember(dest => dest.DueDate,
                 opt => opt.MapFrom(src => src.DueDate != null ? src.DueDate.Value : (DateTime?)null))
             .ForMember(dest => dest.Priority,
-                opt => opt.MapFrom(src => src.Priority.ToString()))
+                opt => opt.MapFrom(src => src.Priority.Value))
             .ForMember(dest => dest.ProjectId,
                 opt => opt.MapFrom(src => src.ProjectId != null ? src.ProjectId.Value : (ulong?)null))
             .ForMember(dest => dest.Energy,
-                opt => opt.MapFrom(src => src.Energy.ToString()))
+                opt => opt.MapFrom(src => src.Energy.Value))
             .ForMember(dest => dest.IsCompleted,
                 opt => opt.MapFrom(src => src.IsCompleted))
             .ForMember(dest => dest.DurationTime,

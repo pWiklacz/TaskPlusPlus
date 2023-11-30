@@ -1,3 +1,7 @@
+.taskItem{
+  font-family: sans-serif;
+}
+
 li {
     list-style: none;
     padding-top: 3px;
@@ -11,19 +15,19 @@ li {
 }
 
 li:hover{
-    transform: scaleX(1.05);
+    transform: scaleX(1.01);
 }
 
 .date-time {
-    font-size: 12px;
+    font-size: 13px;
 }
+
 
 .tags{
-  font-size: 10px;
+  font-size: 13px;
 }
 
-.fa-battery-half{
- 
+.battery{
   font-size: 20px;
 }
 

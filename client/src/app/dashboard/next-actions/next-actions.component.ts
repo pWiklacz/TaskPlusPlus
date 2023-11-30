@@ -3,6 +3,7 @@ import { CategoryService } from 'src/app/category/category.service';
 import { DashboardComponent } from '../dashboard.component';
 import { ActivatedRoute } from '@angular/router';
 import { NextActionsId } from 'src/app/shared/models/CategoryDto';
+import { TaskService } from 'src/app/task/task.service';
 
 @Component({
   selector: 'app-next-actions',
@@ -11,9 +12,10 @@ import { NextActionsId } from 'src/app/shared/models/CategoryDto';
 export class NextActionsComponent extends DashboardComponent implements OnInit {
   constructor(
     categoryService: CategoryService,
-    activatedRoute: ActivatedRoute
-  ) {
-    super(categoryService, activatedRoute);
+    activatedRoute: ActivatedRoute,
+    taskService: TaskService) 
+  {
+    super(categoryService, activatedRoute, taskService);
   }
 
   override ngOnInit(): void {

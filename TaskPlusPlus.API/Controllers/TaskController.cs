@@ -30,7 +30,8 @@ public class TaskController : BaseController
     }
 
     [HttpGet]
-    public async Task<ActionResult<Dictionary<object, List<TaskDto>>>> Get(TaskQueryParameters queryParameters)
+    public async Task<ActionResult<Dictionary<object, List<TaskDto>>>> Get(
+        [FromQuery] TaskQueryParameters queryParameters)
     {
         var projects = await _mediator.Send(new GetGroupedTasksQuery(queryParameters));
 

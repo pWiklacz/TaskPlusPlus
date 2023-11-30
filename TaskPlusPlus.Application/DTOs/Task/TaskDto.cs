@@ -10,8 +10,8 @@ public class TaskDto : BaseDto
     public string Notes { get; set; } = string.Empty;
     public bool IsCompleted { get; set; }
     public TimeOnly? DurationTime { get; set; }
-    public string Priority { get; set; } = null!;
-    public string Energy { get; set; } = null!;
+    public int Priority { get; set; } 
+    public int Energy { get; set; } 
     public ulong? ProjectId { get; set; }
     public ulong CategoryId { get; set; }
     public DateTime? CompletedOnUtc { get; set; }

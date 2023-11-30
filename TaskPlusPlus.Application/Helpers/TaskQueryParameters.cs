@@ -10,12 +10,6 @@ public class TaskQueryParameters
     public string SortBy { get; set; } = Empty;
     public string GroupBy { get; set; } = Empty;
 
-    //public DateTime DueDate { get; set; }
-    //public DateTime DataAdded { get; set; }
-    //public TimeOnly DurationTime { get; set; }
-    //public string Priority { get; set; } = Empty;
-    //public string Energy { get; set; } = Empty;
-
     public string Search
     {
         get => _search;
