@@ -13,7 +13,6 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrls: ['./add-category.component.scss']
 })
 export class AddCategoryComponent implements OnInit {
-  closeBtnName?: string;
   addCategoryForm!: FormGroup;
   colorPickerPanelBgColor!: string;
   isFavorite: boolean = false;
@@ -34,8 +33,8 @@ export class AddCategoryComponent implements OnInit {
 
   changeIsFavoriteStatus() {
     this.isFavorite = !this.isFavorite;
-
   }
+  
   onSubmit() {
     const formValues = this.addCategoryForm.value;
     const createdCategory: CreateCategoryDto = {

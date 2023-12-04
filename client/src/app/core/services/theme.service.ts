@@ -7,6 +7,28 @@ export class ThemeService {
 
   public static default = 'default';
 
+  getBodyColor(): string {
+    switch (this.current) {
+      case 'slate':
+        return '#aaa';
+      case 'default':
+        return '#444';
+      default:
+        return '#444';
+    }
+  }
+  
+  getInputBackgroundColor(): string {
+    switch (this.current) {
+      case 'slate':
+        return '#272b30';
+      case 'default':
+        return '#ffffff';
+      default:
+        return '#ffffff';
+    }
+  }
+
   getColorPickerPanelBgColor(): string {
     switch (this.current) {
       case 'slate':

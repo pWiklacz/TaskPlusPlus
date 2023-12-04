@@ -4,6 +4,7 @@ import { BsModalService, BsModalRef, ModalOptions } from 'ngx-bootstrap/modal';
 import { SettingsComponent } from 'src/app/settings/settings.component';
 import { AddCategoryComponent } from 'src/app/category/add-category/add-category.component';
 import { SideNavService } from '../services/side-nav.service';
+import { AddTaskComponent } from 'src/app/task/add-task/add-task.component';
 
 @Component({
   selector: 'app-nav-bar-logged',
@@ -11,27 +12,27 @@ import { SideNavService } from '../services/side-nav.service';
   styleUrls: ['./nav-bar-logged.component.scss']
 })
 export class NavBarLoggedComponent implements OnInit{
-  //@Output() sideNavToggled = new EventEmitter<boolean>();
-  //menuStatus: boolean = true;
-
   bsModalRef?: BsModalRef;
+
   constructor(public accountService: AccountService, private modalService: BsModalService, private sideNavService: SideNavService) { }
   ngOnInit(): void {
-
+    this.openAddTaskModal()
   }
 
   openSettingsModal() {
     this.bsModalRef = this.modalService.show(SettingsComponent, { backdrop: 'static', class: 'modal-dialog-centered' });
-    this.bsModalRef.content.closeBtnName = 'Close';
   }
 
   openAddCategoryModal() {
     this.bsModalRef = this.modalService.show(AddCategoryComponent, { backdrop: 'static', class: 'modal-dialog-centered' });
-    this.bsModalRef.content.closeBtnName = 'Close';
+
+  }
+
+  openAddTaskModal() {
+    this.bsModalRef = this.modalService.show(AddTaskComponent, { backdrop: 'static', class: 'modal-dialog-centered' });
   }
 
   SideNavToggle() {
-    //this.menuStatus = !this.menuStatus;
     this.sideNavService.updateSideNavStatus();
   }
 }

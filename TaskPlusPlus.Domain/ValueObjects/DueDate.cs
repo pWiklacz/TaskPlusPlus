@@ -15,12 +15,6 @@ public sealed class DueDate : ValueObject
 
     public static Result<DueDate> Create(DateTime dueDate)
     {
-        if (dueDate <= DateTime.Now)
-        {
-            return Result.Fail<DueDate>(
-                new DateTimeBeforeCurrentTimeError(nameof(dueDate)));
-        }
-
         return new DueDate(dueDate);
     }
 

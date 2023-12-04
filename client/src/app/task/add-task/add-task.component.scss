@@ -1,0 +1,81 @@
+::root {
+  --calendar-body-color: white;
+  --calendar-bg-color: white;
+}
+
+:host ::ng-deep .p-inputtext{
+  border: 1px solid black;
+  border-radius: 5px;
+  background: var(--calendar-bg-color) !important;
+  color: var(--calendar-body-color) !important;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "FontAwesome";
+  font-size: 1rem;
+  max-width: 115px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  cursor: pointer;
+}
+
+:host ::ng-deep .p-datepicker{
+  background: var(--calendar-bg-color) !important;
+  color: var(--calendar-body-color) !important;
+}
+
+:host ::ng-deep .p-datepicker-header{
+  background: var(--calendar-bg-color) !important;
+  color: var(--calendar-body-color) !important;
+}
+
+:host ::ng-deep .p-datepicker-year{
+  color: var(--calendar-body-color) !important;
+}
+
+:host ::ng-deep .p-datepicker-month{
+  color: var(--calendar-body-color) !important;
+}
+
+:host ::ng-deep .p-calendar{
+  border-radius: 5px;
+  color: var(--calendar-body-color) !important;
+}
+
+:host ::ng-deep .p-inputtext::placeholder{
+  border-radius: 5px;
+  color: var(--calendar-body-color) !important;
+}
+
+.modal-footer {
+  border: none;
+}
+
+.modal-header {
+  border: none;
+}
+
+.energy {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "FontAwesome";
+  font-size: 1rem;
+  max-width: 115px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  width: auto;
+}
+
+.priority {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "FontAwesome";
+  font-size: 1rem;
+  max-width: 115px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  width: auto;
+}
+
+.durationTime {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "FontAwesome";
+  font-size: 1rem;
+  max-width: 115px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  width: auto;
+}

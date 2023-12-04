@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ReplaceSpacesPipe } from './pipes/replace-spaces.pipe';
-
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @NgModule({
   declarations: [
@@ -12,12 +12,14 @@ import { ReplaceSpacesPipe } from './pipes/replace-spaces.pipe';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    BsDropdownModule.forRoot()
+    BsDropdownModule.forRoot(),
+    BsDatepickerModule.forRoot(),
   ],
   exports:[
     ReactiveFormsModule,
     BsDropdownModule,
-    ReplaceSpacesPipe
+    ReplaceSpacesPipe,
+    BsDatepickerModule
   ]
 })
-export class SharedModule { }
+export class SharedModule { } 
