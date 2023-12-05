@@ -15,7 +15,6 @@ import { SideNavService } from './core/services/side-nav.service';
 export class AppComponent implements OnInit {
   contentLoaded: boolean = false;
   isLoggedIn: boolean = false;
- // sideNavStatus: boolean = true;
   isSmallScreen = false;
 
   constructor(private themeService: ThemeService, private busyService: BusyService,
@@ -30,7 +29,6 @@ export class AppComponent implements OnInit {
     this.contentLoaded = true;
 
     this.checkScreenSize();
-
 
     window.addEventListener('resize', () => {
       this.checkScreenSize();

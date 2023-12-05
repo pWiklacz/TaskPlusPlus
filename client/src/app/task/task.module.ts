@@ -5,7 +5,7 @@ import { AddTaskComponent } from './add-task/add-task.component';
 import { SharedModule } from 'primeng/api';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-import { MultiSelectModule } from 'primeng/multiselect';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { CalendarModule } from 'primeng/calendar';
 
 
@@ -19,8 +19,8 @@ import { CalendarModule } from 'primeng/calendar';
     ReactiveFormsModule,
     SharedModule,
     FormsModule,
-    MultiSelectModule,
-    CalendarModule
+    CalendarModule,
+    NgSelectModule
   ],
   exports: [
     TaskItemComponent
