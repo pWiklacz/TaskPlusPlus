@@ -23,7 +23,10 @@ export class BusyService {
     this.busyRequestCount--;
     if (this.busyRequestCount <= 0) {
       this.busyRequestCount = 0;
-      this.spinnerService.hide();
+      setTimeout(() => {
+        this.spinnerService.hide();
+      }, 1000);
+      
     }
   }
 }

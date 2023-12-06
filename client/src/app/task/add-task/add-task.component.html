@@ -5,7 +5,6 @@
     </button>
 </div>
 
-
 <form [formGroup]="addTaskForm" (ngSubmit)="onSubmit()">
     <div class="modal-body">
         <div class="container text-center">
@@ -13,41 +12,47 @@
                 <input class="form-control" type="text" placeholder="Task Name" formControlName="name">
                 <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Notes" rows="3"
                     formControlName="notes"></textarea>
-                <p-calendar class="calendar" formControlName="date" placeholder="  &#xf133; Due date"
+                <p-calendar class="select" formControlName="date" placeholder="  &#xf133; Due date"
                     [showButtonBar]="true" dateFormat=" dd M yy">
                     <!-- <ng-template pTemplate="header">Header</ng-template>
                         <ng-template pTemplate="footer">Footer</ng-template> -->
                 </p-calendar>
-                <ng-select class="select" formControlName="energy" placeholder="&#xf0e7; Energy">
+                <ng-select class="select" formControlName="energy" placeholder="&#xf0e7; Energy" [searchable]="false">
                     <ng-option value='4' disabled="true">&#xf0e7; Energy</ng-option>
                     <ng-option *ngFor="let energy of EnergyEnum | keyvalue"
                         value="{{energy.value.id}}">{{energy.value.name}}</ng-option>
                 </ng-select>
 
-                <ng-select class="select" formControlName="priority" placeholder="&#x21; Priority">
+                <ng-select class="select" formControlName="priority" placeholder="&#x21; Priority" [searchable]="false">
                     <ng-option value='6' disabled="true" style="cursor: none;">&#x21; Priority</ng-option>
                     <ng-option *ngFor="let priority of PriorityEnum | keyvalue" value="{{priority.value.id}}">
                         {{priority.value.name}}</ng-option>
                 </ng-select>
 
-                <ng-select class="select" formControlName="durationTime" placeholder="&#xf017; Time">
+                <ng-select class="select" formControlName="durationTime" placeholder="&#xf017; Time"
+                    [searchable]="false">
                     <ng-option value='0' disabled="true">&#xf017; Time</ng-option>
                     <ng-option *ngFor="let time of durationTimes" value="{{time.value}}">
                         {{time.label}}</ng-option>
                 </ng-select>
-
-                <ng-select class="select" formControlName="selectedTags" placeholder="&#xf02c; Tags" [multiple]="true"
-                    [closeOnSelect]="false" [hideSelected]="true">
-                    <!-- <div class="ng-value" *ngIf="this.form['selectedTags'].value.length > 2">
-                        <span class="ng-value-label">{{this.form['selectedTags'].value.length - 2}} more...</span>
-                    </div> -->
-                    <ng-option value='0' disabled="true">&#xf02c; Tags</ng-option>
-                    <ng-option *ngFor="let tag of tags" value="{{tag.value}}">
-                        <i class="fa-solid fa-tag pe-2" style="color: red;"></i>{{tag.label}}</ng-option>
+                <ng-select class="select" [items]="tags" bindLabel="label" bindValue="value"
+                    formControlName="selectedTags" placeholder="&#xf02c; Tags" [multiple]="true" [closeOnSelect]="false"
+                    [hideSelected]="true">
+                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                        <div class="ng-value" *ngFor="let item of items | slice:0:1; let i = index">
+                            <span class="ng-value-icon left" aria-hidden="true" (click)="clear(item)">×</span>
+                            <span class="ng-value-label"> <i class="fa-solid fa-tag pe-2"
+                                    style="color: red;"></i>{{items[i].label}}</span>
+                        </div>
+                        <div class="ng-value" *ngIf="items.length > 1">
+                            <span class="ng-value-label">{{items.length - 1}} more...</span>
+                        </div>
+                    </ng-template>
+                    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                        <span><i class="fa-solid fa-tag pe-2" style="color: red;"></i>{{item.label}}</span>
+                    </ng-template>
                 </ng-select>
 
-
-         
             </div>
 
         </div>

@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, map, of, ReplaySubject, Subject } from 'rxjs';
+import { BehaviorSubject, finalize, map, of, ReplaySubject, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { User } from '../shared/models/user';
 import { ApiResponse } from '../shared/models/ApiResponse';
@@ -13,6 +13,8 @@ import { CustomEncoder } from '../shared/custom-encoder';
 import { FacebookLoginProvider, SocialAuthService, SocialUser } from "@abacritt/angularx-social-login";
 import { GoogleLoginProvider } from "@abacritt/angularx-social-login";
 import { ExternalAuthDto } from '../shared/models/ExternalAuthDto';
+import { ThemeService } from '../core/services/theme.service';
+import { BusyService } from '../core/services/busy.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +26,10 @@ export class AccountService {
   private extAuthChangeSub = new Subject<SocialUser>();
   public extAuthChanged = this.extAuthChangeSub.asObservable();
 
-  constructor(private http: HttpClient, private router: Router, private externalAuthService: SocialAuthService) {
+  constructor(private http: HttpClient, private router: Router,
+     private externalAuthService: SocialAuthService,
+     private themeService: ThemeService,
+     private busyService: BusyService) {
     this.externalAuthService.authState.subscribe((user) => {
       if (user) {
         this.extAuthChangeSub.next(user);
@@ -41,32 +46,34 @@ export class AccountService {
   }
 
   login(values: any) {
+    this.busyService.busy();
     return this.http.post<ApiResponse<User>>(this.apiUrl + 'Account/login', values).pipe(
       map(response => {
         localStorage.setItem('token', response.value.token);
         this.isLoggedIn$.next(true);
         this.isExternalAuth$.next(false);
-      })
+      }),
+      finalize(()=> this.busyService.idle()) 
     )
   }
 
   register(values: UserForRegistrationDto) {
+    this.busyService.busy();
     return this.http.post<any>(this.apiUrl + 'Account/register', values).pipe(
-      map(user => {
-
-      })
+      finalize(()=> this.busyService.idle()) 
     )
   }
 
   logout() {
+    this.busyService.busy();
     localStorage.removeItem('token');
     this.isLoggedIn$.next(false);
 
     if (this.isExternalAuth$.value) {
       this.signOutExternal();
     }
-
-    this.router.navigateByUrl('/');
+    this.themeService.current = ThemeService.default;
+    this.router.navigateByUrl('/account/login').then(() => this.busyService.idle());
   }
 
   isLoggedIn() {
@@ -90,7 +97,10 @@ export class AccountService {
   }
 
   externalLogin(values: ExternalAuthDto) {
-    return this.http.post<ApiResponse<User>>(this.apiUrl + 'Account/externalLogin', values);
+    this.busyService.busy();
+    return this.http.post<ApiResponse<User>>(this.apiUrl + 'Account/externalLogin', values).pipe(
+      finalize(()=> this.busyService.idle())
+    );
   }
 
   signInWithFB(): void {

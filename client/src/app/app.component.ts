@@ -22,12 +22,38 @@ export class AppComponent implements OnInit {
     private viewportScroller: ViewportScroller,
     public sideNavService: SideNavService) { }
 
-  ngOnInit(): void {
-    this.accountService.isLoggedIn$.subscribe(res => {
-      this.isLoggedIn = this.accountService.isLoggedIn();
-    })
-    this.contentLoaded = true;
+  // ngOnInit(): void {
+  //   this.accountService.isLoggedIn$.subscribe(res => {
+  //     this.isLoggedIn = this.accountService.isLoggedIn();
+  //   })
+  //   this.contentLoaded = true;
 
+  //   this.checkScreenSize();
+
+  //   window.addEventListener('resize', () => {
+  //     this.checkScreenSize();
+  //   });
+  // }
+
+  private checkScreenSize() {
+   
+    const screenWidth = window.innerWidth;
+  
+    if (screenWidth < 750) {
+      if (this.sideNavService.sidNavOpenStatus()) {
+        this.sideNavService.updateSideNavStatus();
+      }
+    }
+  }
+
+  closeSideNav() {
+    this.sideNavService.updateSideNavStatus();
+  }
+
+  ngOnInit(): void {
+
+    this.busyService.busy()
+    this.loadData();
     this.checkScreenSize();
 
     window.addEventListener('resize', () => {
@@ -35,29 +61,13 @@ export class AppComponent implements OnInit {
     });
   }
 
-  private checkScreenSize() {
-    const screenWidth = window.innerWidth;
-    this.isSmallScreen = screenWidth < 450;
+  loadData() {
+    setTimeout(() => {
+      this.accountService.isLoggedIn$.subscribe(res =>{
+        this.isLoggedIn = this.accountService.isLoggedIn();
+      })
+      this.contentLoaded = true;
+      this.busyService.idle();
+    }, 1000);
   }
-
-  closeSideNav()
-  {
-    this.sideNavService.updateSideNavStatus();
-  }
-
-  // ngOnInit(): void {
-
-  //   this.busyService.busy()
-  //   this.loadData();
-  // }
-
-  // loadData() {
-  //   setTimeout(() => {
-  //     this.accountService.isLoggedIn$.subscribe(res =>{
-  //       this.isLoggedIn = this.accountService.isLoggedIn();
-  //     })
-  //     this.contentLoaded = true;
-  //     this.busyService.idle();
-  //   }, 1000);
-  // }
 }

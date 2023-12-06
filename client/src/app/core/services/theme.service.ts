@@ -79,7 +79,6 @@ export class ThemeService {
     document.head.appendChild(this.style);
 
     if (localStorage.getItem('theme') !== undefined) {
-      console.log(this.current);
       this.style.href = `/${this.current}.css`;
     }
   }
