@@ -7,7 +7,8 @@ public sealed class ProjectDto : BaseDto, IProjectDto
 {
     public string Name { get; set; } = null!;
     public string Notes { get; set; } = string.Empty;
-    public DateTime? DueDate { get; set; }
+    public DateOnly? DueDate { get; set; }
+    public TimeOnly? DueTime { get; set; }
     public bool IsCompleted { get; set; }
     public DateTime? CompletedOnUtc { get; set; }
 

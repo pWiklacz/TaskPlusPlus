@@ -7,9 +7,10 @@ namespace TaskPlusPlus.Application.DTOs.Task;
 public class CreateTaskDto : ITaskTagsDto, IDueDateDto, INameAndNotesDto, ITaskPriorityDto, ITaskEnergyDto
 {
     public string Name { get; set; } = null!;
-    public DateTime? DueDate { get; set; }
+    public DateOnly? DueDate { get; set; }
     public string Notes { get; set; } = string.Empty;
-    public TimeOnly? DurationTime { get; set; }
+    public int DurationTime { get; set; }
+    public TimeOnly? DueTime { get; set; }
     public string Priority { get; set; } = null!;
     public string Energy { get; set; } = null!;
     public ulong? ProjectId { get; set; }

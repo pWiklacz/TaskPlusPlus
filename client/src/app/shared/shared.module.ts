@@ -4,10 +4,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ReplaceSpacesPipe } from './pipes/replace-spaces.pipe';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { EnumToArrayPipe } from './pipes/enum-to-array.pipe';
 
 @NgModule({
   declarations: [
-    ReplaceSpacesPipe
+    ReplaceSpacesPipe,
+    EnumToArrayPipe
   ],
   imports: [
     CommonModule,
@@ -19,7 +21,8 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     ReactiveFormsModule,
     BsDropdownModule,
     ReplaceSpacesPipe,
-    BsDatepickerModule
+    BsDatepickerModule,
+    EnumToArrayPipe
   ]
 })
 export class SharedModule { } 

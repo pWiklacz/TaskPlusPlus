@@ -3,5 +3,5 @@
 namespace TaskPlusPlus.Application.DTOs.Common;
 public class UpdateDueDateDto : BaseDto, IDueDateDto
 {
-    public DateTime? DueDate { get; set; }
+    public DateOnly? DueDate { get; set; }
 }

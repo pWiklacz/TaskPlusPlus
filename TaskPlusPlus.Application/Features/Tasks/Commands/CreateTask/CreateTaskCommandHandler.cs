@@ -48,8 +48,8 @@ internal sealed class CreateTaskCommandHandler : ICommandHandler<CreateTaskComma
         }
 
         var result = Task.Create(dto.Name, dto.DueDate, dto.Notes, dto.Priority, dto.ProjectId,
-            dto.Energy, dto.DurationTime, userId, dto.CategoryId);
-        
+            dto.Energy, dto.DueTime, userId, dto.CategoryId, dto.DurationTime);
+
         if (result.IsFailed)
             return result.ToResult();
 

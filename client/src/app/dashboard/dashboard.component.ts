@@ -1,11 +1,11 @@
 import { Component, OnInit, effect } from '@angular/core';
 import { CategoryService } from '../category/category.service';
 import { ActivatedRoute, Params } from '@angular/router';
-import { CategoryDto } from '../shared/models/CategoryDto';
+import { CategoryDto } from '../shared/models/category/CategoryDto';
 import { switchMap } from 'rxjs/operators';
 import { TaskService } from '../task/task.service';
-import { TaskDto } from '../shared/models/TaskDto';
-import { GetTasksQueryParams } from '../shared/models/GetTasksQueryParams';
+import { TaskDto } from '../shared/models/task/TaskDto';
+import { GetTasksQueryParams } from '../shared/models/task/GetTasksQueryParams';
 
 @Component({
   selector: 'app-dashboard',
@@ -49,10 +49,7 @@ export class DashboardComponent implements OnInit {
     this.taskService.getTasks(this.queryParams).subscribe({
       next: response => {
         this.yourData = response.value;
-        console.log(this.yourData)
         this.groupsNames = Object.keys(this.yourData);
-        const taask : TaskDto =this.yourData[this.groupsNames[0]][1];
-        console.log(taask)
       }
     });
   }

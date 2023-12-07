@@ -1,12 +1,14 @@
+import { KeyValue } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
 import { CategoryService } from 'src/app/category/category.service';
 import { ThemeService } from 'src/app/core/services/theme.service';
-import { EnergyEnum } from 'src/app/shared/models/EnergyEnum';
-import { PriorityEnum } from 'src/app/shared/models/PriorityEnum';
+import { EnergyEnum } from 'src/app/shared/models/task/EnergyEnum';
+import { PriorityEnum } from 'src/app/shared/models/task/PriorityEnum';
+import { TagService } from 'src/app/tag/tag.service';
 
 interface Tag {
   value: number;
@@ -22,6 +24,7 @@ export class AddTaskComponent implements OnInit {
   addTaskForm!: FormGroup;
   public EnergyEnum = EnergyEnum
   public PriorityEnum = PriorityEnum
+  public systemCategories :{ id: string; name: string; icon: string; color: string; }[] = [];
 
   durationTimes = [
     { value: null, label: "None" },
@@ -36,25 +39,25 @@ export class AddTaskComponent implements OnInit {
     { value: 480, label: "8h" },
   ];
 
-  tags : Tag[] = [
-    { value: 5, label: "tagA" },
-    { value: 10, label: "tagB" },
-    { value: 11, label: "tagC" },
-    { value: 12, label: "tagD" },
-    { value: 13, label: "tagE" },
-    { value: 14, label: "tagF" },
-  ]
+  // tags: Tag[] = [
+  //   { value: 5, label: "tagA" },
+  //   { value: 10, label: "tagB" },
+  //   { value: 11, label: "tagC" },
+  //   { value: 12, label: "tagD" },
+  //   { value: 13, label: "tagE" },
+  //   { value: 14, label: "tagF" },
+  // ]
 
-  selectedTaags : Tag[] = [];
-
+  selectedTaags: Tag[] = [];
 
   constructor(public bsModalRef: BsModalRef,
+    private modalService: BsModalService,
     private themeService: ThemeService,
-    private categoryService: CategoryService,
-    private messageService: MessageService) { }
+    public categoryService: CategoryService,
+    private messageService: MessageService,
+    public tagService: TagService) { }
 
   ngOnInit() {
-
     document.documentElement.style.setProperty('--calendar-body-color',
       this.themeService.getBodyColor());
     document.documentElement.style.setProperty('--calendar-bg-color',
@@ -64,14 +67,16 @@ export class AddTaskComponent implements OnInit {
     document.documentElement.style.setProperty('--secondary-color',
       this.themeService.getSecondaryColor());
 
-    this.addTaskForm = new FormGroup({
+    this.addTaskForm = new FormGroup({ 
       name: new FormControl('', Validators.required),
       notes: new FormControl(''),
       date: new FormControl<Date | null>(null),
       energy: new FormControl(),
       priority: new FormControl(),
       durationTime: new FormControl(),
-      selectedTags: new FormControl([])
+      selectedTags: new FormControl([]),
+      categoryId: new FormControl('1'),
+      projectId: new FormControl()
     });
 
 
@@ -90,11 +95,20 @@ export class AddTaskComponent implements OnInit {
         this.addTaskForm.get('durationTime')!.setValue(null, { emitEvent: false });
       }
     });
+
+    
+    this.tagService.getTags()?.subscribe({
+      error: error => console.log(error)
+    })
+
+   this.systemCategories = this.categoryService.systemCategories.filter(category => !['2', '3', '5'].includes(category.id));
   }
 
   get form() { return this.addTaskForm.controls; }
 
   onSubmit() {
-
+    const formValues = this.addTaskForm.value;
+   
+    console.log(formValues.date)
   }
 }

@@ -5,6 +5,7 @@ import { SettingsComponent } from 'src/app/settings/settings.component';
 import { AddCategoryComponent } from 'src/app/category/add-category/add-category.component';
 import { SideNavService } from '../services/side-nav.service';
 import { AddTaskComponent } from 'src/app/task/add-task/add-task.component';
+import { TagService } from 'src/app/tag/tag.service';
 
 @Component({
   selector: 'app-nav-bar-logged',
@@ -14,7 +15,10 @@ import { AddTaskComponent } from 'src/app/task/add-task/add-task.component';
 export class NavBarLoggedComponent implements OnInit{
   bsModalRef?: BsModalRef;
 
-  constructor(public accountService: AccountService, private modalService: BsModalService, private sideNavService: SideNavService) { }
+  constructor(public accountService: AccountService,
+     private modalService: BsModalService,
+      private sideNavService: SideNavService) { }
+
   ngOnInit(): void {
     this.openAddTaskModal()
   }

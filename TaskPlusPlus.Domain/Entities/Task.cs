@@ -16,7 +16,8 @@ public sealed class Task : Entity<TaskId>, IAuditEntity
     public DueDate? DueDate { get; private set; }
     public Notes Notes { get; private set; } = null!;
     public bool IsCompleted { get; private set; }
-    public TimeOnly? DurationTime { get; private set; }
+    public int DurationTimeInMinutes { get; private set; }
+    public TimeOnly? DueTime { get; private set; }
     public Priority Priority { get; private set; } = null!;
     public Energy Energy { get; private set; } = null!;
     public ProjectId? ProjectId { get; private set; }
@@ -30,18 +31,19 @@ public sealed class Task : Entity<TaskId>, IAuditEntity
     public DateTime? CompletedOnUtc { get; private set; }
 
     private Task()
-    {}
+    { }
 
     private Task(
         TaskName name,
         DueDate? dueDate,
         Notes notes,
-        Priority priority, 
-        ProjectId? projectId, 
+        Priority priority,
+        ProjectId? projectId,
         Energy energy,
-        TimeOnly? durationTime,
-        UserId userId, 
-        CategoryId categoryId)
+        TimeOnly? dueTime,
+        UserId userId,
+        CategoryId categoryId,
+        int durationTime)
     {
         Name = name;
         DueDate = dueDate;
@@ -49,22 +51,24 @@ public sealed class Task : Entity<TaskId>, IAuditEntity
         Priority = priority;
         ProjectId = projectId;
         Energy = energy;
-        DurationTime = durationTime;
+        DueTime = dueTime;
         UserId = userId;
         CategoryId = categoryId;
+        DurationTimeInMinutes = durationTime;
         IsCompleted = false;
     }
 
     public static Result<Task> Create(
         string name,
-        DateTime? dueDate,
-        string notes,  
+        DateOnly? dueDate,
+        string notes,
         string priority,
         ProjectId? projectId,
         string energy,
-        TimeOnly? durationTime,
+        TimeOnly? dueTime,
         string userId,
-        CategoryId categoryId)
+        CategoryId categoryId,
+        int durationTime)
     {
         var errors = new List<IError>();
 
@@ -75,7 +79,7 @@ public sealed class Task : Entity<TaskId>, IAuditEntity
         Result<DueDate> dueDateResult = null!;
         if (dueDate != null)
         {
-            dueDateResult = DueDate.Create((DateTime)dueDate);
+            dueDateResult = DueDate.Create((DateOnly)dueDate);
             if (dueDateResult.IsFailed)
                 errors.AddRange(dueDateResult.Errors);
         }
@@ -93,7 +97,7 @@ public sealed class Task : Entity<TaskId>, IAuditEntity
             errors.AddRange(priorityResult.Errors);
 
         var energyResult = Energy.FromName(energy);
-        if(energyResult.IsFailed)
+        if (energyResult.IsFailed)
             errors.AddRange(energyResult.Errors);
 
         if (errors.Any())
@@ -106,9 +110,10 @@ public sealed class Task : Entity<TaskId>, IAuditEntity
             priorityResult.Value!,
             projectId,
             energyResult.Value!,
-            durationTime,
+            dueTime,
             userIdResult.Value,
-            categoryId);
+            categoryId,
+            durationTime);
 
         return task;
     }
@@ -118,7 +123,7 @@ public sealed class Task : Entity<TaskId>, IAuditEntity
 
     public void ChangeProject(ProjectId projectId)
         => ProjectId = projectId;
-    
+
     public Result AddTag(Tag tag)
     {
         var alreadyExist = _tags.Any(t => t == tag);
@@ -154,16 +159,16 @@ public sealed class Task : Entity<TaskId>, IAuditEntity
     {
         var tagResult = GetTag(tag.Id);
 
-        if(tagResult.IsFailed)
+        if (tagResult.IsFailed)
             return Result.Fail(tagResult.Errors);
 
         _tags.Remove(tagResult.Value);
         return Result.Ok();
     }
-    
+
     public void ChangePriority(Priority priority)
     => Priority = priority;
-    public Result UpdateDueDate(DateTime dueDate)
+    public Result UpdateDueDate(DateOnly dueDate)
     {
         var dueDateResult = DueDate.Create(dueDate);
         if (dueDateResult.IsFailed)
@@ -212,5 +217,5 @@ public sealed class Task : Entity<TaskId>, IAuditEntity
         return tag ?? Result.Fail<Tag>(
             new NotFoundError(nameof(Tag), id));
     }
-    
-} 
+
+}

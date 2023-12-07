@@ -2,8 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { ApiResponse } from '../shared/models/ApiResponse';
-import { TaskDto } from '../shared/models/TaskDto';
-import { GetTasksQueryParams } from '../shared/models/GetTasksQueryParams';
+import { TaskDto } from '../shared/models/task/TaskDto';
+import { GetTasksQueryParams } from '../shared/models/task/GetTasksQueryParams';
 
 @Injectable({
   providedIn: 'root'

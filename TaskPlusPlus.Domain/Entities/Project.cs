@@ -13,6 +13,8 @@ public sealed class Project : Entity<ProjectId>, IAuditEntity
     public ProjectName Name { get; private set; } = null!;
     public Notes Notes { get; private set; } = null!;
     public DueDate? DueDate { get; private set; }
+    public TimeOnly? DueTime { get; private set; }
+
     public bool IsCompleted { get; private set; }
     public IReadOnlyCollection<Task> Tasks => _tasks;
     public UserId UserId { get; private set; } = null!;
@@ -29,22 +31,25 @@ public sealed class Project : Entity<ProjectId>, IAuditEntity
     }
     public Project(
         ProjectName name,
-        Notes notes, 
+        Notes notes,
         DueDate? dueDate,
-        UserId userId)
+        UserId userId,
+        TimeOnly? dueTime)
     {
         Name = name;
         Notes = notes;
         DueDate = dueDate;
         UserId = userId;
         IsCompleted = false;
+        DueTime = dueTime;
     }
 
     public static Result<Project> Create(
         string name,
         string notes,
-        DateTime? dueDate,
-        string userId)
+        DateOnly? dueDate,
+        string userId,
+        TimeOnly? dueTime)
     {
 
         var errors = new List<IError>();
@@ -60,7 +65,7 @@ public sealed class Project : Entity<ProjectId>, IAuditEntity
         Result<DueDate> dueDateResult = null!;
         if (dueDate != null)
         {
-            dueDateResult = DueDate.Create((DateTime)dueDate);
+            dueDateResult = DueDate.Create((DateOnly)dueDate);
             if (dueDateResult.IsFailed)
                 errors.AddRange(dueDateResult.Errors);
         }
@@ -77,11 +82,12 @@ public sealed class Project : Entity<ProjectId>, IAuditEntity
             nameResult.Value,
             notesResult.Value,
             dueDate == null ? null : dueDateResult!.Value,
-            userIdResult.Value);
+            userIdResult.Value,
+            dueTime);
 
         return project;
     }
-    public Result UpdateDueDate(DateTime dueDate)
+    public Result UpdateDueDate(DateOnly dueDate)
     {
         var dueDateResult = DueDate.Create(dueDate);
         if (dueDateResult.IsFailed)
@@ -144,7 +150,7 @@ public sealed class Project : Entity<ProjectId>, IAuditEntity
         _tasks.Add(task);
         return Result.Ok();
     }
-    
+
     private Result<Task> GetTask(TaskId id)
     {
         var task = _tasks.SingleOrDefault(t => t.Id == id);

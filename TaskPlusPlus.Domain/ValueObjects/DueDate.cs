@@ -6,19 +6,19 @@ namespace TaskPlusPlus.Domain.ValueObjects;
 
 public sealed class DueDate : ValueObject
 {
-    private DueDate(DateTime value)
+    private DueDate(DateOnly value)
     {
         Value = value;
     }
 
-    public DateTime Value { get; }
+    public DateOnly Value { get; }
 
-    public static Result<DueDate> Create(DateTime dueDate)
+    public static Result<DueDate> Create(DateOnly dueDate)
     {
         return new DueDate(dueDate);
     }
 
-    public static implicit operator DateTime(DueDate dueDate)
+    public static implicit operator DateOnly(DueDate dueDate)
         => dueDate.Value;
 
     public override IEnumerable<object> GetAtomicValues()

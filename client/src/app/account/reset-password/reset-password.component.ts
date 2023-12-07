@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MustMatch } from 'src/app/shared/validators/passwords-must-match-validator';
 import { AccountService } from '../account.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ResetPasswordDto } from 'src/app/shared/models/ResetPasswordDto';
+import { ResetPasswordDto } from 'src/app/shared/models/account/ResetPasswordDto';
 import { MessageService } from 'primeng/api';
 
 @Component({

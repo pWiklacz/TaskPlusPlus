@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaskPlusPlus.Domain.Enums;
@@ -25,9 +26,6 @@ public class TaskConfiguration : IEntityTypeConfiguration<Domain.Entities.Task>
         var notesConverter = new ValueConverter<Notes, string>(
             notes => notes.Value,
             value => Notes.Create(value).Value);
-        var dueDateConverter = new ValueConverter<DueDate, DateTime>(
-            dueDate => dueDate.Value,
-            value => DueDate.Create(value).Value);
         var categoryIdConverter = new ValueConverter<CategoryId, ulong>(
             categoryId => categoryId.Value,
             value => new CategoryId(value));
@@ -40,9 +38,22 @@ public class TaskConfiguration : IEntityTypeConfiguration<Domain.Entities.Task>
         var energyConverter = new ValueConverter<Energy, int>(
             energy => energy.Value,
             value => Energy.FromValue(value).Value!);
-        var durationTimeConverter = new ValueConverter<TimeOnly, TimeSpan>(
+
+        var dueTimeConverter = new ValueConverter<TimeOnly, TimeSpan>(
             timeOnly => timeOnly.ToTimeSpan(),
             timeSpan => TimeOnly.FromTimeSpan(timeSpan));
+
+        var dueTimeComparer = new ValueComparer<TimeOnly>(
+            (t1, t2) => t1.Ticks == t2.Ticks,
+            t => t.GetHashCode());
+
+        var dueDateConverter = new ValueConverter<DueDate, DateTime>(
+            dueDate => dueDate.Value.ToDateTime(TimeOnly.MinValue),
+            value => DueDate.Create(DateOnly.FromDateTime(value)).Value);
+
+        var dueDateComparer = new ValueComparer<DueDate>(
+            (d1, d2) => d1!.Value.DayNumber == d2!.Value.DayNumber,
+            d => d.GetHashCode());
 
         builder.HasKey(t => t.Id);
 
@@ -63,7 +74,7 @@ public class TaskConfiguration : IEntityTypeConfiguration<Domain.Entities.Task>
             .HasConversion(notesConverter);
 
         builder.Property(t => t.DueDate)
-            .HasConversion(dueDateConverter!);
+            .HasConversion(dueDateConverter!, dueDateComparer);
 
         builder.Property(t => t.CategoryId)
             .HasConversion(categoryIdConverter);
@@ -78,8 +89,8 @@ public class TaskConfiguration : IEntityTypeConfiguration<Domain.Entities.Task>
         builder.Property(t => t.Energy)
             .HasConversion(energyConverter);
 
-        builder.Property(t => t.DurationTime)
-            .HasConversion(durationTimeConverter);
+        builder.Property(t => t.DueTime)
+            .HasConversion(dueTimeConverter, dueTimeComparer);
 
         builder.HasMany(t => t.Tags)
             .WithMany();

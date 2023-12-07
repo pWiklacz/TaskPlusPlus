@@ -34,7 +34,7 @@ internal class UpdateProjectDueDateCommandHandler : ICommandHandler<UpdateProjec
             return Result.Fail(new NotFoundError(nameof(Project), request.Dto.Id));
         }
 
-        var updateDueDateResult = project.UpdateDueDate((DateTime)request.Dto.DueDate!);
+        var updateDueDateResult = project.UpdateDueDate((DateOnly)request.Dto.DueDate!);
 
         if (updateDueDateResult.IsFailed)
         {

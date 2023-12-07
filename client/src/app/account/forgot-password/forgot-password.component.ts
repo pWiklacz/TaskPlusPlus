@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AccountService } from '../account.service';
-import { ForgotPasswordDto } from 'src/app/shared/models/ForgotPasswordDto';
+import { ForgotPasswordDto } from 'src/app/shared/models/account/ForgotPasswordDto';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';

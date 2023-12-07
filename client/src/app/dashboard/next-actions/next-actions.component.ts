@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CategoryService } from 'src/app/category/category.service';
 import { DashboardComponent } from '../dashboard.component';
 import { ActivatedRoute } from '@angular/router';
-import { NextActionsId } from 'src/app/shared/models/CategoryDto';
+import { NextActionsId } from 'src/app/shared/models/category/CategoryDto';
 import { TaskService } from 'src/app/task/task.service';
 
 @Component({

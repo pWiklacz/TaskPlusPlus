@@ -36,7 +36,7 @@ internal class UpdateTaskDueDateCommandHandler : ICommandHandler<UpdateTaskDueDa
             return Result.Fail(new NotFoundError(nameof(Task), request.Dto.Id));
         }
 
-        var updateDueDateResult = task.UpdateDueDate((DateTime)request.Dto.DueDate!);
+        var updateDueDateResult = task.UpdateDueDate((DateOnly)request.Dto.DueDate!);
 
         if (updateDueDateResult.IsFailed)
         {

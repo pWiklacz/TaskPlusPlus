@@ -15,9 +15,9 @@ public class TaskMappingProfile : Profile
             .ForMember(dest => dest.Name,
                 opt => opt.MapFrom(src => src.Name.Value))
             .ForMember(dest => dest.Notes,
-                opt => opt.MapFrom(src => src.Notes.Value)) 
+                opt => opt.MapFrom(src => src.Notes.Value))
             .ForMember(dest => dest.DueDate,
-                opt => opt.MapFrom(src => src.DueDate != null ? src.DueDate.Value : (DateTime?)null))
+                opt => opt.MapFrom(src => src.DueDate != null ? src.DueDate.Value : (DateOnly?)null))
             .ForMember(dest => dest.Priority,
                 opt => opt.MapFrom(src => src.Priority.Value))
             .ForMember(dest => dest.ProjectId,
@@ -26,14 +26,15 @@ public class TaskMappingProfile : Profile
                 opt => opt.MapFrom(src => src.Energy.Value))
             .ForMember(dest => dest.IsCompleted,
                 opt => opt.MapFrom(src => src.IsCompleted))
-            .ForMember(dest => dest.DurationTime,
-                opt => opt.MapFrom(src => src.DurationTime))
+            .ForMember(dest => dest.DueTime,
+                opt => opt.MapFrom(src => src.DueTime))
             .ForMember(dest => dest.CategoryId,
                 opt => opt.MapFrom(src => src.CategoryId))
             .ForMember(dest => dest.CompletedOnUtc,
                 opt => opt.MapFrom(src => src.CompletedOnUtc))
             .ForMember(dest => dest.Tags,
-                opt => opt.MapFrom(src => src.Tags));
-
+                opt => opt.MapFrom(src => src.Tags))
+            .ForMember(dest => dest.DurationTime,
+                opt => opt.MapFrom(src => src.DurationTimeInMinutes));
     }
 }

@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { AccountService } from '../account.service';
 import { Router } from '@angular/router';
 import { MustMatch } from 'src/app/shared/validators/passwords-must-match-validator';
-import { UserForRegistrationDto } from 'src/app/shared/models/UserForRegistraionDto';
+import { UserForRegistrationDto } from 'src/app/shared/models/account/UserForRegistraionDto';
 import { environment } from 'src/environments/environment';
 
 @Component({

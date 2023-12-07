@@ -1,5 +1,5 @@
 import { Time } from "@angular/common"
-import { TagDto } from "./TagDto"
+import { TagDto } from "../tag/TagDto"
 
 export interface TaskDto {
     id: number

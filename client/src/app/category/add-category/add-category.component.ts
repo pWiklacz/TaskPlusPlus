@@ -2,10 +2,11 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ThemeService } from 'src/app/core/services/theme.service';
-import { CategoryDto, CreateCategoryDto } from 'src/app/shared/models/CategoryDto';
+import { CategoryDto} from 'src/app/shared/models/category/CategoryDto';
 import { CategoryService } from '../category.service';
 import { MessageService } from 'primeng/api';
 import { HttpErrorResponse } from '@angular/common/http';
+import { CreateCategoryDto } from 'src/app/shared/models/category/CreateCategoryDto';
 
 @Component({
   selector: 'app-add-category',

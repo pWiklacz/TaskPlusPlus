@@ -24,9 +24,9 @@ internal class TasksWithTagsSpecification : Specification<Domain.Entities.Task>
             {
                 case { } type when type == typeof(TimeOnly?):
                     if (queryParams.SortDescending)
-                        AddOrderByDescending(t => t.DurationTime!);
+                        AddOrderByDescending(t => t.DueTime!);
                     else
-                        AddOrderBy(t => t.DurationTime!);
+                        AddOrderBy(t => t.DueTime!);
                     break;
                 case { } type when type == typeof(ProjectId?):
                     if (queryParams.SortDescending)

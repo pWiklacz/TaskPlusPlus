@@ -1,6 +1,6 @@
 import { Time } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { TaskDto } from 'src/app/shared/models/TaskDto';
+import { TaskDto } from 'src/app/shared/models/task/TaskDto';
 
 @Component({
   selector: 'app-task-item',

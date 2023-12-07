@@ -26,6 +26,7 @@ import { ColorPickerModule } from 'primeng/colorpicker';
 import { FormsModule } from '@angular/forms';
 import { TaskItemComponent } from './task/task-item/task-item.component';
 import { TaskModule } from './task/task.module';
+import { TagModule } from './tag/tag.module';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { TaskModule } from './task/task.module';
     ModalModule.forRoot(),
     CategoryModule,
     FormsModule,
-    TaskModule
+    TaskModule,
+    TagModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
