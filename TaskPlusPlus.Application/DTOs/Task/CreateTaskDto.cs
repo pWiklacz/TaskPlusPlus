@@ -15,5 +15,5 @@ public class CreateTaskDto : ITaskTagsDto, IDueDateDto, INameAndNotesDto, ITaskP
     public string Energy { get; set; } = null!;
     public ulong? ProjectId { get; set; }
     public ulong CategoryId { get; set; }
-    public List<TagDto> Tags { get; set; } = new();
+    public List<ulong> Tags { get; set; } = new();
 }

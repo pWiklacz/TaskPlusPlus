@@ -9,7 +9,7 @@ internal class TaskTagsDtoValidator : AbstractValidator<ITaskTagsDto>
 {
     public TaskTagsDtoValidator(IUnitOfWork unitOfWork)
     {
-        var invalidTags = new List<TagDto>();
+        var invalidTags = new List<ulong>();
 
         RuleFor(dto => dto.Tags)
             .MustAsync(async (tags, token) =>
@@ -22,7 +22,7 @@ internal class TaskTagsDtoValidator : AbstractValidator<ITaskTagsDto>
                 foreach (var tag in tags)
                 {
                     var tagExists = await unitOfWork.Repository<Domain.Entities.Tag, TagId>()
-                        .ExistsByIdAsync(tag.Id);
+                        .ExistsByIdAsync(tag);
                     if (!tagExists)
                     {
                         invalidTags.Add(tag);

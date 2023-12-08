@@ -1,18 +1,15 @@
 import { Time } from "@angular/common"
 import { TagDto } from "../tag/TagDto"
 
-export interface TaskDto {
-    id: number
+export interface CreateTaskDto {
     name: string
-    dueDate: Date
-    notes: string 
-    isCompleted: boolean
-    dueTime: Time
+    dueDate: string
+    notes: string
     durationTime: number
+    dueTime: string
     priority: number
     energy: number
     projectId: number
     categoryId: number
-    completedOnUtc: Date
-    tags: TagDto[]
+    tags: number[]
 }

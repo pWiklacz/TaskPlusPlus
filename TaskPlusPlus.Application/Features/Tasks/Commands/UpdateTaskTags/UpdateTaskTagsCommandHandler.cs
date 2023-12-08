@@ -35,12 +35,12 @@ internal sealed class UpdateTaskTagsCommandHandler : ICommandHandler<UpdateTaskT
         {
             return Result.Fail(new NotFoundError(nameof(Task), request.Dto.Id));
         }
-        var tagsDto = request.Dto.Tags;
+        var tagsIds = request.Dto.Tags;
         var tags = new List<Tag>();
 
-        foreach (var tagDto in tagsDto)
+        foreach (var tagId in tagsIds)
         {
-            var tag = await _unitOfWork.Repository<Tag, TagId>().GetByIdAsync(tagDto.Id);
+            var tag = await _unitOfWork.Repository<Tag, TagId>().GetByIdAsync(tagId);
             tags.Add(tag!);
         }
 

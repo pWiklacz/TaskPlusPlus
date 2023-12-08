@@ -3,5 +3,5 @@
 namespace TaskPlusPlus.Application.DTOs.Task.IDto;
 internal interface ITaskTagsDto
 {
-    public List<TagDto> Tags { get; set; }
+    public List<ulong> Tags { get; set; }
 }

@@ -11,7 +11,7 @@
                 </div>
                 <div class="ml-3 duration-time" *ngIf="task.durationTime">
                     <i class="fa-regular fa-clock mx-1"></i>
-                    <span class="ml-2">{{this.formatTime(task.durationTime)}}</span>
+                   <span class="ml-2">{{this.formatMinutes(task.durationTime)}}</span> 
                 </div>
                 <div class="ml-3 energy">
                     <i class="{{this.formatEnergyIcon(this.task.energy)}} fa-fw mx-1 battery"></i>

@@ -54,11 +54,11 @@ internal sealed class CreateTaskCommandHandler : ICommandHandler<CreateTaskComma
             return result.ToResult();
 
         var task = result.Value;
-        var tagsDto = dto.Tags;
+        var tagsIds = dto.Tags;
 
-        foreach (var tagDto in tagsDto)
+        foreach (var tagId in tagsIds)
         {
-            var tag = await _unitOfWork.Repository<Tag, TagId>().GetByIdAsync(tagDto.Id);
+            var tag = await _unitOfWork.Repository<Tag, TagId>().GetByIdAsync(tagId);
             task.AddTag(tag!);
         }
 

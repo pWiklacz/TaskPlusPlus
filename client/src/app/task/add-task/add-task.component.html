@@ -39,16 +39,16 @@
                     <div class="col-6">
                         <ng-select class="select" formControlName="energy" placeholder="&#xf0e7; Energy"
                             [searchable]="false">
-                            <ng-option value='4' disabled="true">&#xf0e7; Energy</ng-option>
+                            <ng-option value='None' disabled="true">&#xf0e7; Energy</ng-option>
                             <ng-option *ngFor="let energy of EnergyEnum | enumToArray"
-                                value="{{energy.id}}">{{energy.name}}</ng-option>
+                                value="{{energy.name}}">{{energy.name}}</ng-option>
                         </ng-select>
                     </div>
                     <div class="col-6">
                         <ng-select class="select" formControlName="priority" placeholder="&#x21; Priority"
                             [searchable]="false">
-                            <ng-option value='6' disabled="true" style="cursor: none;">&#x21; Priority</ng-option>
-                            <ng-option *ngFor="let priority of PriorityEnum | keyvalue" value="{{priority.value.id}}">
+                            <ng-option value='E' disabled="true" style="cursor: none;">&#x21; Priority</ng-option>
+                            <ng-option *ngFor="let priority of PriorityEnum | keyvalue" value="{{priority.value.name}}">
                                 {{priority.value.name}}</ng-option>
                         </ng-select>
                     </div>

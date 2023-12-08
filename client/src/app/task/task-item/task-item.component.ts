@@ -7,23 +7,38 @@ import { TaskDto } from 'src/app/shared/models/task/TaskDto';
   templateUrl: './task-item.component.html',
   styleUrls: ['./task-item.component.scss']
 })
-export class TaskItemComponent {
+export class TaskItemComponent implements OnInit {
+
   @Input() task?: TaskDto;
 
-  formatTime(time: Time): string {
-    const timeSA = time.toString().split(":", 2);
-    var timeA: number[] = [];
+  ngOnInit(): void {
+    console.log(this.formatMinutes(30));  // Output: '30min'
+    console.log(this.formatMinutes(60));  // Output: '1h'
+    console.log(this.formatMinutes(70));  // Output: '1h 10min'
+  }
 
-    for (let item of timeSA) {
-      let no: number = Number(item);
-      timeA.push(no);
+  formatMinutes(minutes: number): string {
+    if (isNaN(minutes) || minutes < 0) {
+      return 'Invalid input';
     }
-    if (timeA[0] > 0 && timeA[1] > 0)
-      return `${timeA[0]}h ${timeA[1]}min`;
-    else if (timeA[0] == 0 && timeA[1] > 0)
-      return `${timeA[1]}min`;
-    else
-      return `${timeA[0]}h`;
+
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+
+    let result = '';
+
+    if (hours > 0) {
+      result += `${hours}h`;
+    }
+
+    if (remainingMinutes > 0) {
+      if (result !== '') {
+        result += ' ';
+      }
+      result += `${remainingMinutes}min`;
+    }
+
+    return result !== '' ? result : '0min';
   }
 
   formatEnergyIcon(energy: number) {
@@ -46,8 +61,7 @@ export class TaskItemComponent {
     }
   }
 
-  formatPriorityIcon(priority: number)
-  {
+  formatPriorityIcon(priority: number) {
     switch (priority) {
       case 1: {
         return "fa-solid fa-e";
