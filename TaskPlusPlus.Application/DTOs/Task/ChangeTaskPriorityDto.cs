@@ -4,5 +4,5 @@ using TaskPlusPlus.Application.DTOs.Task.IDto;
 namespace TaskPlusPlus.Application.DTOs.Task;
 public class ChangeTaskPriorityDto : BaseDto, ITaskPriorityDto
 {
-    public string Priority { get; set; } = null!;
+    public int Priority { get; set; }
 }

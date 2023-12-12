@@ -13,6 +13,6 @@ export interface TaskDto {
     energy: number
     projectId: number
     categoryId: number
-    completedOnUtc: Date
+    completedOnUtc: Date | null
     tags: TagDto[]
 }

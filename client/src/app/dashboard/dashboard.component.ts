@@ -2,7 +2,7 @@ import { Component, OnInit, effect } from '@angular/core';
 import { CategoryService } from '../category/category.service';
 import { ActivatedRoute, Params } from '@angular/router';
 import { CategoryDto } from '../shared/models/category/CategoryDto';
-import { switchMap } from 'rxjs/operators';
+import { finalize, map, switchMap } from 'rxjs/operators';
 import { TaskService } from '../task/task.service';
 import { TaskDto } from '../shared/models/task/TaskDto';
 import { GetTasksQueryParams } from '../shared/models/task/GetTasksQueryParams';
@@ -13,21 +13,20 @@ import { GetTasksQueryParams } from '../shared/models/task/GetTasksQueryParams';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-  protected categoryId?: number;
+  protected categoryId!: number;
   groupedTasks = new Map<string, TaskDto[]>();
   queryParams = new GetTasksQueryParams;
   yourData: { [key: string]: TaskDto[] } = {};
   groupsNames: string[] = []
+  contentLoaded: boolean = false;
 
   constructor(protected categoryService: CategoryService,
     protected activatedRoute: ActivatedRoute,
     protected taskService: TaskService) { }
 
   ngOnInit(): void {
-    this.getCategory() 
-    this.queryParams.categoryId = this.categoryId!;
-    if(this.queryParams.categoryId > 0)
-    this.getTasks();
+    this.getCategory();
+    this.contentLoaded = true;
   }
 
   private getCategory() {
@@ -38,20 +37,20 @@ export class DashboardComponent implements OnInit {
           return [];
         }
         this.categoryId = id;
+        this.queryParams.categoryId = this.categoryId;
+        this.getTasks();
         return this.categoryService.getCategory(+id);
       })
     ).subscribe({
       error: error => console.log(error)
     });
   }
-
   protected getTasks() {
-    this.taskService.getTasks(this.queryParams).subscribe({
-      next: response => {
-        this.yourData = response.value;
-        this.groupsNames = Object.keys(this.yourData);
+    this.taskService.getTasks(this.queryParams)?.subscribe(
+      {
+        error: error => console.log(error)
       }
-    });
+    );
   }
 
 }

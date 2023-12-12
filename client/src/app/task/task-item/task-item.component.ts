@@ -12,9 +12,6 @@ export class TaskItemComponent implements OnInit {
   @Input() task?: TaskDto;
 
   ngOnInit(): void {
-    console.log(this.formatMinutes(30));  // Output: '30min'
-    console.log(this.formatMinutes(60));  // Output: '1h'
-    console.log(this.formatMinutes(70));  // Output: '1h 10min'
   }
 
   formatMinutes(minutes: number): string {

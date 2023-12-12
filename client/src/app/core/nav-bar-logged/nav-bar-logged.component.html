@@ -8,14 +8,14 @@
                 </a>
             </li>
             <li>
-                <a class="nav-link px-2 link-secondary" style="font-size: 20px;"  routerLink="dashboard/inbox">
+                <a class="nav-link px-2 link-secondary" style="font-size: 20px;" routerLink="dashboard/inbox">
                     <i class="fa-house fa-solid fa-fw"></i>
                 </a>
             </li>
             <li>
                 <div class="btn-group border" dropdown>
                     <button type="button" class="add-button btn px-2 button-secondary" style="font-size: 20px;"
-                    (click)="this.openAddTaskModal()">
+                        (click)="this.openAddTaskModal()">
                         <i class="fa-plus fa-solid " style="color: white;"></i>
                     </button>
                     <button id="button-split" type="button" dropdownToggle
@@ -38,7 +38,7 @@
                                 Category
                             </a>
                         </li>
-                        <li role="menuitem"><a class="dropdown-item" href="#">
+                        <li role="menuitem"><a class="dropdown-item" (click)="this.openAddTagModal()">
                                 <i class="fa-solid fa-tag me-2"></i>Tag</a>
                         </li>
                     </ul>

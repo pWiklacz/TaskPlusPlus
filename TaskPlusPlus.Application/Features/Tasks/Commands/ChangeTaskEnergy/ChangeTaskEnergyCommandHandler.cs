@@ -35,7 +35,7 @@ internal sealed class ChangeTaskEnergyCommandHandler : ICommandHandler<ChangeTas
             return Result.Fail(new NotFoundError(nameof(Task), request.Dto.Id));
         }
 
-        var energyUpdateResult = Energy.FromName(request.Dto.Energy);
+        var energyUpdateResult = Energy.FromValue(request.Dto.Energy);
         if (energyUpdateResult.IsFailed)
             return energyUpdateResult.ToResult();
 

@@ -27,14 +27,16 @@ export class TagService {
     })
   }
 
+  filterTagsByTagIds(selectedTagIds: number[]): TagDto[] {
+    return this.userTags().filter(tag => selectedTagIds.includes(tag.id));
+  }
+
   getTags() {
     if(this.userTags().length == 0)
     {
       return this.http.get<ApiResponse<TagDto[]>>(this.apiUrl + 'Tag').pipe(
         map(tags => {
-          console.log(tags)
           this.userTags.set(tags.value)
-          console.log(this.userTags())
         })
       )
     }

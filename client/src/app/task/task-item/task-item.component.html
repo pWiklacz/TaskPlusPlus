@@ -4,24 +4,24 @@
         <label for="box-{{task.id}}"></label>
         <div class="ml-2">
             <h6 class="mb-0">{{task.name}}</h6>
-            <div class="d-flex flex-row mt-1 date-time ">
+            <div class="d-flex mt-1 date-time ">
                 <div class="due-date" *ngIf="task.dueDate">
                     <i class="fa-regular fa-calendar-o fa-fw me-1"></i>
-                    <span class="ml-2">{{task.dueDate | date:'MMM d, y, h:mm a'}}</span>
+                    <span class="me-2">{{task.dueDate | date:'MMM d, y'}}</span>
                 </div>
-                <div class="ml-3 duration-time" *ngIf="task.durationTime">
-                    <i class="fa-regular fa-clock mx-1"></i>
-                   <span class="ml-2">{{this.formatMinutes(task.durationTime)}}</span> 
+                <div class="duration-time" *ngIf="task.durationTime">
+                    <i class="fa-regular fa-clock me-1"></i>
+                   <span class="me-2">{{this.formatMinutes(task.durationTime)}}</span> 
                 </div>
-                <div class="ml-3 energy">
-                    <i class="{{this.formatEnergyIcon(this.task.energy)}} fa-fw mx-1 battery"></i>
+                <div class="energy">
+                    <i class="{{this.formatEnergyIcon(this.task.energy)}} fa-fw me-1 battery"></i>
                 </div>
-                <div class="ml-3 priority">
+                <div class="priority">
                     <i class="{{this.formatPriorityIcon(this.task.priority)}} fa-fw mx-0"></i>
                     <i class="fa-solid fa-exclamation"></i>
                 </div>
             </div>
-            <div class="d-flex flex-row mt-1 tags">
+            <div class="d-flex mt-1 tags">
                 <div *ngFor="let tag of task.tags" class="tag" [ngStyle]="{'color': tag.colorHex}">
                     <i class="fa-solid fa-tag fa-fw" [ngStyle]="{'color': tag.colorHex}"></i>
                     {{tag.name}}

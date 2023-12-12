@@ -1,9 +1,7 @@
-import { KeyValue } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { MessageService } from 'primeng/api';
-import { Observable } from 'rxjs';
 import { CategoryService } from 'src/app/category/category.service';
 import { ThemeService } from 'src/app/core/services/theme.service';
 import { CreateTaskDto } from 'src/app/shared/models/task/CreateTaskDto';
@@ -12,6 +10,8 @@ import { PriorityEnum } from 'src/app/shared/models/task/PriorityEnum';
 import { TagService } from 'src/app/tag/tag.service';
 import { TaskService } from '../task.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { TaskDto } from 'src/app/shared/models/task/TaskDto';
+import { Time } from "@angular/common"
 
 interface Tag {
   value: number;
@@ -19,7 +19,7 @@ interface Tag {
 }
 
 @Component({
-  selector: 'app-add-task',
+  selector: 'app-add-tag',
   templateUrl: './add-task.component.html',
   styleUrls: ['./add-task.component.scss']
 })
@@ -118,15 +118,47 @@ export class AddTaskComponent implements OnInit {
       categoryId: formValues.categoryId,
       tags: formValues.selectedTags
     }
-  
-
     this.taskService.postTask(createdTask).subscribe({
       next: (response: any) => {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: response.message, life: 3000 });
+        const task: TaskDto = {
+          id: response.value,
+          name: createdTask.name,
+          dueDate: new Date(createdTask.dueDate),
+          notes: createdTask.notes,
+          isCompleted: false,
+          dueTime: this.parseTimeString(createdTask.dueTime)!,
+          durationTime: +createdTask.durationTime,
+          priority: +createdTask.priority,
+          energy: +createdTask.energy,
+          projectId: createdTask.projectId,
+          categoryId: createdTask.categoryId,
+          completedOnUtc: null,
+          tags: this.tagService.filterTagsByTagIds(createdTask.tags)
+        }
+        console.log(task)
+        this.taskService.addTask(task);
+
       },
       error: (err: HttpErrorResponse) => {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Problem with creating task', life: 3000 });
       }
     })
+
+    this.bsModalRef.hide()
+  }
+
+  private parseTimeString(timeString: string): Time | null {
+    const timeRegex = /^(\d{2}):(\d{2}):(\d{2})$/;
+
+    const match = timeString.match(timeRegex);
+
+    if (match) {
+      const [, hours, minutes, seconds] = match.map(Number);
+      return { hours, minutes };
+    }
+
+    console.error('Invalid time string format or values.');
+    return null;
   }
 }

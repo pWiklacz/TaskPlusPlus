@@ -11,8 +11,8 @@ public class CreateTaskDto : ITaskTagsDto, IDueDateDto, INameAndNotesDto, ITaskP
     public string Notes { get; set; } = string.Empty;
     public int DurationTime { get; set; }
     public TimeOnly? DueTime { get; set; }
-    public string Priority { get; set; } = null!;
-    public string Energy { get; set; } = null!;
+    public int Priority { get; set; }
+    public int Energy { get; set; }
     public ulong? ProjectId { get; set; }
     public ulong CategoryId { get; set; }
     public List<ulong> Tags { get; set; } = new();

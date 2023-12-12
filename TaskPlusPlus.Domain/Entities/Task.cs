@@ -62,9 +62,9 @@ public sealed class Task : Entity<TaskId>, IAuditEntity
         string name,
         DateOnly? dueDate,
         string notes,
-        string priority,
+        int priority,
         ProjectId? projectId,
-        string energy,
+        int energy,
         TimeOnly? dueTime,
         string userId,
         CategoryId categoryId,
@@ -92,11 +92,11 @@ public sealed class Task : Entity<TaskId>, IAuditEntity
         if (notesResult.IsFailed)
             errors.AddRange(notesResult.Errors);
 
-        var priorityResult = Priority.FromName(priority);
+        var priorityResult = Priority.FromValue(priority);
         if (priorityResult.IsFailed)
             errors.AddRange(priorityResult.Errors);
 
-        var energyResult = Energy.FromName(energy);
+        var energyResult = Energy.FromValue(energy);
         if (energyResult.IsFailed)
             errors.AddRange(energyResult.Errors);
 

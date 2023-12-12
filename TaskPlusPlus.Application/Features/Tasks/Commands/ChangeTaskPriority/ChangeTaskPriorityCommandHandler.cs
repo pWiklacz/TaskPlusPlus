@@ -35,7 +35,7 @@ internal sealed class ChangeTaskPriorityCommandHandler : ICommandHandler<ChangeT
             return Result.Fail(new NotFoundError(nameof(Task), request.Dto.Id));
         }
 
-        var priorityUpdateResult = Priority.FromName(request.Dto.Priority);
+        var priorityUpdateResult = Priority.FromValue(request.Dto.Priority);
         if (priorityUpdateResult.IsFailed)
             return priorityUpdateResult.ToResult();
 

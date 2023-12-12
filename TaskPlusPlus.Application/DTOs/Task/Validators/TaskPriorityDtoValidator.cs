@@ -10,7 +10,7 @@ internal class TaskPriorityDtoValidator : AbstractValidator<ITaskPriorityDto>
         RuleFor(dto => dto.Priority)
             .Must(e =>
                 {
-                    var result = Priority.FromName(e);
+                    var result = Priority.FromValue(e);
                     return result.IsSuccess;
                 }
                 ).WithMessage("There is no Priority value name {PropertyValue}");

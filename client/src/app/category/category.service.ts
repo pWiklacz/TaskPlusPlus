@@ -3,7 +3,7 @@ import { Injectable, signal } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { CategoryDto } from '../shared/models/category/CategoryDto';
 import { ApiResponse } from '../shared/models/ApiResponse';
-import { Observable, map } from 'rxjs';
+import { map } from 'rxjs';
 import { CreateCategoryDto } from '../shared/models/category/CreateCategoryDto';
 
 @Injectable({
@@ -57,7 +57,6 @@ export class CategoryService {
       color: '#f3f316'
     }
   ];
-
 
   constructor(private http: HttpClient) { }
 
