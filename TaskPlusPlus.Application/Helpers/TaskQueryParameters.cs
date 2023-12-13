@@ -13,6 +13,6 @@ public class TaskQueryParameters
     public string Search
     {
         get => _search;
-        set => _search = value.ToLower();
+        set => _search = value!.ToLower();
     }
 }

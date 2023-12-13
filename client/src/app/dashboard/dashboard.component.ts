@@ -1,4 +1,4 @@
-import { Component, OnInit, effect } from '@angular/core';
+import { Component, Input, OnInit, effect } from '@angular/core';
 import { CategoryService } from '../category/category.service';
 import { ActivatedRoute, Params } from '@angular/router';
 import { CategoryDto } from '../shared/models/category/CategoryDto';
@@ -18,7 +18,7 @@ export class DashboardComponent implements OnInit {
   queryParams = new GetTasksQueryParams;
   yourData: { [key: string]: TaskDto[] } = {};
   groupsNames: string[] = []
-  contentLoaded: boolean = false;
+  protected contentLoaded: boolean = false;
 
   constructor(protected categoryService: CategoryService,
     protected activatedRoute: ActivatedRoute,

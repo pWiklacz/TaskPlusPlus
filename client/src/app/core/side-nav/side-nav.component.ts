@@ -17,9 +17,6 @@ export class SideNavComponent implements OnInit {
     this.getCategories();
   }
 
-  selectCategory(id: number) {
-    this.categoryService.selecetCategory(id);
-  }
 
   getCategories() {
     this.categoryService.getCategories().subscribe({

@@ -18,28 +18,35 @@ internal class TasksWithTagsSpecification : Specification<Domain.Entities.Task>
         AddOrderBy(t => t.Name);
 
         var sortBy = typeof(Domain.Entities.Task).GetProperty(queryParams.SortBy);
+        
         if (sortBy is not null)
         {
-            switch (sortBy.PropertyType)
+            switch (sortBy.Name)
             {
-                case { } type when type == typeof(TimeOnly?):
+                case "DurationTimeInMinutes":
                     if (queryParams.SortDescending)
-                        AddOrderByDescending(t => t.DueTime!);
+                        AddOrderByDescending(t => t.DurationTimeInMinutes);
                     else
-                        AddOrderBy(t => t.DueTime!);
+                        AddOrderBy(t => t.DurationTimeInMinutes!);
                     break;
-                case { } type when type == typeof(ProjectId?):
+                case "CreatedOnUtc":
                     if (queryParams.SortDescending)
-                        AddOrderByDescending(t => t.ProjectId!);
+                        AddOrderByDescending(t => t.CreatedOnUtc);
                     else
-                        AddOrderBy(t => t.ProjectId!);
+                        AddOrderBy(t => t.CreatedOnUtc!);
                     break;
-                case { } type when type == typeof(CategoryId):
-                    if (queryParams.SortDescending)
-                        AddOrderByDescending(t => t.CategoryId);
-                    else
-                        AddOrderBy(t => t.CategoryId);
-                    break;
+                //case "ProjectId":
+                //    if (queryParams.SortDescending)
+                //        AddOrderByDescending(t => t.ProjectId!);
+                //    else
+                //        AddOrderBy(t => t.ProjectId!);
+                //    break;
+                //case "CategoryId":
+                //    if (queryParams.SortDescending)
+                //        AddOrderByDescending(t => t.CategoryId);
+                //    else
+                //        AddOrderBy(t => t.CategoryId);
+                //    break;
                 default:
                     var parameter = Expression.Parameter(typeof(Domain.Entities.Task), "t");
                     var property = Expression.Property(parameter, sortBy);

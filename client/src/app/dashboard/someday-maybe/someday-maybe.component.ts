@@ -18,10 +18,11 @@ export class SomedayMaybeComponent extends DashboardComponent implements OnInit 
     super(categoryService, activatedRoute, taskService);
   }
 
-
   override ngOnInit(): void {
     this.categoryService.getCategory(+SomedayMaybeId).subscribe({
       error: error => console.log(error)
     })
+    this.queryParams.categoryId = SomedayMaybeId;
+    this.getTasks();
   }
 }

@@ -5,5 +5,5 @@ using TaskPlusPlus.Application.Messaging;
 namespace TaskPlusPlus.Application.Features.Tasks.Queries.GetGroupedTasks;
 
 public record GetGroupedTasksQuery(TaskQueryParameters QueryParams)
-    : IQuery<Dictionary<object, List<TaskDto>>>;
+    : IQuery<Dictionary<string, List<TaskDto>>>;
 

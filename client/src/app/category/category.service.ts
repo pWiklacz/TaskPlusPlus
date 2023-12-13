@@ -21,37 +21,37 @@ export class CategoryService {
       color: '#4cd6f1'
     },
     {
-      id: '2',
+      id: '99',
       name: 'Today',
       icon: 'fa-solid fa-calendar-day',
       color: '#065535'
     },
     {
-      id: '3',
+      id: '99',
       name: 'Calendar',
       icon: 'fa-solid fa-calendar',
       color: '#cb063e'
     },
     {
-      id: '4',
+      id: '2',
       name: 'Next Actions',
       icon: 'fa-solid fa-angles-right',
       color: '#f37b16'
     },
     {
-      id: '5',
+      id: '99',
       name: 'Projects',
       icon: 'fa-solid fa-list-check',
       color: '#ffffff'
     },
     {
-      id: '6',
+      id: '5',
       name: 'Waiting For',
       icon: 'fa-solid fa-hourglass-half',
       color: '#000000'
     },
     {
-      id: '7',
+      id: '6',
       name: 'Someday/Maybe',
       icon: 'fa-solid fa-lightbulb',
       color: '#f3f316'
@@ -70,10 +70,6 @@ export class CategoryService {
     this.userCategories.mutate((val) => {
       val.splice(id, 1);
     })
-  }
-
-  selecetCategory(id: number) {
-    this.selectedCategory.update(() => this.userCategories()[id])
   }
 
   getCategories() {

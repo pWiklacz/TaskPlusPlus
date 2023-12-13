@@ -15,10 +15,10 @@
         <!--Card Body-->
         <div class="card-body">
             <div class="col-md-12">
-                <ul class="list list-inline" *ngFor="let groupName of this.taskService.getCategoryTaskGroupsNames(categoryId)">
+                <ul class="list list-inline" *ngFor="let groupName of this.taskService.CurrentCategoryTasksGroupNames()">
                     <div>
                         {{groupName}}
-                        <ul class="list list-inline" *ngFor="let task of this.taskService.getCategoryGroupOfTasks(categoryId, groupName)">
+                        <ul class="list list-inline" *ngFor="let task of this.taskService.CurrentCategoryTasksMap()![groupName]">
                             <app-task-item [task]="task"></app-task-item>
                         </ul>
                     </div>

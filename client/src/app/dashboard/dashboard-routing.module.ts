@@ -8,6 +8,7 @@ import { DashboardComponent } from './dashboard.component';
 import { InboxComponent } from './inbox/inbox.component';
 import { NextActionsComponent } from './next-actions/next-actions.component';
 import { WaitingForComponent } from './waiting-for/waiting-for.component';
+import { SomedayMaybeComponent } from './someday-maybe/someday-maybe.component';
 
 const routes: Routes = [
   {path: 'today', component: TodayComponent},
@@ -16,7 +17,7 @@ const routes: Routes = [
   {path: 'inbox', component: InboxComponent},
   {path: 'nextactions', component: NextActionsComponent},
   {path: 'waitingfor', component: WaitingForComponent},
-  {path: 'someday_maybe', component: WaitingForComponent},
+  {path: 'someday/maybe', component: SomedayMaybeComponent},
   {path: 'category/:id', component: DashboardComponent},
   { path: '**', redirectTo: 'today', pathMatch: 'full' },
   { path: '', redirectTo: 'today', pathMatch: 'full' }

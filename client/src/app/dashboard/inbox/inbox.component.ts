@@ -8,7 +8,8 @@ import { TaskService } from 'src/app/task/task.service';
 
 @Component({
   selector: 'app-inbox',
-  template: '<app-dashboard></app-dashboard>'
+  templateUrl: './inbox.component.html',
+  styleUrls: ['./inbox.component.scss']
 })
 export class InboxComponent extends DashboardComponent implements OnInit {
  
@@ -16,10 +17,8 @@ export class InboxComponent extends DashboardComponent implements OnInit {
     categoryService: CategoryService,
     activatedRoute: ActivatedRoute,
     taskService: TaskService) {
-    super(categoryService, activatedRoute, taskService);
-    
+    super(categoryService, activatedRoute, taskService);   
   }
-
 
   override ngOnInit(): void {
     this.categoryService.getCategory(+InboxId).subscribe({

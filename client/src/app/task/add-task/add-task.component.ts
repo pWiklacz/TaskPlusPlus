@@ -95,7 +95,7 @@ export class AddTaskComponent implements OnInit {
       error: error => console.log(error)
     })
 
-    this.systemCategories = this.categoryService.systemCategories.filter(category => !['2', '3', '5'].includes(category.id));
+    this.systemCategories = this.categoryService.systemCategories.filter(category => !['99'].includes(category.id));
   }
 
   get form() { return this.addTaskForm.controls; }
@@ -112,12 +112,13 @@ export class AddTaskComponent implements OnInit {
       notes: formValues.notes!,
       durationTime: formValues.durationTime ?? 0,
       dueTime: formattedTime!,
-      priority: formValues.priority ?? PriorityEnum.E.name,
-      energy: formValues.energy ?? EnergyEnum.NONE.name,
+      priority: formValues.priority ?? PriorityEnum.E.id,
+      energy: formValues.energy ?? EnergyEnum.NONE.id,
       projectId: formValues.projectId,
       categoryId: formValues.categoryId,
       tags: formValues.selectedTags
     }
+
     this.taskService.postTask(createdTask).subscribe({
       next: (response: any) => {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: response.message, life: 3000 });
@@ -150,15 +151,16 @@ export class AddTaskComponent implements OnInit {
 
   private parseTimeString(timeString: string): Time | null {
     const timeRegex = /^(\d{2}):(\d{2}):(\d{2})$/;
+    if(timeString)
+    {
+      const match = timeString.match(timeRegex);
 
-    const match = timeString.match(timeRegex);
-
-    if (match) {
-      const [, hours, minutes, seconds] = match.map(Number);
-      return { hours, minutes };
+      if (match) {
+        const [, hours, minutes, seconds] = match.map(Number);
+        return { hours, minutes };
+      } 
     }
-
-    console.error('Invalid time string format or values.');
+    //console.error('Invalid time string format or values.');
     return null;
   }
 }

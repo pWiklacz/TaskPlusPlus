@@ -22,5 +22,7 @@ export class WaitingForComponent extends DashboardComponent implements OnInit {
     this.categoryService.getCategory(+WaitingForId).subscribe({
       error: error => console.log(error)
     })
+    this.queryParams.categoryId = WaitingForId;
+    this.getTasks();
   }
 }
