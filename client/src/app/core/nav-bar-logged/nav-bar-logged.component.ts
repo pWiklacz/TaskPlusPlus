@@ -1,11 +1,10 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AccountService } from 'src/app/account/account.service';
-import { BsModalService, BsModalRef, ModalOptions } from 'ngx-bootstrap/modal';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { SettingsComponent } from 'src/app/settings/settings.component';
 import { AddCategoryComponent } from 'src/app/category/add-category/add-category.component';
 import { SideNavService } from '../services/side-nav.service';
 import { AddTaskComponent } from 'src/app/task/add-task/add-task.component';
-import { TagService } from 'src/app/tag/tag.service';
 import { AddTagComponent } from 'src/app/tag/add-tag/add-tag.component';
 
 @Component({

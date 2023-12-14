@@ -1,8 +1,5 @@
 ﻿using System.Linq.Expressions;
-using System.Reflection;
 using TaskPlusPlus.Application.Helpers;
-using TaskPlusPlus.Domain.ValueObjects.Category;
-using TaskPlusPlus.Domain.ValueObjects.Project;
 
 namespace TaskPlusPlus.Application.Specifications.Task;
 
@@ -35,18 +32,6 @@ internal class TasksWithTagsSpecification : Specification<Domain.Entities.Task>
                     else
                         AddOrderBy(t => t.CreatedOnUtc!);
                     break;
-                //case "ProjectId":
-                //    if (queryParams.SortDescending)
-                //        AddOrderByDescending(t => t.ProjectId!);
-                //    else
-                //        AddOrderBy(t => t.ProjectId!);
-                //    break;
-                //case "CategoryId":
-                //    if (queryParams.SortDescending)
-                //        AddOrderByDescending(t => t.CategoryId);
-                //    else
-                //        AddOrderBy(t => t.CategoryId);
-                //    break;
                 default:
                     var parameter = Expression.Parameter(typeof(Domain.Entities.Task), "t");
                     var property = Expression.Property(parameter, sortBy);
@@ -59,7 +44,6 @@ internal class TasksWithTagsSpecification : Specification<Domain.Entities.Task>
                     break;
             }
         }
-
     }
 
     public TasksWithTagsSpecification(ulong id, string userId)

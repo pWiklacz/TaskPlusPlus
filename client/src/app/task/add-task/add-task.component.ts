@@ -42,6 +42,7 @@ export class AddTaskComponent implements OnInit {
     { value: 480, label: "8h" },
   ];
 
+
   selectedTaags: Tag[] = [];
 
   constructor(public bsModalRef: BsModalRef,
@@ -151,14 +152,13 @@ export class AddTaskComponent implements OnInit {
 
   private parseTimeString(timeString: string): Time | null {
     const timeRegex = /^(\d{2}):(\d{2}):(\d{2})$/;
-    if(timeString)
-    {
+    if (timeString) {
       const match = timeString.match(timeRegex);
 
       if (match) {
         const [, hours, minutes, seconds] = match.map(Number);
         return { hours, minutes };
-      } 
+      }
     }
     //console.error('Invalid time string format or values.');
     return null;

@@ -5,6 +5,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ReplaceSpacesPipe } from './pipes/replace-spaces.pipe';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { EnumToArrayPipe } from './pipes/enum-to-array.pipe';
+import { TieredMenuModule } from 'primeng/tieredmenu';
 
 @NgModule({
   declarations: [
@@ -16,13 +17,15 @@ import { EnumToArrayPipe } from './pipes/enum-to-array.pipe';
     ReactiveFormsModule,
     BsDropdownModule.forRoot(),
     BsDatepickerModule.forRoot(),
+    TieredMenuModule
   ],
   exports:[
     ReactiveFormsModule,
     BsDropdownModule,
     ReplaceSpacesPipe,
     BsDatepickerModule,
-    EnumToArrayPipe
+    EnumToArrayPipe,
+    TieredMenuModule
   ]
 })
 export class SharedModule { } 

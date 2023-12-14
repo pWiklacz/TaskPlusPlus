@@ -27,6 +27,7 @@ import { FormsModule } from '@angular/forms';
 import { TaskItemComponent } from './task/task-item/task-item.component';
 import { TaskModule } from './task/task.module';
 import { TagModule } from './tag/tag.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { TagModule } from './tag/tag.module';
     CategoryModule,
     FormsModule,
     TaskModule,
-    TagModule
+    TagModule,
+    DashboardModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

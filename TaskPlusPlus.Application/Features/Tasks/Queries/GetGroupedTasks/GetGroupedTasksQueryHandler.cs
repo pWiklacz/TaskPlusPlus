@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using FluentResults;
-using System.Reflection;
 using TaskPlusPlus.Application.Contracts.Persistence;
-using TaskPlusPlus.Application.DTOs.Tag;
 using TaskPlusPlus.Application.DTOs.Task;
+using TaskPlusPlus.Application.Extensions;
 using TaskPlusPlus.Application.Messaging;
 using TaskPlusPlus.Application.Models.Identity.ApplicationUser;
 using TaskPlusPlus.Application.Responses.Errors;
 using TaskPlusPlus.Application.Specifications.Task;
+using TaskPlusPlus.Domain.Enums;
 using TaskPlusPlus.Domain.ValueObjects.Task;
 using Task = TaskPlusPlus.Domain.Entities.Task;
 
@@ -54,37 +54,38 @@ internal sealed class GetGroupedTasksQueryHandler : IQueryHandler<GetGroupedTask
             case "":
                 result["All"] = tasksDto;
                 break;
-            default:
-                {
+            case "DurationTime":
+                result = tasksDto
+                    .GroupBy(task => task.DurationTime)
+                    .ToDictionary(g => "Duration time: " + g.Key.FormatMinutes(), g => g.ToList());
+                break;
+            case "DueDate":
+                var today = DateOnly.FromDateTime(DateTime.Now);
 
-                    /**
-                     * sortowanie po Name, DueDate, DurationTimeInMinutes, Priority, Energy, CreatedOn
-                     * grupowanie po DueDate, DurationTimeInMinutes, Priority, Energy, CreatedOn 
-                     */
-                    var groupBy = typeof(TaskDto).GetProperty(request.QueryParams.GroupBy);
-
-                    if (groupBy is not null)
+                result = tasksDto
+                    .GroupBy(task =>
                     {
-                        var groupedTasksDto = tasksDto
-                            .GroupBy(t => groupBy.GetValue(t) ?? "No Value")
-                            .OrderBy(x => x.Key);
-
-                        foreach (var group in groupedTasksDto)
+                        if (task.DueDate == null)
                         {
-                            var key = group.Key?.ToString() ?? "No Value";
-                            result[key] = group.Select(item => item).ToList();
+                            return "NoDueDate";
                         }
-                    }
-                    else
-                    {
-                        return Result.Fail(new GroupingProblemError(request.QueryParams.GroupBy));
-                    }
-
-                    break;
-                }
+                        return task.DueDate.Value < today ? "Overdue" : task.DueDate.ToString();
+                    })
+                    .ToDictionary(g => g.Key!, g => g.ToList());
+                break;
+            case "Priority":
+                result = tasksDto
+                    .GroupBy(task => task.Priority)
+                    .ToDictionary(g => "Priority: " + Priority.FromValue(g.Key).Value, g => g.ToList());
+                break;
+            case "Energy":
+                result = tasksDto
+                    .GroupBy(task => task.Energy)
+                    .ToDictionary(g => "Energy: " + Energy.FromValue(g.Key).Value, g => g.ToList());
+                break;
+            default:
+                return Result.Fail(new GroupingProblemError(request.QueryParams.GroupBy));
         }
-
         return result;
-
     }
 }

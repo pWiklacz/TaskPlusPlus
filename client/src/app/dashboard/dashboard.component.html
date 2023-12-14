@@ -8,17 +8,74 @@
                 <h1 class="text-white">{{this.categoryService.selectedCategory()?.name}}</h1>
             </div>
             <div class="col-6 icons text-white text-end">
-                <i class="fa-solid fa-gear mx-3"></i>
-                <i class="fa-solid fa-ellipsis"></i>
+
+                <span dropdown container="body" [insideClick]="true">
+                    <a href id="basic-link" dropdownToggle (click)="false" aria-controls="basic-link-dropdown">
+                        <i class="fa-solid fa-ellipsis"></i>
+                    </a>
+                    <ul id="basic-link-dropdown" *dropdownMenu class="dropdown-menu dropdown-menu-right border"
+                        role="menu" aria-labelledby="basic-link">
+                        <li role="menuitem"><a class="dropdown-item">  
+                            <i class="fa-solid fa-pen-to-square me-2"></i>Edit</a>
+                        </li>
+                        <li class="divider dropdown-divider"></li>
+                        <li role="menuitem">
+                            <span dropdown container="body">
+                                <a href id="basic-link" dropdownToggle (click)="false"
+                                    aria-controls="basic-link-dropdown">
+                                    <a class="dropdown-item">
+                                        <div class="align-items-center row">
+                                            <div class="col-6">
+                                                <i class="fa-solid fa-sort me-2 fa-fw"></i>Sorting
+                                            </div>                        
+                                            <div class="col-6 text-end">cc</div>
+                                        </div>
+                                    </a>                           
+                                </a>
+                                <ul id="basic-link-dropdown" *dropdownMenu class="dropdown-menu border" role="menu"
+                                    aria-labelledby="basic-link">
+                                    <li role="menuitem"><a class="dropdown-item">
+                                            <i class="fa-solid fa-pen-to-square me-2"></i>aa</a></li>
+                                    <li role="menuitem"><a class="dropdown-item">
+                                            <i class="fa-solid fa-trash me-2"></i>Delete</a>
+                                    </li>
+                                </ul>
+                            </span>
+                        </li>
+                        <li role="menuitem">
+                            <span dropdown container="body">
+                                <a href id="basic-link" dropdownToggle (click)="false"
+                                    aria-controls="basic-link-dropdown">
+                                    <a class="dropdown-item" style="text-decoration: none;">
+                                        <i class="fa-solid fa-layer-group me-2 fa-fw"></i>Grouping</a>
+                                </a>
+                                <ul id="basic-link-dropdown" *dropdownMenu class="dropdown-menu border" role="menu"
+                                    aria-labelledby="basic-link">
+                                    <li role="menuitem"><a class="dropdown-item">
+                                            <i class="fa-solid fa-pen-to-square me-2"></i>aa</a></li>
+                                    <li role="menuitem"><a class="dropdown-item">
+                                            <i class="fa-solid fa-trash me-2"></i>Delete</a>
+                                    </li>
+                                </ul>
+                            </span>
+                        </li>
+                        <li class="divider dropdown-divider"></li>
+                        <li role="menuitem"><a class="dropdown-item">
+                                <i class="fa-solid fa-trash me-2"></i>Delete</a>
+                        </li>
+                    </ul>
+                </span>
             </div>
         </div>
         <!--Card Body-->
         <div class="card-body">
             <div class="col-md-12">
-                <ul class="list list-inline" *ngFor="let groupName of this.taskService.CurrentCategoryTasksGroupNames()">
+                <ul class="list list-inline"
+                    *ngFor="let groupName of this.taskService.CurrentCategoryTasksGroupNames()">
                     <div>
-                        {{groupName}}
-                        <ul class="list list-inline" *ngFor="let task of this.taskService.CurrentCategoryTasksMap()![groupName]">
+                        <b class="text-white">{{groupName}}</b>
+                        <ul class="list list-inline"
+                            *ngFor="let task of this.taskService.CurrentCategoryTasksMap()![groupName]">
                             <app-task-item [task]="task"></app-task-item>
                         </ul>
                     </div>

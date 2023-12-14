@@ -8,6 +8,17 @@
     margin-bottom: 50px;
 }
 
+.dropdown-item {
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    width: 300px;
+}
+
+a {
+    text-decoration: none;
+}
 
 .card-header {
     margin-left: 5%;
