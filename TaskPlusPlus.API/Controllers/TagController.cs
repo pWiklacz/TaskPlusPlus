@@ -23,7 +23,7 @@ public class TagController : BaseController
     [HttpGet]
     public async Task<ActionResult<List<TagDto>>> Get()
     {
-        var query = new GetTagsQuery();
+        var query = new GetUserTagsQuery();
         var tags = await _mediator.Send(query);
 
         return FromResult(tags);

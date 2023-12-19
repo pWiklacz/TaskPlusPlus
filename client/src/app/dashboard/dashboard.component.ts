@@ -1,11 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CategoryService } from '../category/category.service';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { TaskService } from '../task/task.service';
-import { TaskDto } from '../shared/models/task/TaskDto';
 import { GetTasksQueryParams } from '../shared/models/task/GetTasksQueryParams';
-import { MenuItem } from 'primeng/api';
+import { GroupingOptionsEnum } from '../shared/models/task/GroupingOptionsEnum';
+import { SortingOptionsEnum } from '../shared/models/task/SortingOptionsEnum';
+import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { EditCategoryComponent } from '../category/edit-category/edit-category.component';
+import { DeleteConfirmationModalComponent } from '../shared/components/delete-confirmation-modal/delete-confirmation-modal.component';
+import { MessageService } from 'primeng/api';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,88 +19,21 @@ import { MenuItem } from 'primeng/api';
 })
 export class DashboardComponent implements OnInit {
   protected categoryId!: number;
-  groupedTasks = new Map<string, TaskDto[]>();
   queryParams = new GetTasksQueryParams;
-  yourData: { [key: string]: TaskDto[] } = {};
-  groupsNames: string[] = []
   protected contentLoaded: boolean = false;
-  items: MenuItem[] | undefined;
+  public groupOptions = GroupingOptionsEnum;
+  public sortOptions = SortingOptionsEnum;
+  bsModalRef?: BsModalRef;
 
   constructor(protected categoryService: CategoryService,
     protected activatedRoute: ActivatedRoute,
-    protected taskService: TaskService) { }
+    protected taskService: TaskService,
+    protected modalService: BsModalService,
+    protected router: Router,
+    protected messageService: MessageService) { }
 
   ngOnInit(): void {
     this.getCategory();
-    this.items = [
-      {
-          label: 'File',
-          icon: 'pi pi-file',
-          items: [
-              {
-                  label: 'New',
-                  icon: 'pi pi-plus',
-                  items: [
-                      {
-                          label: 'Document',
-                          icon: 'pi pi-file'
-                      },
-                      {
-                          label: 'Image',
-                          icon: 'pi pi-image'
-                      },
-                      {
-                          label: 'Video',
-                          icon: 'pi pi-video'
-                      }
-                  ]
-              },
-              {
-                  label: 'Open',
-                  icon: 'pi pi-folder-open'
-              },
-              {
-                  label: 'Print',
-                  icon: 'pi pi-print'
-              }
-          ]
-      },
-      {
-          label: 'Edit',
-          icon: 'pi pi-file-edit',
-          items: [
-              {
-                  label: 'Copy',
-                  icon: 'pi pi-copy'
-              },
-              {
-                  label: 'Delete',
-                  icon: 'pi pi-times'
-              }
-          ]
-      },
-      {
-          label: 'Search',
-          icon: 'pi pi-search'
-      },
-      {
-          separator: true
-      },
-      {
-          label: 'Share',
-          icon: 'pi pi-share-alt',
-          items: [
-              {
-                  label: 'Slack',
-                  icon: 'pi pi-slack'
-              },
-              {
-                  label: 'Whatsapp',
-                  icon: 'pi pi-whatsapp'
-              }
-          ]
-      }
-  ]
     this.contentLoaded = true;
   }
 
@@ -115,6 +53,7 @@ export class DashboardComponent implements OnInit {
       error: error => console.log(error)
     });
   }
+
   protected getTasks() {
     this.taskService.getTasks(this.queryParams)?.subscribe(
       {
@@ -123,5 +62,76 @@ export class DashboardComponent implements OnInit {
     );
   }
 
+  onGroupingOptionSelected(id: number) {
+    const option = Object.values(GroupingOptionsEnum).find(enumItem => enumItem.id === id);
+    if (option !== this.queryParams.groupBy) {
+      this.queryParams.groupBy = option!;
+      this.queryParams.categoryId = this.categoryService.selectedCategory()!.id;
+      this.taskService.getTasks(this.queryParams, true)?.subscribe(
+        {
+          error: error => console.log(error)
+        }
+      );
+    }
+  }
+
+  onSortingOptionSelected(id: number) {
+    const option = Object.values(SortingOptionsEnum).find(enumItem => enumItem.id === id);
+    if (option !== this.queryParams.sortBy) {
+      this.queryParams.sortBy = option!
+      this.queryParams.categoryId = this.categoryService.selectedCategory()!.id;
+      this.taskService.getTasks(this.queryParams, true)?.subscribe(
+        {
+          error: error => console.log(error)
+        }
+      );
+    }
+  }
+
+  onSortDirectionSelected(bool: boolean) {
+    if (this.queryParams.sortDescending !== bool) {
+      this.queryParams.sortDescending = bool;
+      this.taskService.getTasks(this.queryParams, true)?.subscribe(
+        {
+          error: error => console.log(error)
+        }
+      );
+    }
+  }
+
+  openEditCategoryModal() {
+    const initialState: ModalOptions = {
+      initialState: {
+        category: this.categoryService.selectedCategory()
+      },
+      backdrop: 'static',
+      class: 'modal-dialog-centered'
+    }
+    this.bsModalRef = this.modalService.show(EditCategoryComponent, initialState);
+  }
+
+  openDeleteModal() {
+    const initialState: ModalOptions = {
+      initialState: {
+        name: this.categoryService.selectedCategory()?.name
+      }
+    }
+    this.bsModalRef = this.modalService.show(DeleteConfirmationModalComponent, initialState);
+
+    this.bsModalRef.content.deleteConfirmed.subscribe((deleteConfirmed: boolean) => {
+      if (deleteConfirmed) {
+        this.categoryService.deleteCategory(this.categoryService.selectedCategory()?.id!).subscribe({
+          next: (response: any) => {
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: response.message, life: 3000 });
+            this.router.navigate(['/dashboard/inbox']);
+            this.categoryService.removeCategory(this.categoryService.selectedCategory()?.id!)
+          },
+          error: (err: HttpErrorResponse) => {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Problem with deleting category', life: 3000 });
+          }
+        })
+      }
+    });
+  }
 }
 

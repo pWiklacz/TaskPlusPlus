@@ -177,3 +177,6 @@ $pre-color:                         inherit !default;
 
 @import 'node_modules/bootstrap/scss/bootstrap';
 
+.isNotCurrentMonth{
+    background: #1c1f23;
+  }

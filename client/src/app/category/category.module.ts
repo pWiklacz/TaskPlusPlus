@@ -4,11 +4,13 @@ import { AddCategoryComponent } from './add-category/add-category.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ColorPickerModule } from 'primeng/colorpicker';
 import { SharedModule } from 'primeng/api';
+import { EditCategoryComponent } from './edit-category/edit-category.component';
 
 
 @NgModule({
   declarations: [
-    AddCategoryComponent
+    AddCategoryComponent,
+    EditCategoryComponent
   ],
   imports: [
     CommonModule,

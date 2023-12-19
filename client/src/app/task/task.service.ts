@@ -33,7 +33,12 @@ export class TaskService {
     }
   }
 
-  getTasks(queryParams: GetTasksQueryParams) {
+  getTasks(queryParams: GetTasksQueryParams, paramsChanged = false) {
+    if(paramsChanged)
+    {
+      this.userTasks().delete(queryParams.categoryId)
+    }
+
     if (this.userTasks().has(queryParams.categoryId)) {
       this.CurrentCategoryTasksMap.set(this.userTasks().get(queryParams.categoryId))
       this.CurrentCategoryTasksGroupNames.set(Object.keys(this.CurrentCategoryTasksMap()!))
@@ -44,8 +49,8 @@ export class TaskService {
 
     if (queryParams.categoryId > 0) params = params.append('categoryId', queryParams.categoryId.toString());
     params = params.append('sortDescending', queryParams.sortDescending.toString());
-    params = params.append('sortBy', queryParams.sortBy);
-    if (queryParams.groupBy) params = params.append('groupBy', queryParams.groupBy);
+    params = params.append('sortBy', queryParams.sortBy.apiName);
+    if (queryParams.groupBy) params = params.append('groupBy', queryParams.groupBy.apiName);
     if (queryParams.search) params = params.append('search', queryParams.search);
 
     return this.http.get<ApiResponse<{ [key: string]: TaskDto[] }>>(this.apiUrl + 'Task', { params }).pipe(

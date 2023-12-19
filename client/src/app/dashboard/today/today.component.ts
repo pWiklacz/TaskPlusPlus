@@ -7,6 +7,5 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./today.component.scss']
 })
 export class TodayComponent {
-
- 
+  
 }

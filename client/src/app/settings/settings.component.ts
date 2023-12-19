@@ -14,6 +14,5 @@ export class SettingsComponent implements OnInit {
   constructor(public bsModalRef: BsModalRef) {}
  
   ngOnInit() {
-    this.list.push('PROFIT!!!');
   }
 }

@@ -96,56 +96,6 @@ $list-group-disabled-color:         lighten($list-group-bg, 30%) !default;
 @import "node_modules/bootswatch/dist/pulse/bootswatch";
 
 
-.select {
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "FontAwesome";
-    font-size: 1rem;
-    padding-top: 1px;
-    padding-bottom: 1px;
-  }
-  
-  :host ::ng-deep .ng-select-container {
-    background: var(--calendar-bg-color) !important;
-    color: var(--calendar-body-color) !important;
-    border-color: black;
-  }
-  
-  :host ::ng-deep .ng-select.ng-select-focused:not(.ng-select-opened)>.ng-select-container {
-    border-color: var(--primary-color);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 3px rgba(var(--primary-color), 0.5);
-  }
-  
-  :host ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
-    background: var(--calendar-bg-color) !important;
-    color: var(--calendar-body-color) !important;
-  }
-  
-  :host ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
-    background-color: var(--primary-color) !important;
-    color: white !important;
-  }
-  
-  :host ::ng-deep .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value {
-    background-color: var(--primary-color) !important;
-    color: white !important;
-  }
-  
-  :host ::ng-deep .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value .ng-value-icon.left {
-    border: none;
-  }
-  
-  :host ::ng-deep .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value .ng-value-icon:hover {
-    background-color: var(--secondary-color) !important;
-  }
-  
-  :host ::ng-deep .ng-select .ng-arrow-wrapper {
-    display: none;
-  }
-  
-  :host ::ng-deep .ng-input {
-    cursor: pointer !important;
-  }
-  
-  :host ::ng-deep .ng-select .ng-select-container .ng-value-container .ng-input>input {
-    cursor: pointer !important;
-    color: var(--calendar-body-color) !important;
-  }
+.isNotCurrentMonth{
+  background: #f2f2f2;
+}

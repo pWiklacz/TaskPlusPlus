@@ -52,6 +52,7 @@ export class AddCategoryComponent implements OnInit {
           id: response.value,
           name: createdCategory.name,
           isFavorite: createdCategory.isFavorite,
+          isImmutable: false,
           colorHex: createdCategory.colorHex,
           icon: createdCategory.icon
         }

@@ -4,6 +4,7 @@ export interface CategoryDto {
     id: number;
     name: string;
     isFavorite: boolean;
+    isImmutable: boolean;
     colorHex: string;
     icon: string;
 }

@@ -29,7 +29,7 @@ internal sealed class GetGroupedTasksQueryHandler : IQueryHandler<GetGroupedTask
         var userResult = _userContext.GetCurrentUser();
         if (userResult.IsFailed)
         {
-            return userResult.ToResult();
+            return userResult.ToResult(); 
         }
 
         var userId = userResult.Value.Id;
@@ -51,7 +51,7 @@ internal sealed class GetGroupedTasksQueryHandler : IQueryHandler<GetGroupedTask
                     result = groupedTasksDto;
                     break;
                 }
-            case "":
+            case "None":
                 result["All"] = tasksDto;
                 break;
             case "DurationTime":

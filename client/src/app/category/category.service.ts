@@ -68,7 +68,19 @@ export class CategoryService {
 
   removeCategory(id: number) {
     this.userCategories.mutate((val) => {
-      val.splice(id, 1);
+      const index = val.findIndex(cat => cat.id == id)
+      if (index !== -1) {
+        val.splice(index, 1);
+      }
+    })
+  }
+
+  updateCategory(category: CategoryDto) {
+    this.userCategories.mutate((val) => {
+      const index = val.findIndex(cat => cat.id == category.id)
+      if (index !== -1) {
+        val[index] = category;
+      }
     })
   }
 
@@ -87,6 +99,7 @@ export class CategoryService {
   getCategory(id: number) {
     return this.http.get<ApiResponse<CategoryDto>>(this.apiUrl + 'Category/' + id).pipe(
       map(category => {
+        console.log(category.value)
         this.selectedCategory.update(() => category.value)
       })
     );

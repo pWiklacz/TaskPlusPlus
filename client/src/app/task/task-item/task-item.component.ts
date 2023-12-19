@@ -8,7 +8,6 @@ import { TaskDto } from 'src/app/shared/models/task/TaskDto';
   styleUrls: ['./task-item.component.scss']
 })
 export class TaskItemComponent implements OnInit {
-
   @Input() task?: TaskDto;
 
   ngOnInit(): void {

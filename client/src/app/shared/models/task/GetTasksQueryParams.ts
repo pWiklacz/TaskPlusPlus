@@ -1,7 +1,10 @@
+import { GroupingOptionsEnum } from "./GroupingOptionsEnum";
+import { SortingOptionsEnum } from "./SortingOptionsEnum";
+
 export class GetTasksQueryParams {
     categoryId = 0;
     sortDescending = false;
-    sortBy = 'name';
-    groupBy = 'Tags';
+    sortBy = SortingOptionsEnum.NAME;
+    groupBy = GroupingOptionsEnum.TAG;
     search = '';
 }
