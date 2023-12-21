@@ -13,48 +13,62 @@ export class CategoryService {
   apiUrl = environment.apiUrl;
   public userCategories = signal<CategoryDto[]>([]);
   public selectedCategory = signal<CategoryDto | undefined>(undefined);
-  public systemCategories = [
+  public systemCategories : CategoryDto[] = [
     {
-      id: '1',
+      id: 1,
       name: 'Inbox',
       icon: 'fa-solid fa-inbox',
-      color: '#4cd6f1'
+      isFavorite: false,
+      isImmutable: true,
+      colorHex: '#4cd6f1'
     },
     {
-      id: '99',
+      id: 0,
       name: 'Today',
       icon: 'fa-solid fa-calendar-day',
-      color: '#065535'
+      isFavorite: false,
+      isImmutable: true,
+      colorHex: '#065535'
     },
     {
-      id: '99',
+      id: 0,
       name: 'Calendar',
       icon: 'fa-solid fa-calendar',
-      color: '#cb063e'
+      isFavorite: false,
+      isImmutable: true,
+      colorHex: '#cb063e'
     },
     {
-      id: '2',
+      id: 2,
       name: 'Next Actions',
       icon: 'fa-solid fa-angles-right',
-      color: '#f37b16'
+      isFavorite: false,
+      isImmutable: true,
+      colorHex: '#f37b16'
     },
     {
-      id: '99',
+      id: 0,
       name: 'Projects',
       icon: 'fa-solid fa-list-check',
-      color: '#ffffff'
+      isFavorite: false,
+      isImmutable: true,
+      colorHex: '#ffffff'
     },
     {
-      id: '5',
+      id: 5,
       name: 'Waiting For',
       icon: 'fa-solid fa-hourglass-half',
-      color: '#000000'
+      isFavorite: false,
+      isImmutable: true,
+      colorHex: '#000000'
     },
     {
-      id: '6',
+      id: 6,
       name: 'Someday/Maybe',
       icon: 'fa-solid fa-lightbulb',
-      color: '#f3f316'
+      isFavorite: false,
+      isImmutable: true,
+      colorHex: '#f3f316'
     }
   ];
 
@@ -84,6 +98,10 @@ export class CategoryService {
     })
   }
 
+  selectCategory(category: CategoryDto){
+    this.selectedCategory.update(() => category)
+  }
+
   getCategories() {
     return this.http.get<ApiResponse<CategoryDto[]>>(this.apiUrl + 'Category').pipe(
       map(categories => {
@@ -99,7 +117,6 @@ export class CategoryService {
   getCategory(id: number) {
     return this.http.get<ApiResponse<CategoryDto>>(this.apiUrl + 'Category/' + id).pipe(
       map(category => {
-        console.log(category.value)
         this.selectedCategory.update(() => category.value)
       })
     );

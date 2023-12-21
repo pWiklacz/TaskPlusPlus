@@ -12,28 +12,38 @@ using TaskPlusPlus.Domain.ValueObjects.Task;
 using Task = TaskPlusPlus.Domain.Entities.Task;
 
 namespace TaskPlusPlus.Application.Features.Tasks.Queries.GetGroupedTasks;
-internal sealed class GetGroupedTasksQueryHandler : IQueryHandler<GetGroupedTasksQuery, Dictionary<string, List<TaskDto>>>
+internal sealed class GetTasksByParamsQueryHandler : IQueryHandler<GetTasksByParamsQuery, Dictionary<string, List<TaskDto>>>
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IUserContext _userContext;
 
-    public GetGroupedTasksQueryHandler(IMapper mapper, IUnitOfWork unitOfWork, IUserContext userContext)
+    public GetTasksByParamsQueryHandler(IMapper mapper, IUnitOfWork unitOfWork, IUserContext userContext)
     {
         _mapper = mapper;
         _unitOfWork = unitOfWork;
         _userContext = userContext;
     }
-    public async Task<Result<Dictionary<string, List<TaskDto>>>> Handle(GetGroupedTasksQuery request, CancellationToken cancellationToken)
+    public async Task<Result<Dictionary<string, List<TaskDto>>>> Handle(GetTasksByParamsQuery request, CancellationToken cancellationToken)
     {
         var userResult = _userContext.GetCurrentUser();
         if (userResult.IsFailed)
         {
-            return userResult.ToResult(); 
+            return userResult.ToResult();
         }
 
         var userId = userResult.Value.Id;
-        var spec = new TasksWithTagsSpecification(request.QueryParams, userId);
+        ISpecification<Task> spec;
+
+        if (request.QueryParams.Date != null)
+        {
+            spec = new TasksWithTagsByDateSpecification(request.QueryParams, userId);
+        }
+        else
+        {
+            spec = new TasksWithTagsSpecification(request.QueryParams, userId);
+        }
+
         var tasksFromDb = await _unitOfWork.Repository<Task, TaskId>().ListAsync(spec);
         var tasksDto = _mapper.Map<List<TaskDto>>(tasksFromDb);
 

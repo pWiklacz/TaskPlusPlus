@@ -18,20 +18,21 @@
             <div class="col-sm">
                 <div class="col-12">
                     <ng-select class="select tags mb-2" [items]="tagService.userTags()" bindLabel="name" bindValue="id"
-                        formControlName="selectedTags" placeholder="&#xf02c; Tags" [multiple]="true" [closeOnSelect]="false"
-                        [hideSelected]="true">
+                        formControlName="selectedTags" placeholder="&#xf02c; Tags" [multiple]="true"
+                        [closeOnSelect]="false" [hideSelected]="true">
                         <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
                             <div class="ng-value" *ngFor="let item of items | slice:0:1; let i = index">
                                 <span class="ng-value-icon left" aria-hidden="true" (click)="clear(item)">×</span>
                                 <span class="ng-value-label"> <i class="fa-solid fa-tag pe-2"
-                                    [ngStyle]="{ 'color': items[i].colorHex }"></i>{{items[i].name}}</span>
+                                        [ngStyle]="{ 'color': items[i].colorHex }"></i>{{items[i].name}}</span>
                             </div>
                             <div class="ng-value" *ngIf="items.length > 1">
                                 <span class="ng-value-label">{{items.length - 1}} more...</span>
                             </div>
                         </ng-template>
                         <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-                            <span><i class="fa-solid fa-tag pe-2"  [ngStyle]="{ 'color': item.colorHex }"></i>{{item.name}}</span>
+                            <span><i class="fa-solid fa-tag pe-2"
+                                    [ngStyle]="{ 'color': item.colorHex }"></i>{{item.name}}</span>
                         </ng-template>
                     </ng-select>
                 </div>
@@ -55,10 +56,14 @@
                 </div>
                 <div class="row mb-2">
                     <div class="col-6">
-                        <p-calendar class="" formControlName="date" placeholder="  &#xf133; Due date" [showButtonBar]="true"
-                            dateFormat=" dd M yy">
-                            <!-- <ng-template pTemplate="header">Header</ng-template>
-                                <ng-template pTemplate="footer">Footer</ng-template> -->
+                        <p-calendar class="" formControlName="date" placeholder="  &#xf133; Due date" [showTime]="addTimeChecked" hourFormat="12" [stepMinute]="5" [defaultDate]="defaultDate!"
+                            [showButtonBar]="true" dateFormat=" dd M yy">
+                            <ng-template pTemplate="footer">
+                                <label class="btn btn-secondary" btnCheckbox tabindex="0"
+                                    role="button" (click)="addTime()">
+                                    <i class="fa-regular fa-clock me-1"></i>  Time
+                                </label>
+                            </ng-template>
                         </p-calendar>
                     </div>
                     <div class="col-6">
@@ -76,9 +81,12 @@
                             [searchable]="false">
                             <ng-option value='4' disabled="true">&#xf86d; Category</ng-option>
                             <ng-option *ngFor="let category of systemCategories " value="{{category.id}}">
-                                <i class="{{category.icon}} fa-fw" [ngStyle]="{ 'color': category.color }"></i>  {{category.name}}</ng-option>
-                            <ng-option *ngFor="let category of categoryService.userCategories() " value="{{category.id}}">
-                                <i class="{{category.icon}} fa-fw" [ngStyle]="{ 'color': category.colorHex }"></i>  {{category.name}}</ng-option>
+                                <i class="{{category.icon}} fa-fw" [ngStyle]="{ 'color': category.colorHex }"></i>
+                                {{category.name}}</ng-option>
+                            <ng-option *ngFor="let category of categoryService.userCategories() "
+                                value="{{category.id}}">
+                                <i class="{{category.icon}} fa-fw" [ngStyle]="{ 'color': category.colorHex }"></i>
+                                {{category.name}}</ng-option>
                         </ng-select>
                     </div>
                     <div class="col-6">
@@ -89,11 +97,8 @@
 
                         </ng-select>
                     </div>
-                </div>        
+                </div>
             </div>
-      
-      
-           
         </div>
     </div>
     <div class="modal-footer">

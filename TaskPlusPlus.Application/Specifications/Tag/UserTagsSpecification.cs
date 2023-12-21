@@ -11,6 +11,5 @@ internal class UserTagsSpecification : Specification<Domain.Entities.Tag>
         : base(category =>
             category.UserId == userId && category.Id == id)
     {
-
     }
 }

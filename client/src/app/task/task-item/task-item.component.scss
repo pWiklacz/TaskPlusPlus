@@ -1,47 +1,49 @@
-.taskItem{
+.taskItem {
   font-family: sans-serif;
 }
 
 li {
-    list-style: none;
-    padding-top: 3px;
-    padding-bottom: 3px;
-    padding: 3px;
-    border: 1px solid #e3dada;
-    margin-top: 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
+  list-style: none;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  padding: 3px;
+  border: 1px solid #e3dada;
+  margin-top: 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
 }
 
-li:hover{
-    transform: scaleX(1.01);
+li:hover {
+  transform: scaleX(1.01);
 }
 
 .date-time {
-    font-size: 13px;
+  font-size: 12px;
 }
 
-
-.tags{
-  font-size: 13px;
+.tags {
+  font-size: 12px;
 }
 
-.battery{
-  font-size: 20px;
+.battery {
+  font-size: 18px;
 }
 
 .tag {
   margin-right: 3px;
 }
-.fa-tag{
+
+.fa-tag {
   padding-left: 3px;
   padding-top: 1px;
 }
 
-input[type="checkbox"] { display: none; }
+input[type="checkbox"] {
+  display: none;
+}
 
-input[type="checkbox"] + label {
+input[type="checkbox"]+label {
   display: block;
   position: relative;
   padding-left: 35px;
@@ -52,12 +54,15 @@ input[type="checkbox"] + label {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  text-decoration: none; /* Dodane przekreślenie tekstu */
+  text-decoration: none;
+  /* Dodane przekreślenie tekstu */
 }
 
-input[type="checkbox"] + label:last-child { margin-bottom: 0; }
+input[type="checkbox"]+label:last-child {
+  margin-bottom: 0;
+}
 
-input[type="checkbox"] + label:before {
+input[type="checkbox"]+label:before {
   content: '';
   display: block;
   width: 20px;
@@ -71,7 +76,7 @@ input[type="checkbox"] + label:before {
   transition: all .12s, border-color .08s;
 }
 
-input[type="checkbox"]:checked + label:before {
+input[type="checkbox"]:checked+label:before {
   width: 10px;
   top: -5px;
   left: 5px;
@@ -83,7 +88,18 @@ input[type="checkbox"]:checked + label:before {
   transform: rotate(45deg);
 }
 
-input[type="checkbox"]:checked + label {
+input[type="checkbox"]:checked+label {
   text-decoration: line-through;
   text-decoration-thickness: 1px;
+}
+
+@media only screen and (max-width: 390px) 
+{
+  .energy{
+    display: none;
+  }
+
+  .priority{
+    display: none;
+  }
 }

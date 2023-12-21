@@ -13,6 +13,7 @@ using TaskPlusPlus.Application.Features.Tasks.Commands.DeleteTask;
 using TaskPlusPlus.Application.Features.Tasks.Commands.UpdateTaskDueDate;
 using TaskPlusPlus.Application.Features.Tasks.Commands.UpdateTaskNameAndNotes;
 using TaskPlusPlus.Application.Features.Tasks.Commands.UpdateTaskTags;
+using TaskPlusPlus.Application.Features.Tasks.Queries.GetCalendarTasksInMonth;
 using TaskPlusPlus.Application.Features.Tasks.Queries.GetGroupedTasks;
 using TaskPlusPlus.Application.Features.Tasks.Queries.GetTaskById;
 using TaskPlusPlus.Application.Helpers;
@@ -33,9 +34,17 @@ public class TaskController : BaseController
     public async Task<ActionResult<Dictionary<object, List<TaskDto>>>> Get(
         [FromQuery] TaskQueryParameters queryParameters)
     {
-        var projects = await _mediator.Send(new GetGroupedTasksQuery(queryParameters));
+        var tasks = await _mediator.Send(new GetTasksByParamsQuery(queryParameters));
 
-        return FromResult(projects);
+        return FromResult(tasks);
+    }
+
+    [HttpGet("getCalendarTasks")]
+    public async Task<ActionResult<List<CalendarTaskDto>>> GetCalendarTasks(
+        [FromQuery] int month, int year)
+    {
+        var tasks = await _mediator.Send(new GetCalendarTasksInMonthQuery(month, year));
+        return FromResult(tasks);
     }
 
     [HttpGet("{id}")]

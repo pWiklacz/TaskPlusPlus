@@ -3,6 +3,16 @@
 
 $theme: "slate" !default;
 
+$grid-breakpoints: (
+        xs: 0,
+        ssm: 330px,
+        sm: 576px,
+        md: 768px,
+        lg: 992px,
+        xl: 1200px,
+        xxl: 1900px
+);
+
 //
 // Color system
 //

@@ -25,4 +25,14 @@ public sealed class DueDate : ValueObject
     {
         yield return Value;
     }
+
+    public static bool operator <=(DueDate left, DueDate right)
+    {
+        return left.Value <= right.Value;
+    }
+
+    public static bool operator >=(DueDate left, DueDate right)
+    {
+        return left.Value >= right.Value;
+    }
 }

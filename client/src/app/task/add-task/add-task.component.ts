@@ -12,6 +12,7 @@ import { TaskService } from '../task.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TaskDto } from 'src/app/shared/models/task/TaskDto';
 import { Time } from "@angular/common"
+import { CategoryDto } from 'src/app/shared/models/category/CategoryDto';
 
 interface Tag {
   value: number;
@@ -27,7 +28,9 @@ export class AddTaskComponent implements OnInit {
   addTaskForm!: FormGroup;
   public EnergyEnum = EnergyEnum
   public PriorityEnum = PriorityEnum
-  public systemCategories: { id: string; name: string; icon: string; color: string; }[] = [];
+  public systemCategories: CategoryDto[] = [];
+  addTimeChecked: boolean = false;
+  defaultDate?: Date;
 
   durationTimes = [
     { value: null, label: "None" },
@@ -41,7 +44,6 @@ export class AddTaskComponent implements OnInit {
     { value: 240, label: "4h" },
     { value: 480, label: "8h" },
   ];
-
 
   selectedTaags: Tag[] = [];
 
@@ -96,7 +98,9 @@ export class AddTaskComponent implements OnInit {
       error: error => console.log(error)
     })
 
-    this.systemCategories = this.categoryService.systemCategories.filter(category => !['99'].includes(category.id));
+    this.systemCategories = this.categoryService.systemCategories.filter(category => ![0].includes(category.id));
+
+    this.defaultDate = new Date()
   }
 
   get form() { return this.addTaskForm.controls; }
@@ -106,7 +110,7 @@ export class AddTaskComponent implements OnInit {
     let formattedDate = null;
     let formattedTime = null;
     if (formValues.date) formattedDate = `${formValues.date.getFullYear()}-${(formValues.date.getMonth() + 1).toString().padStart(2, '0')}-${formValues.date.getDate().toString().padStart(2, '0')}`;
-    if (formValues.date) formattedTime = `${formValues.date.getHours().toString().padStart(2, '0')}:${formValues.date.getMinutes().toString().padStart(2, '0')}:${formValues.date.getSeconds().toString().padStart(2, '0')}`;
+    if (formValues.date && this.addTimeChecked) formattedTime = `${formValues.date.getHours().toString().padStart(2, '0')}:${formValues.date.getMinutes().toString().padStart(2, '0')}:${formValues.date.getSeconds().toString().padStart(2, '0')}`;
     const createdTask: CreateTaskDto = {
       name: formValues.name!,
       dueDate: formattedDate!,
@@ -138,9 +142,7 @@ export class AddTaskComponent implements OnInit {
           completedOnUtc: null,
           tags: this.tagService.filterTagsByTagIds(createdTask.tags)
         }
-        console.log(task)
         this.taskService.addTask(task);
-
       },
       error: (err: HttpErrorResponse) => {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Problem with creating task', life: 3000 });
@@ -154,13 +156,24 @@ export class AddTaskComponent implements OnInit {
     const timeRegex = /^(\d{2}):(\d{2}):(\d{2})$/;
     if (timeString) {
       const match = timeString.match(timeRegex);
-
       if (match) {
         const [, hours, minutes, seconds] = match.map(Number);
         return { hours, minutes };
       }
     }
-    //console.error('Invalid time string format or values.');
     return null;
+  }
+
+  addTime() {
+    let date: Date = this.addTaskForm.value.date;
+    if (date) {
+      const currentDate = new Date();
+      const currentMinutes = currentDate.getMinutes();
+      const nextMultipleOf5Minutes = Math.ceil(currentMinutes / 5) * 5;
+      date.setHours(currentDate.getHours())
+      date.setMinutes(nextMultipleOf5Minutes);
+      this.addTaskForm.get('date')?.setValue(date);
+      this.addTimeChecked = !this.addTimeChecked;
+    }
   }
 }

@@ -6,6 +6,7 @@ import { WaitingForId } from 'src/app/shared/models/category/CategoryDto';
 import { TaskService } from 'src/app/task/task.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { MessageService } from 'primeng/api';
+import { GroupingOptionsEnum } from 'src/app/shared/models/task/GroupingOptionsEnum';
 
 @Component({
   selector: 'app-waiting-for',
@@ -26,7 +27,9 @@ export class WaitingForComponent extends DashboardComponent implements OnInit {
     this.categoryService.getCategory(+WaitingForId).subscribe({
       error: error => console.log(error)
     })
-    this.queryParams.categoryId = WaitingForId;
+    this.taskService.QueryParams().categoryId = WaitingForId;
     this.getTasks();
   }
+
+ 
 }

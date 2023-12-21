@@ -19,7 +19,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class DashboardComponent implements OnInit {
   protected categoryId!: number;
-  queryParams = new GetTasksQueryParams;
   protected contentLoaded: boolean = false;
   public groupOptions = GroupingOptionsEnum;
   public sortOptions = SortingOptionsEnum;
@@ -45,7 +44,7 @@ export class DashboardComponent implements OnInit {
           return [];
         }
         this.categoryId = id;
-        this.queryParams.categoryId = this.categoryId;
+        this.taskService.QueryParams().categoryId = this.categoryId;
         this.getTasks();
         return this.categoryService.getCategory(+id);
       })
@@ -55,7 +54,7 @@ export class DashboardComponent implements OnInit {
   }
 
   protected getTasks() {
-    this.taskService.getTasks(this.queryParams)?.subscribe(
+    this.taskService.getTasks()?.subscribe(
       {
         error: error => console.log(error)
       }
@@ -64,10 +63,10 @@ export class DashboardComponent implements OnInit {
 
   onGroupingOptionSelected(id: number) {
     const option = Object.values(GroupingOptionsEnum).find(enumItem => enumItem.id === id);
-    if (option !== this.queryParams.groupBy) {
-      this.queryParams.groupBy = option!;
-      this.queryParams.categoryId = this.categoryService.selectedCategory()!.id;
-      this.taskService.getTasks(this.queryParams, true)?.subscribe(
+    if (option !== this.taskService.QueryParams().groupBy) {
+      this.taskService.QueryParams().groupBy = option!;
+      this.taskService.QueryParams().categoryId = this.categoryService.selectedCategory()!.id;
+      this.taskService.getTasks(true)?.subscribe(
         {
           error: error => console.log(error)
         }
@@ -77,10 +76,10 @@ export class DashboardComponent implements OnInit {
 
   onSortingOptionSelected(id: number) {
     const option = Object.values(SortingOptionsEnum).find(enumItem => enumItem.id === id);
-    if (option !== this.queryParams.sortBy) {
-      this.queryParams.sortBy = option!
-      this.queryParams.categoryId = this.categoryService.selectedCategory()!.id;
-      this.taskService.getTasks(this.queryParams, true)?.subscribe(
+    if (option !== this.taskService.QueryParams().sortBy) {
+      this.taskService.QueryParams().sortBy = option!;
+      this.taskService.QueryParams().categoryId = this.categoryService.selectedCategory()!.id;
+      this.taskService.getTasks(true)?.subscribe(
         {
           error: error => console.log(error)
         }
@@ -89,9 +88,9 @@ export class DashboardComponent implements OnInit {
   }
 
   onSortDirectionSelected(bool: boolean) {
-    if (this.queryParams.sortDescending !== bool) {
-      this.queryParams.sortDescending = bool;
-      this.taskService.getTasks(this.queryParams, true)?.subscribe(
+    if (this.taskService.QueryParams().sortDescending !== bool) {
+      this.taskService.QueryParams().sortDescending = bool;
+      this.taskService.getTasks(true)?.subscribe(
         {
           error: error => console.log(error)
         }

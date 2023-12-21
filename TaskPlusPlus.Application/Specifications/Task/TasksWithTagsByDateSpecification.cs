@@ -1,16 +1,18 @@
 ﻿using System.Linq.Expressions;
 using TaskPlusPlus.Application.Helpers;
+using TaskPlusPlus.Domain.ValueObjects;
 
 namespace TaskPlusPlus.Application.Specifications.Task;
 
-internal class TasksWithTagsSpecification : Specification<Domain.Entities.Task>
+internal class TasksWithTagsByDateSpecification : Specification<Domain.Entities.Task>
 {
-    public TasksWithTagsSpecification(TaskQueryParameters queryParams, string userId)
+    public TasksWithTagsByDateSpecification(TaskQueryParameters queryParams, string userId)
         : base(task =>
             (string.IsNullOrEmpty(queryParams.Search) || task.Name.Value.ToLower().Contains(queryParams.Search)) &&
-            (task.CategoryId == queryParams.CategoryId)/* || (task.DueDate != null && task.DueDate! == queryParams.Date && queryParams.CategoryId == 3)*/
+            (task.DueDate == DueDate.Create((DateOnly)queryParams.Date!).Value)
             && task.UserId == userId)
     {
+        var x = DueDate.Create((DateOnly)queryParams.Date!).Value;
         AddInclude(t => t.Tags);
         AddOrderBy(t => t.Name);
 
@@ -44,14 +46,6 @@ internal class TasksWithTagsSpecification : Specification<Domain.Entities.Task>
                     break;
             }
         }
-    }
-
-    public TasksWithTagsSpecification(ulong id, string userId)
-        : base(t =>
-            (t.Id == id)
-            && t.UserId == userId)
-    {
-        AddInclude(t => t.Tags);
     }
 }
 

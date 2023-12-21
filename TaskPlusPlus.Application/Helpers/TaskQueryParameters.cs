@@ -1,4 +1,5 @@
-﻿using static System.String;
+﻿using System.Runtime.InteropServices.JavaScript;
+using static System.String;
 
 namespace TaskPlusPlus.Application.Helpers;
 
@@ -9,6 +10,7 @@ public class TaskQueryParameters
     public bool SortDescending { get; set; } = false;
     public string SortBy { get; set; } = Empty;
     public string GroupBy { get; set; } = Empty;
+    public DateOnly? Date { get; set; }
 
     public string Search
     {

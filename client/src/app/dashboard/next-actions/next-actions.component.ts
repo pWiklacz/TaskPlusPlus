@@ -27,7 +27,7 @@ export class NextActionsComponent extends DashboardComponent implements OnInit {
     this.categoryService.getCategory(+NextActionsId).subscribe({
       error: error => console.log(error)
     })
-    this.queryParams.categoryId = NextActionsId;
+    this.taskService.QueryParams().categoryId =NextActionsId; 
     this.getTasks();
   }
 }

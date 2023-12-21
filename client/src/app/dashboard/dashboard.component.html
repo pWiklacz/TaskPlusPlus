@@ -14,7 +14,8 @@
                     </a>
                     <ul id="basic-link-dropdown" *dropdownMenu class="dropdown-menu dropdown-menu-right border"
                         role="menu" aria-labelledby="basic-link">
-                        <li role="menuitem" *ngIf="!this.categoryService.selectedCategory()?.isImmutable"><a class="dropdown-item" (click)="openEditCategoryModal()">
+                        <li role="menuitem" *ngIf="!this.categoryService.selectedCategory()?.isImmutable">
+                            <a class="dropdown-item" (click)="openEditCategoryModal()">
                                 <i class="fa-solid fa-pen-to-square me-2 fa-fw"></i>Edit</a>
                         </li>
                         <li class="divider dropdown-divider" *ngIf="!this.categoryService.selectedCategory()?.isImmutable"></li>
@@ -28,7 +29,7 @@
                                                 <i class="fa-solid fa-layer-group me-2 fa-fw"></i>Grouping
                                             </div>
                                             <div class="col-7 text-end">
-                                                {{this.queryParams.groupBy.name}}
+                                                {{this.taskService.QueryParams().groupBy.name}}
                                             </div>
                                         </div>
                                     </a>
@@ -41,7 +42,7 @@
                                                 <div class="col-6">
                                                     {{choice.name}}
                                                 </div>
-                                                <div class="col-6 text-end" *ngIf="queryParams.groupBy == choice">
+                                                <div class="col-6 text-end" *ngIf="this.taskService.QueryParams().groupBy == choice">
                                                     <i class="fa-solid fa-check"></i>
                                                 </div>
                                             </div>
@@ -60,7 +61,7 @@
                                                 <i class="fa-solid fa-sort me-2 fa-fw"></i>Sorting
                                             </div>
                                             <div class="col-7 text-end">
-                                                {{this.queryParams.sortBy.name}}
+                                                {{this.taskService.QueryParams().sortBy.name}}
                                             </div>
                                         </div>
                                     </a>
@@ -73,7 +74,7 @@
                                                 <div class="col-6">
                                                     {{choice.name}}
                                                 </div>
-                                                <div class="col-6 text-end" *ngIf="queryParams.sortBy == choice">
+                                                <div class="col-6 text-end" *ngIf="this.taskService.QueryParams().sortBy == choice">
                                                     <i class="fa-solid fa-check"></i>
                                                 </div>
                                             </div>
@@ -88,7 +89,7 @@
                                     aria-controls="basic-link-dropdown">
                                     <a class="dropdown-item">
                                         <div class="align-items-center row">                                           
-                                                <ng-template [ngIf]="!queryParams.sortDescending"
+                                                <ng-template [ngIf]="!this.taskService.QueryParams().sortDescending"
                                                     [ngIfElse]="Descending">
                                                     <div class="col-5">
                                                         <i class="fa-solid fa-caret-up me-2 fa-fw"></i>Direction
@@ -118,7 +119,7 @@
                                                 <div class="col-6">
                                                     Ascending (default)
                                                 </div>
-                                                <div class="col-6 text-end" *ngIf="!queryParams.sortDescending">
+                                                <div class="col-6 text-end" *ngIf="!this.taskService.QueryParams().sortDescending">
                                                     <i class="fa-solid fa-check"></i>
                                                 </div>
                                             </div>
@@ -131,7 +132,7 @@
                                                 <div class="col-6">
                                                     Descending
                                                 </div>
-                                                <div class="col-6 text-end" *ngIf="queryParams.sortDescending">
+                                                <div class="col-6 text-end" *ngIf="this.taskService.QueryParams().sortDescending">
                                                     <i class="fa-solid fa-check"></i>
                                                 </div>
                                             </div>

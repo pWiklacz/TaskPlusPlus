@@ -7,4 +7,5 @@ export class GetTasksQueryParams {
     sortBy = SortingOptionsEnum.NAME;
     groupBy = GroupingOptionsEnum.TAG;
     search = '';
+    date = '';
 }

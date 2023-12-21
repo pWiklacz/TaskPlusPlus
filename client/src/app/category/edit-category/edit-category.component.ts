@@ -47,7 +47,6 @@ export class EditCategoryComponent implements OnInit {
   changeIsFavoriteStatus() {
     this.isFavorite = !this.isFavorite;
     this.editCategoryForm.get('isFavorite')?.setValue(this.isFavorite);
-
   }
 
   onSubmit() {

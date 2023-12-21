@@ -9,8 +9,13 @@ import { TaskDto } from 'src/app/shared/models/task/TaskDto';
 })
 export class TaskItemComponent implements OnInit {
   @Input() task?: TaskDto;
+  time: string = '';
 
   ngOnInit(): void {
+    if(this.task?.dueTime)
+    {
+      this.time = this.formatTime(this.task?.dueTime!)
+    }
   }
 
   formatMinutes(minutes: number): string {
@@ -78,6 +83,11 @@ export class TaskItemComponent implements OnInit {
         return "";
       }
     }
+  }
+
+  formatTime(time: Time): string {
+    const timeSA = time.toString().split(":", 2);
+    return `${timeSA[0]}:${timeSA[1]}`
   }
 }
 

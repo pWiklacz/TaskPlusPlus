@@ -30,7 +30,7 @@ export class InboxComponent extends DashboardComponent implements OnInit {
     this.categoryService.getCategory(+InboxId).subscribe({
       error: error => console.log(error)
     })
-    this.queryParams.categoryId = InboxId;
+    this.taskService.QueryParams().categoryId = InboxId;
     this.getTasks();
   }
 }

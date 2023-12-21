@@ -15,19 +15,17 @@ import { MessageService } from 'primeng/api';
 import { SocialLoginModule, SocialAuthServiceConfig, FacebookLoginProvider } from '@abacritt/angularx-social-login';
 import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { environment } from 'src/environments/environment';
-import { ThemeSwitcherComponent } from './settings/theme-switcher/theme-switcher.component';
 import { ThemeService } from './core/services/theme.service';
-import { SettingsComponent } from './settings/settings.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { SettingsModule } from './settings/settings.module';
 import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
 import { CategoryModule } from './category/category.module';
-import { ColorPickerModule } from 'primeng/colorpicker';
 import { FormsModule } from '@angular/forms';
-import { TaskItemComponent } from './task/task-item/task-item.component';
 import { TaskModule } from './task/task.module';
 import { TagModule } from './tag/tag.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
+
 
 @NgModule({
   declarations: [
@@ -49,7 +47,8 @@ import { DashboardModule } from './dashboard/dashboard.module';
     FormsModule,
     TaskModule,
     TagModule,
-    DashboardModule
+    DashboardModule,
+    ButtonsModule.forRoot()
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

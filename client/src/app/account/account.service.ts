@@ -65,6 +65,7 @@ export class AccountService {
   }
 
   logout() {
+    this.themeService.current = ThemeService.default;
     this.busyService.busy();
     localStorage.removeItem('token');
     this.isLoggedIn$.next(false);
@@ -72,7 +73,6 @@ export class AccountService {
     if (this.isExternalAuth$.value) {
       this.signOutExternal();
     }
-    this.themeService.current = ThemeService.default;
     this.router.navigateByUrl('/account/login').then(() => this.busyService.idle());
   }
 

@@ -7,6 +7,6 @@ internal class DueDateDtoValidator : AbstractValidator<IDueDateDto>
     public DueDateDtoValidator()
     {
         RuleFor(dto => dto.DueDate)
-            .GreaterThan(DateOnly.FromDateTime(DateTime.Now)).WithMessage("Due date cannot be in the past");
+            .GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.Now)).WithMessage("Due date cannot be in the past");
     }
 }

@@ -27,7 +27,7 @@ export class SomedayMaybeComponent extends DashboardComponent implements OnInit 
     this.categoryService.getCategory(+SomedayMaybeId).subscribe({
       error: error => console.log(error)
     })
-    this.queryParams.categoryId = SomedayMaybeId;
+    this.taskService.QueryParams().categoryId = SomedayMaybeId;
     this.getTasks();
   }
 }

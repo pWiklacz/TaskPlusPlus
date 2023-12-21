@@ -1,22 +1,29 @@
 <div class="container-fluid">
     <div class="header">
-        <h4 class="display-4 mb-4 text-center text-secondary">{{ months[date.getMonth()] }} {{ date.getFullYear() }}</h4>
+        <h4 class="display-4 mb-4 text-center text-secondary">
+            <i class="fa-solid fa-chevron-left fa-2xs" (click)="decrementMonth()"></i>
+            {{ months[date.getMonth()] }} {{ date.getFullYear() }}
+            <i class="fa-solid fa-chevron-right fa-2xs" (click)="incrementMonth()"></i>
+        </h4>
         <div class="row d-none d-sm-flex p-1 bg-primary text-secondary">
             <h5 class="col-sm p-1 text-center" *ngFor="let weekday of weekdays">{{weekday}}</h5>
         </div>
     </div>
     <div class="row border-top border-right-0 border-bottom-0">
-        <ng-container *ngFor="let day of generateCalendar(); let i = index">
+        <ng-container *ngFor="let day of this.calendarService.currentMonthTasks(); let i = index">
             <div class="day col-sm p-2 border border-left-0 border-top-0 text-truncate"
                 [class.isNotCurrentMonth]="!day.isCurrentMonth" [class.text-muted]="!day.isCurrentMonth"
-                [class.text-white]="day.isToday"
-                [class.bg-secondary]="day.isToday">
+                [class.text-white]="day.isToday" [class.bg-secondary]="day.isToday">
                 <h5 class="row align-items-center">
                     <span class="date col-1">{{ day.dayNumber }}</span>
                     <small class="col d-sm-none text-center text-muted">{{ weekdays[day.date.getDay()] }}</small>
                     <span class="col-1"></span>
                 </h5>
-                <p class="d-sm-none">No events</p>
+                <div *ngFor="let task of day.tasks">
+                    <a class="event d-block p-1 pl-2 pr-2 mb-1 rounded text-truncate small bg-primary text-white"
+                        title="Test Event with Super Duper Really Long Title">{{task.name}}</a>
+                </div>
+                <p *ngIf="day.tasks.length === 0" class="d-sm-none">No events</p>
             </div>
             <div *ngIf="(i + 1) % 7 === 0" class="w-100"></div>
         </ng-container>

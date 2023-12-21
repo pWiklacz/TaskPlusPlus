@@ -19,19 +19,19 @@ public abstract class ValueObject : IEquatable<ValueObject>
     private bool ValuesAreEqual(ValueObject other)
     => GetAtomicValues().SequenceEqual(other.GetAtomicValues());
 
-    //public static bool operator ==(ValueObject left, ValueObject right)
-    //{
-    //    if (ReferenceEquals(left, null) && ReferenceEquals(right, null))
-    //        return true;
+    public static bool operator ==(ValueObject left, ValueObject right)
+    {
+        if (ReferenceEquals(left, null) && ReferenceEquals(right, null))
+            return true;
 
-    //    if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
-    //        return false;
+        if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
+            return false;
 
-    //    return left.Equals(right);
-    //}
+        return left.Equals(right);
+    }
 
-    //public static bool operator !=(ValueObject left, ValueObject right)
-    //{
-    //    return !(left == right);
-    //}
+    public static bool operator !=(ValueObject left, ValueObject right)
+    {
+        return !(left == right);
+    }
 }

@@ -13,15 +13,16 @@ import { CategoryService } from '../category/category.service';
 })
 export class TaskService {
   apiUrl = environment.apiUrl;
-  userTasks = signal<Map<number, { [key: string]: TaskDto[] }>>(new Map<number, { [key: string]: TaskDto[] }>())
+  UserTasks = signal<Map<number, { [key: string]: TaskDto[] }>>(new Map<number, { [key: string]: TaskDto[] }>())
   CurrentCategoryTasksGroupNames = signal<string[] | undefined>([]);
   CurrentCategoryTasksMap = signal<{ [key: string]: TaskDto[] } | undefined>(undefined);
+  QueryParams = signal<GetTasksQueryParams>(new GetTasksQueryParams);
 
   constructor(private http: HttpClient, private categoryService: CategoryService) { }
 
   addTask(task: TaskDto) {
-    if (this.userTasks().has(task.categoryId)) {
-      this.userTasks.mutate((val) => {
+    if (this.UserTasks().has(task.categoryId)) {
+      this.UserTasks.mutate((val) => {
         let categoryTasks = val.get(task.categoryId)
         categoryTasks!['All'].push(task)
       })
@@ -33,32 +34,32 @@ export class TaskService {
     }
   }
 
-  getTasks(queryParams: GetTasksQueryParams, paramsChanged = false) {
-    if(paramsChanged)
-    {
-      this.userTasks().delete(queryParams.categoryId)
+  getTasks(paramsChanged = false) {
+    if (paramsChanged) {
+      this.UserTasks().delete(this.QueryParams().categoryId)
     }
 
-    if (this.userTasks().has(queryParams.categoryId)) {
-      this.CurrentCategoryTasksMap.set(this.userTasks().get(queryParams.categoryId))
+    if (this.UserTasks().has(this.QueryParams().categoryId)) {
+      this.CurrentCategoryTasksMap.set(this.UserTasks().get(this.QueryParams().categoryId))
       this.CurrentCategoryTasksGroupNames.set(Object.keys(this.CurrentCategoryTasksMap()!))
       return;
     }
 
     let params = new HttpParams();
 
-    if (queryParams.categoryId > 0) params = params.append('categoryId', queryParams.categoryId.toString());
-    params = params.append('sortDescending', queryParams.sortDescending.toString());
-    params = params.append('sortBy', queryParams.sortBy.apiName);
-    if (queryParams.groupBy) params = params.append('groupBy', queryParams.groupBy.apiName);
-    if (queryParams.search) params = params.append('search', queryParams.search);
+    if (this.QueryParams().categoryId > 0) params = params.append('categoryId', this.QueryParams().categoryId.toString());
+    params = params.append('sortDescending', this.QueryParams().sortDescending.toString());
+    params = params.append('sortBy', this.QueryParams().sortBy.apiName);
+    if (this.QueryParams().groupBy) params = params.append('groupBy', this.QueryParams().groupBy.apiName);
+    if (this.QueryParams().search) params = params.append('search', this.QueryParams().search);
+    if (this.QueryParams().date) params = params.append('date', this.QueryParams().date)
 
     return this.http.get<ApiResponse<{ [key: string]: TaskDto[] }>>(this.apiUrl + 'Task', { params }).pipe(
       map(response => {
-        this.userTasks.mutate((val) => {
-          val.set(queryParams.categoryId, response.value)
+        this.UserTasks.mutate((val) => {
+          val.set(this.QueryParams().categoryId, response.value)
         })
-        this.CurrentCategoryTasksMap.set(this.userTasks().get(queryParams.categoryId))
+        this.CurrentCategoryTasksMap.set(this.UserTasks().get(this.QueryParams().categoryId))
         this.CurrentCategoryTasksGroupNames.set(Object.keys(this.CurrentCategoryTasksMap()!))
       })
     );
