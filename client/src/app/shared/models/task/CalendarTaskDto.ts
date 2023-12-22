@@ -5,4 +5,5 @@ export interface CalendarTaskDto {
     isCompleted: boolean
     projectId: number
     categoryId: number
+    categoryColor: string
 }

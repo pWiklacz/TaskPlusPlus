@@ -20,9 +20,12 @@ interface calendarDay {
 export class CalendarService {
   apiUrl = environment.apiUrl;
   today: Date = new Date();
-  constructor(private http: HttpClient, private categoryService: CategoryService) { }
   calendarTasks = signal<Map<{ month: number, year: number }, calendarDay[]>>(new Map<{ month: number, year: number }, calendarDay[]>)
   currentMonthTasks = signal<calendarDay[]>([])
+
+  constructor(private http: HttpClient, private categoryService: CategoryService) { }
+
+
 
   getCalendarTask(month: number, year: number) {
     let params = new HttpParams();
@@ -32,9 +35,33 @@ export class CalendarService {
     return this.http.get<ApiResponse<CalendarTaskDto[]>>(this.apiUrl + 'Task/getCalendarTasks', { params });
   }
 
-
   generateCalendar(date: Date) {
 
+    this.getCalendarTask(date.getMonth() + 1, date.getFullYear())
+      .subscribe({
+        next: (response) => {
+          const allCategories = [...this.categoryService.userCategories(), ...this.categoryService.systemCategories]
+          const categoryColorMap = new Map<number, string>();
+          allCategories.forEach(category => {
+            categoryColorMap.set(category.id, category.colorHex);
+          });
+
+          const tasksWithCategoryColors = response.value.map(task => ({
+            ...task,
+            categoryColor: categoryColorMap.get(task.categoryId) || 'defaultColor',
+          }));
+
+          this.generateMonth(date, tasksWithCategoryColors);
+        },
+        error: (err: HttpErrorResponse) => {
+          console.log(err);
+        }
+      })
+
+  }
+
+  generateMonth(date: Date, calendarTasks: CalendarTaskDto[]) {
+    console.log(calendarTasks)
     const daysInMonth: calendarDay[] = [];
 
     const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
@@ -47,28 +74,17 @@ export class CalendarService {
 
     const startIndex = firstDayOfMonth.getDay();
 
-    let calendarTasks: CalendarTaskDto[] = [];
-
-    this.getCalendarTask(date.getMonth() + 1, date.getFullYear())
-      .subscribe({
-        next: (response) => {
-          calendarTasks = response.value
-        },
-        error: (err: HttpErrorResponse) => {
-          console.log(err);
-        }
-      })
-
-      console.log(calendarTasks)
 
     for (let i = daysInPrevMonth - startIndex + 1; i <= daysInPrevMonth; i++) {
       const prevDate = new Date(lastDayOfPrevMonth.getFullYear(), lastDayOfPrevMonth.getMonth(), i);
-      // console.log(prevDate)
-      // console.log(calendarTasks)
+
       const tasks = calendarTasks.filter(obj => {
-        obj.dueDate.getTime() === prevDate.getTime()
-        // console.log(obj.dueDate.getTime())
-        // console.log(prevDate.getTime())
+        const dueDateFromString = new Date(obj.dueDate);
+        return (
+          dueDateFromString.getFullYear() === prevDate.getFullYear() &&
+          dueDateFromString.getMonth() === prevDate.getMonth() &&
+          dueDateFromString.getDate() === prevDate.getDate()
+        );
       })
         .map(obj => ({ ...obj }));
 
@@ -84,7 +100,14 @@ export class CalendarService {
     for (let i = 1; i <= lastDayOfMonth.getDate(); i++) {
       const currentDate = new Date(firstDayOfMonth.getFullYear(), firstDayOfMonth.getMonth(), i);
       const isCurrentMonth = currentDate.getMonth() === date.getMonth();
-      const tasks = calendarTasks.filter(obj => obj.dueDate.getTime() === currentDate.getTime())
+      const tasks = calendarTasks.filter(obj => {
+        const dueDateFromString = new Date(obj.dueDate);
+        return (
+          dueDateFromString.getFullYear() === currentDate.getFullYear() &&
+          dueDateFromString.getMonth() === currentDate.getMonth() &&
+          dueDateFromString.getDate() === currentDate.getDate()
+        );
+      })
         .map(obj => ({ ...obj }));
 
       daysInMonth.push({
@@ -100,8 +123,16 @@ export class CalendarService {
 
     for (let i = 1; i <= daysToAdd; i++) {
       const nextDate = new Date(lastDayOfMonth.getFullYear(), lastDayOfMonth.getMonth() + 1, i);
-      const tasks = calendarTasks.filter(obj => obj.dueDate.getTime() === nextDate.getTime())
+      const tasks = calendarTasks.filter(obj => {
+        const dueDateFromString = new Date(obj.dueDate);
+        return (
+          dueDateFromString.getFullYear() === nextDate.getFullYear() &&
+          dueDateFromString.getMonth() === nextDate.getMonth() &&
+          dueDateFromString.getDate() === nextDate.getDate()
+        );
+      })
         .map(obj => ({ ...obj }));
+
       daysInMonth.push({
         date: nextDate,
         dayNumber: i,
@@ -112,6 +143,5 @@ export class CalendarService {
     }
 
     this.currentMonthTasks.set(daysInMonth)
-    console.log(this.currentMonthTasks())
   }
 }

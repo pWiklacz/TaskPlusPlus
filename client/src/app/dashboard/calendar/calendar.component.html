@@ -20,8 +20,8 @@
                     <span class="col-1"></span>
                 </h5>
                 <div *ngFor="let task of day.tasks">
-                    <a class="event d-block p-1 pl-2 pr-2 mb-1 rounded text-truncate small bg-primary text-white"
-                        title="Test Event with Super Duper Really Long Title">{{task.name}}</a>
+                    <div class="event d-block p-1 pl-2 pr-2 mb-1 rounded text-truncate small text-white"
+                      [ngStyle]="{'background' : task.categoryColor}" >{{task.name}}</div>
                 </div>
                 <p *ngIf="day.tasks.length === 0" class="d-sm-none">No events</p>
             </div>
