@@ -8,13 +8,15 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { CalendarModule } from 'primeng/calendar';
 import { SharedModule  } from "../shared/shared.module";
 import { ToggleButtonModule } from 'primeng/togglebutton';
+import { AddTaskTimeConflictModalComponent } from './add-task-time-conflict-modal/add-task-time-conflict-modal.component';
 
 
 
 @NgModule({
     declarations: [
         TaskItemComponent,
-        AddTaskComponent
+        AddTaskComponent,
+        AddTaskTimeConflictModalComponent
     ],
     exports: [
         TaskItemComponent

@@ -17,6 +17,4 @@ export class DeleteConfirmationModalComponent {
     this.deleteConfirmed.next(true);
     this.bsModalRef.hide();
   }
-
-  
 }

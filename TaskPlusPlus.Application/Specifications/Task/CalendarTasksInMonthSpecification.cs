@@ -12,3 +12,4 @@ internal class CalendarTasksInMonthSpecification : Specification<Domain.Entities
         AddOrderBy(t => t.DueTime!);
     }
 }
+  

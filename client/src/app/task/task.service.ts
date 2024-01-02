@@ -34,6 +34,20 @@ export class TaskService {
     }
   }
 
+  getTaskWithNoCategory()
+  {
+    let params = new HttpParams();
+
+    if (this.QueryParams().categoryId > 0) params = params.append('categoryId', this.QueryParams().categoryId.toString());
+    params = params.append('sortDescending', this.QueryParams().sortDescending.toString());
+    params = params.append('sortBy', this.QueryParams().sortBy.apiName);
+    if (this.QueryParams().groupBy) params = params.append('groupBy', this.QueryParams().groupBy.apiName);
+    if (this.QueryParams().search) params = params.append('search', this.QueryParams().search);
+    if (this.QueryParams().date) params = params.append('date', this.QueryParams().date)
+
+    return this.http.get<ApiResponse<{ [key: string]: TaskDto[] }>>(this.apiUrl + 'Task', { params });
+  }
+
   getTasks(paramsChanged = false) {
     if (paramsChanged) {
       this.UserTasks().delete(this.QueryParams().categoryId)
