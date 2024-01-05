@@ -154,7 +154,7 @@
                 <ul class="list list-inline"
                     *ngFor="let groupName of this.taskService.CurrentCategoryTasksGroupNames()">
                     <div>
-                        <b class="text-white">{{groupName}}</b>
+                        <b class="text-white" *ngIf="groupName !== 'All'">{{groupName}}</b>
                         <ul class="list list-inline"
                             *ngFor="let task of this.taskService.CurrentCategoryTasksMap()![groupName]">
                             <app-task-item [task]="task"></app-task-item>

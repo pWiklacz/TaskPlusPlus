@@ -1,11 +1,9 @@
-﻿using TaskPlusPlus.Application.DTOs.Common;
-using TaskPlusPlus.Application.DTOs.Common.IDto;
-using TaskPlusPlus.Application.DTOs.Tag;
+﻿using TaskPlusPlus.Application.DTOs.Common.IDto;
+using TaskPlusPlus.Application.DTOs.Common;
 using TaskPlusPlus.Application.DTOs.Task.IDto;
 
 namespace TaskPlusPlus.Application.DTOs.Task;
-
-public class TaskDto : BaseDto
+public class EditTaskDto : BaseDto, ITaskTagsDto, IDueDateDto, INameAndNotesDto, ITaskPriorityDto, ITaskEnergyDto
 {
     public string Name { get; set; } = null!;
     public DateOnly? DueDate { get; set; }
@@ -17,6 +15,5 @@ public class TaskDto : BaseDto
     public int Energy { get; set; }
     public ulong? ProjectId { get; set; }
     public ulong CategoryId { get; set; }
-    public DateTime? CompletedOnUtc { get; set; }
-    public List<TagDto> Tags { get; set; } = new();
+    public List<ulong> Tags { get; set; } = new();
 }

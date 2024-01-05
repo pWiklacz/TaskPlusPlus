@@ -1,6 +1,11 @@
 import { Time } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, signal } from '@angular/core';
 import { TaskDto } from 'src/app/shared/models/task/TaskDto';
+import { TaskService } from '../task.service';
+import { MessageService } from 'primeng/api';
+import { HttpErrorResponse } from '@angular/common/http';
+import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { EditTaskComponent } from '../edit-task/edit-task.component';
 
 @Component({
   selector: 'app-task-item',
@@ -9,13 +14,31 @@ import { TaskDto } from 'src/app/shared/models/task/TaskDto';
 })
 export class TaskItemComponent implements OnInit {
   @Input() task?: TaskDto;
-  time: string = '';
+  public time = signal<string>('');
+  bsModalRef?: BsModalRef;
+
+  constructor(private taskService: TaskService,
+    private messageService: MessageService,
+    private modalService: BsModalService) {}
 
   ngOnInit(): void {
     if(this.task?.dueTime)
     {
-      this.time = this.formatTime(this.task?.dueTime!)
+      this.time.update(() =>this.formatTime(this.task?.dueTime!))
     }
+  }
+
+  complete()
+  {
+    this.taskService.changeCompleteStatus(this.task!.isCompleted, this.task!.id).subscribe({
+      next: (response: any) => {
+        this.taskService.updateTask(this.task!);
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: response.message, life: 3000 });
+      },
+      error: (err: HttpErrorResponse) => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Problem with compliting a task', life: 3000 });
+      }
+    })
   }
 
   formatMinutes(minutes: number): string {
@@ -85,9 +108,20 @@ export class TaskItemComponent implements OnInit {
     }
   }
 
-  formatTime(time: Time): string {
-    const timeSA = time.toString().split(":", 2);
-    return `${timeSA[0]}:${timeSA[1]}`
+  formatTime(inputTime: string): string {
+    const [hours, minutes] = inputTime.split(':');
+    return `${hours}:${minutes}`;
+  }
+
+  openEditTaskModal() {
+    const initialState: ModalOptions = {
+      initialState: {
+       task: this.task
+      },
+      backdrop: 'static',
+      class: 'modal-dialog-centered'
+    }
+    this.bsModalRef = this.modalService.show(EditTaskComponent, initialState);
   }
 }
 

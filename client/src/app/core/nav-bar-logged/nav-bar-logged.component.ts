@@ -6,6 +6,7 @@ import { AddCategoryComponent } from 'src/app/category/add-category/add-category
 import { SideNavService } from '../services/side-nav.service';
 import { AddTaskComponent } from 'src/app/task/add-task/add-task.component';
 import { AddTagComponent } from 'src/app/tag/add-tag/add-tag.component';
+import { AddProjectComponent } from 'src/app/project/add-project/add-project.component';
 
 @Component({
   selector: 'app-nav-bar-logged',
@@ -38,6 +39,9 @@ export class NavBarLoggedComponent implements OnInit {
     this.bsModalRef = this.modalService.show(AddTaskComponent, { backdrop: 'static', class: 'modal-dialog-centered' });
   }
 
+  openAddProjectModal() {
+    this.bsModalRef = this.modalService.show(AddProjectComponent, { backdrop: 'static', class: 'modal-dialog-centered' });
+  }
   SideNavToggle() {
     this.sideNavService.updateSideNavStatus();
   }

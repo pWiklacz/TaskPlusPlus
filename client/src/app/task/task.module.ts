@@ -9,6 +9,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { SharedModule  } from "../shared/shared.module";
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { AddTaskTimeConflictModalComponent } from './add-task-time-conflict-modal/add-task-time-conflict-modal.component';
+import { EditTaskComponent } from './edit-task/edit-task.component';
 
 
 
@@ -16,7 +17,8 @@ import { AddTaskTimeConflictModalComponent } from './add-task-time-conflict-moda
     declarations: [
         TaskItemComponent,
         AddTaskComponent,
-        AddTaskTimeConflictModalComponent
+        AddTaskTimeConflictModalComponent,
+        EditTaskComponent
     ],
     exports: [
         TaskItemComponent

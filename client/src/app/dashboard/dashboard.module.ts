@@ -11,6 +11,7 @@ import { NextActionsComponent } from './next-actions/next-actions.component';
 import { WaitingForComponent } from './waiting-for/waiting-for.component';
 import { SomedayMaybeComponent } from './someday-maybe/someday-maybe.component';
 import { TaskModule } from '../task/task.module';
+import { ProjectModule } from '../project/project.module';
 
 
 
@@ -31,6 +32,7 @@ import { TaskModule } from '../task/task.module';
     SharedModule,
     DashboardRoutingModule,
     TaskModule,
+    ProjectModule
   ],
   exports: [
   ]

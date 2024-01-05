@@ -23,9 +23,11 @@ public class TaskConfiguration : IEntityTypeConfiguration<Domain.Entities.Task>
         var idConverter = new ValueConverter<TaskId, ulong>(
             taskId => taskId.Value,
             value => new TaskId(value));
+
         var notesConverter = new ValueConverter<Notes, string>(
             notes => notes.Value,
             value => Notes.Create(value).Value);
+
         var categoryIdConverter = new ValueConverter<CategoryId, ulong>(
             categoryId => categoryId.Value,
             value => new CategoryId(value));

@@ -1,11 +1,11 @@
 <div class="modal-header bg-primary">
-    <h4 class="modal-title pull-left text-secondary">New Task</h4>
+    <h4 class="modal-title pull-left text-secondary">Edit Task</h4>
     <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
         <span aria-hidden="true" class="visually-hidden">&times;</span>
     </button>
 </div>
 
-<form [formGroup]="addTaskForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="editTaskForm" (ngSubmit)="onSubmit()">
     <div class="modal-body">
         <div class="container text-center">
             <div class="col-sm">
@@ -93,10 +93,8 @@
                         <ng-select class="select" formControlName="projectId" placeholder="&#xf0ae; Project"
                             [searchable]="false">
                             <ng-option value='6' disabled="true" style="cursor: none;">&#xf0ae; Project</ng-option>
-                            <ng-option *ngFor="let project of projectService.UserProjects() "
-                            value="{{project.id}}">
-                            {{project.name}}</ng-option>
                             <ng-option value='' disabled="false" style="cursor: none;">None</ng-option>
+
                         </ng-select>
                     </div>
                 </div>
@@ -104,7 +102,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" [class.disabled]="this.addTaskForm.invalid">Add</button>
+        <button type="submit" class="btn btn-primary" [class.disabled]="this.editTaskForm.invalid  || !isEdited">Edit</button>
         <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">Cancel</button>
     </div>
 </form>

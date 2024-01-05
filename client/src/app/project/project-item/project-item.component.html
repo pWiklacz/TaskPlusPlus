@@ -1,0 +1,45 @@
+<div class="card card-margin bg-primary" *ngIf="project && !project.isCompleted">
+    <div class="card-header no-border justify-content-between ">
+        <div>
+            <h5 class="card-title text-secondary">{{project.name}}</h5>
+        </div>
+        <div>
+            <input type="checkbox" id="box-{{project.id}}" [(ngModel)]="project.isCompleted"
+                [checked]="project.isCompleted">
+            <label for="box-{{project.id}}"></label>
+        </div>
+    </div>
+    <div class="card-body pt-0">
+        <div class="widget-49">
+            <div class="widget-49-title-wrapper row">
+                <div class="widget-49-date-primary bg-secondary col-3" *ngIf="project.dueDate">
+                    <span class="widget-49-date-day  text-primary">{{project.dueDate | date:'d'}}</span>
+                    <span class="widget-49-date-month  text-primary">{{project.dueDate | date:'MMM'}}</span>
+                </div>
+                <div class="widget-49-date-primary bg-secondary col-3" *ngIf="!project.dueDate">
+                    <span class="text-primary">NoDue</span>      
+                </div>
+                <div class="widget-49-meeting-info col-9">
+                    <span class="widget-49-pro-title notes">{{project.notes}}</span>
+                    <span class="widget-49-meeting-time">
+                        <div class="due-date" *ngIf="project.dueDate">
+                            <i class="fa-regular fa-calendar-o fa-fw me-1"></i>
+                            <span class="me-2">{{project.dueDate | date:'MMM d, y'}}</span> <span class="me-2"
+                                *ngIf="project.dueTime">{{time()}}</span>
+                        </div>
+                    </span>                 
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <ul class="list list-inline" *ngFor="let task of project.tasks">
+                    <app-task-item [task]="task"></app-task-item>
+                </ul>
+            </div>
+
+            <div class="widget-49-meeting-action">
+                <a href="#" class="btn btn-sm btn-flash-border-primary text-secondary">View All</a>
+            </div>
+        </div>
+    </div>
+</div>

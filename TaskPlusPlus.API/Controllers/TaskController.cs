@@ -10,6 +10,7 @@ using TaskPlusPlus.Application.Features.Tasks.Commands.ChangeTaskPriority;
 using TaskPlusPlus.Application.Features.Tasks.Commands.ChangeTaskProject;
 using TaskPlusPlus.Application.Features.Tasks.Commands.CreateTask;
 using TaskPlusPlus.Application.Features.Tasks.Commands.DeleteTask;
+using TaskPlusPlus.Application.Features.Tasks.Commands.EditTask;
 using TaskPlusPlus.Application.Features.Tasks.Commands.UpdateTaskDueDate;
 using TaskPlusPlus.Application.Features.Tasks.Commands.UpdateTaskNameAndNotes;
 using TaskPlusPlus.Application.Features.Tasks.Commands.UpdateTaskTags;
@@ -60,6 +61,15 @@ public class TaskController : BaseController
     public async Task<ActionResult> Post([FromBody] CreateTaskDto dto)
     {
         var command = new CreateTaskCommand(dto);
+        var result = await _mediator.Send(command);
+
+        return FromResult(result);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult> Put([FromBody] EditTaskDto dto)
+    {
+        var command = new EditTaskCommand(dto);
         var result = await _mediator.Send(command);
 
         return FromResult(result);

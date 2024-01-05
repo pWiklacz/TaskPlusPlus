@@ -1,17 +1,20 @@
-<li class="d-flex justify-content-between bg-secondary taskItem" *ngIf="task">
+<li class="d-flex justify-content-between bg-secondary taskItem" *ngIf="task && !task.isCompleted">
     <div class="d-flex flex-row align-items-center text-white">
-        <input type="checkbox" id="box-{{task.id}}" value="{{task.isCompleted}}">
+        <input type="checkbox" id="box-{{task.id}}" [(ngModel)]="task.isCompleted" (change)="complete()"
+            [checked]="task.isCompleted">
         <label for="box-{{task.id}}"></label>
         <div class="ml-2">
-            <h6 class="mb-0">{{task.name}}</h6>
+            <h6 class="mb-0">{{task.name}}
+            </h6>
             <div class="d-flex mt-1 date-time ">
                 <div class="due-date" *ngIf="task.dueDate">
                     <i class="fa-regular fa-calendar-o fa-fw me-1"></i>
-                    <span class="me-2">{{task.dueDate | date:'MMM d, y'}}</span>  <span class="me-2" *ngIf="task.dueTime">{{time}}</span>
+                    <span class="me-2">{{task.dueDate | date:'MMM d, y'}}</span> <span class="me-2"
+                        *ngIf="task.dueTime">{{time()}}</span>
                 </div>
                 <div class="duration-time" *ngIf="task.durationTime">
                     <i class="fa-regular fa-clock me-1"></i>
-                   <span class="me-2">{{this.formatMinutes(task.durationTime)}}</span> 
+                    <span class="me-2">{{this.formatMinutes(task.durationTime)}}</span>
                 </div>
                 <div class="energy">
                     <i class="{{this.formatEnergyIcon(this.task.energy)}} fa-fw me-1 battery"></i>
@@ -30,8 +33,20 @@
         </div>
     </div>
     <div class="d-flex flex-row align-items-center text-white">
-        <div class="d-flex flex-column mr-2">
-        </div>
-        <i class="fa-solid fa-ellipsis"></i>
+        <span dropdown container="body">
+            <a id="basic-link" dropdownToggle (click)="false" aria-controls="basic-link-dropdown">
+                <i class="fa-solid fa-ellipsis"></i>
+            </a>
+            <ul id="basic-link-dropdown" *dropdownMenu class="dropdown-menu dropdown-menu-right border" role="menu"
+                aria-labelledby="basic-link">
+                <li role="menuitem">
+                    <a class="dropdown-item" (click)="openEditTaskModal()">
+                        <i class="fa-solid fa-pen-to-square me-2 fa-fw"></i>Edit</a>
+                </li>
+                <li role="menuitem"><a class="dropdown-item">
+                    <i class="fa-solid fa-trash me-2 fa-fw"></i>Delete</a>
+            </li>
+            </ul>
+        </span>
     </div>
 </li>

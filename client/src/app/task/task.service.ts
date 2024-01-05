@@ -7,6 +7,7 @@ import { GetTasksQueryParams } from '../shared/models/task/GetTasksQueryParams';
 import { CreateTaskDto } from '../shared/models/task/CreateTaskDto';
 import { map } from 'rxjs';
 import { CategoryService } from '../category/category.service';
+import { EditTaskDto } from '../shared/models/task/EditTaskDto';
 
 @Injectable({
   providedIn: 'root'
@@ -34,8 +35,22 @@ export class TaskService {
     }
   }
 
-  getTaskWithNoCategory()
-  {
+  updateTask(task: TaskDto) {
+    if (+this.categoryService.selectedCategory()!.id === +task.categoryId) {
+      this.CurrentCategoryTasksMap.mutate((val) => {
+        Object.keys(val!).forEach(tag => {
+          const tagTasks = val![tag] || [];
+          const index = tagTasks.findIndex(t => t.id === task.id);
+          if (index !== -1) {
+            tagTasks[index] = task;
+            val![tag] = [...tagTasks];
+          }
+        });
+      })
+    }
+  }
+
+  getTaskWithNoCategory() {
     let params = new HttpParams();
 
     if (this.QueryParams().categoryId > 0) params = params.append('categoryId', this.QueryParams().categoryId.toString());
@@ -81,5 +96,13 @@ export class TaskService {
 
   postTask(values: CreateTaskDto) {
     return this.http.post<ApiResponse<number>>(this.apiUrl + 'Task', values)
+  }
+
+  changeCompleteStatus(isComplete: boolean, id: number) {
+    return this.http.put(this.apiUrl + 'Task/' + id + '/changeCompleteStatus', { id, isComplete })
+  }
+
+  putTask(updatedTask: EditTaskDto) {
+    return this.http.put(this.apiUrl + 'Task/' + updatedTask.id, updatedTask);
   }
 }

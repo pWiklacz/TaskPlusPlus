@@ -1,7 +1,7 @@
 import { Time } from "@angular/common"
 import { TagDto } from "../tag/TagDto"
 
-export interface TaskDto {
+export interface EditTaskDto {
     id: number
     name: string
     dueDate: string
@@ -13,6 +13,5 @@ export interface TaskDto {
     energy: number
     projectId: number
     categoryId: number
-    completedOnUtc: Date | null
-    tags: TagDto[]
+    tags: number[]
 }

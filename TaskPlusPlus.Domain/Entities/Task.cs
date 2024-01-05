@@ -118,10 +118,15 @@ public sealed class Task : Entity<TaskId>, IAuditEntity
         return task;
     }
 
+    public void UpdateDueTime(TimeOnly? dueTime)
+    => DueTime = dueTime;
+    public void UpdateDurationTime(int time)
+    => DurationTimeInMinutes = time;
+
     public void ChangeCategory(CategoryId categoryId)
         => CategoryId = categoryId;
 
-    public void ChangeProject(ProjectId projectId)
+    public void ChangeProject(ProjectId? projectId)
         => ProjectId = projectId;
 
     public Result AddTag(Tag tag)
@@ -148,7 +153,7 @@ public sealed class Task : Entity<TaskId>, IAuditEntity
         if (errors.Any())
             return Result.Fail(errors);
 
-        foreach (var tag in enumerable)
+        foreach (var tag in enumerable.Where(tag => _tags.All(t => t.Id != tag.Id)))
         {
             AddTag(tag);
         }
@@ -168,6 +173,9 @@ public sealed class Task : Entity<TaskId>, IAuditEntity
 
     public void ChangePriority(Priority priority)
     => Priority = priority;
+
+    public void ChangeEnergy(Energy energy)
+    => Energy = energy;
     public Result UpdateDueDate(DateOnly dueDate)
     {
         var dueDateResult = DueDate.Create(dueDate);

@@ -35,6 +35,7 @@ internal sealed class UpdateTaskTagsCommandHandler : ICommandHandler<UpdateTaskT
         {
             return Result.Fail(new NotFoundError(nameof(Task), request.Dto.Id));
         }
+
         var tagsIds = request.Dto.Tags;
         var tags = new List<Tag>();
 

@@ -1,36 +1,35 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { MessageService } from 'primeng/api';
 import { CategoryService } from 'src/app/category/category.service';
 import { ThemeService } from 'src/app/core/services/theme.service';
-import { CreateTaskDto } from 'src/app/shared/models/task/CreateTaskDto';
+import { CategoryDto } from 'src/app/shared/models/category/CategoryDto';
 import { EnergyEnum } from 'src/app/shared/models/task/EnergyEnum';
 import { PriorityEnum } from 'src/app/shared/models/task/PriorityEnum';
 import { TagService } from 'src/app/tag/tag.service';
 import { TaskService } from '../task.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { TaskDto } from 'src/app/shared/models/task/TaskDto';
-import { Time } from "@angular/common"
-import { CategoryDto } from 'src/app/shared/models/category/CategoryDto';
 import { GroupingOptionsEnum } from 'src/app/shared/models/task/GroupingOptionsEnum';
 import { AddTaskTimeConflictModalComponent } from '../add-task-time-conflict-modal/add-task-time-conflict-modal.component';
-import { ProjectService } from 'src/app/project/project.service';
-
+import { Time } from '@angular/common';
+import { EditTaskDto } from 'src/app/shared/models/task/EditTaskDto';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-add-tag',
-  templateUrl: './add-task.component.html',
-  styleUrls: ['./add-task.component.scss']
+  selector: 'app-edit-task',
+  templateUrl: './edit-task.component.html',
+  styleUrls: ['./edit-task.component.scss']
 })
-export class AddTaskComponent implements OnInit {
-  addTaskForm!: FormGroup;
+export class EditTaskComponent {
+  task?: TaskDto;
+  editTaskForm!: FormGroup;
   public EnergyEnum = EnergyEnum
   public PriorityEnum = PriorityEnum
   public systemCategories: CategoryDto[] = [];
   addTimeChecked: boolean = false;
   defaultDate?: Date;
-
+  isEdited = false;
   durationTimes = [
     { value: null, label: "None" },
     { value: 5, label: "5 min" },
@@ -50,8 +49,7 @@ export class AddTaskComponent implements OnInit {
     private messageService: MessageService,
     public tagService: TagService,
     private taskService: TaskService,
-    protected modalService: BsModalService,
-    public projectService: ProjectService) { } 
+    protected modalService: BsModalService) { }
 
   ngOnInit() {
     document.documentElement.style.setProperty('--calendar-body-color',
@@ -63,55 +61,85 @@ export class AddTaskComponent implements OnInit {
     document.documentElement.style.setProperty('--secondary-color',
       this.themeService.getSecondaryColor());
 
-    this.addTaskForm = new FormGroup({
-      name: new FormControl('', Validators.required),
-      notes: new FormControl(''),
-      date: new FormControl<Date | null>(null),
-      energy: new FormControl(),
-      priority: new FormControl(),
-      durationTime: new FormControl(),
-      selectedTags: new FormControl([]),
-      categoryId: new FormControl('1'),
-      projectId: new FormControl()
+    if (this.task?.dueTime)
+      this.addTimeChecked = true;
+
+    const dueDate = new Date(this.task?.dueDate! + ' ' + this.task?.dueTime)
+
+    const tagsIds = this.task?.tags.flatMap(tag => tag.id ?? []);
+
+    this.editTaskForm = new FormGroup({
+      name: new FormControl(this.task?.name, Validators.required),
+      notes: new FormControl(this.task?.notes),
+      date: new FormControl<Date | null>(this.task?.dueDate ? dueDate : null),
+      energy: new FormControl(this.task?.energy.toString()),
+      priority: new FormControl(this.task?.priority.toString()),
+      durationTime: new FormControl(this.task?.durationTime.toString()),
+      selectedTags: new FormControl(tagsIds),
+      categoryId: new FormControl(this.task?.categoryId.toString()),
+      projectId: new FormControl(this.task?.projectId?.toString())
     });
 
-    this.addTaskForm.get('energy')!.valueChanges.subscribe((selectedValue) => {
+    this.editTaskForm.get('energy')!.valueChanges.subscribe((selectedValue) => {
       if (selectedValue == 0) {
-        this.addTaskForm.get('energy')!.setValue(null, { emitEvent: false });
+        this.editTaskForm.get('energy')!.setValue(null, { emitEvent: false });
       }
     });
-    this.addTaskForm.get('priority')!.valueChanges.subscribe((selectedValue) => {
+    this.editTaskForm.get('priority')!.valueChanges.subscribe((selectedValue) => {
       if (selectedValue == 1) {
-        this.addTaskForm.get('priority')!.setValue(null, { emitEvent: false });
+        this.editTaskForm.get('priority')!.setValue(null, { emitEvent: false });
       }
     });
-    this.addTaskForm.get('durationTime')!.valueChanges.subscribe((selectedValue) => {
+    this.editTaskForm.get('durationTime')!.valueChanges.subscribe((selectedValue) => {
       if (selectedValue == '') {
-        this.addTaskForm.get('durationTime')!.setValue(null, { emitEvent: false });
+        this.editTaskForm.get('durationTime')!.setValue(null, { emitEvent: false });
       }
     });
-
     this.tagService.getTags()?.subscribe({
       error: error => console.log(error)
     })
-
-    this.projectService.getProjects()?.subscribe({
-      error: error => console.log(error)
-    });
-
     this.systemCategories = this.categoryService.systemCategories.filter(category => ![0].includes(category.id));
     this.defaultDate = new Date()
+
+    this.editTaskForm.valueChanges.subscribe((val) => {
+      if (val.name !== this.task?.name
+        || val.notes !== this.task?.notes
+        || val.date !== this.task?.dueDate
+        || val.energy !== this.task?.energy
+        || val.priority !== this.task?.priority
+        || val.durationTime !== this.task?.durationTime
+        || !this.compareTags(val.selectedTags, this.task?.tags!)
+        || val.categoryId !== this.task?.categoryId
+        || val.projectId !== this.task?.projectId) {
+        this.isEdited = true;
+      } else {
+        this.isEdited = false;
+      }
+    });
   }
 
-  get form() { return this.addTaskForm.controls; }
+  compareTags(selectedTags: any[], taskTags: any[]): boolean {
+    if (selectedTags.length !== taskTags.length) {
+      return false;
+    }
+    for (let i = 0; i < selectedTags.length; i++) {
+      if (selectedTags[i].id !== taskTags[i].id) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  get form() { return this.editTaskForm.controls; }
 
   async onSubmit() {
-    const formValues = this.addTaskForm.value;
+    const formValues = this.editTaskForm.value;
     let formattedDate = null;
     let formattedTime = null;
     if (formValues.date) formattedDate = `${formValues.date.getFullYear()}-${(formValues.date.getMonth() + 1).toString().padStart(2, '0')}-${formValues.date.getDate().toString().padStart(2, '0')}`;
     if (formValues.date && this.addTimeChecked) formattedTime = `${formValues.date.getHours().toString().padStart(2, '0')}:${formValues.date.getMinutes().toString().padStart(2, '0')}:${formValues.date.getSeconds().toString().padStart(2, '0')}`;
-    const createdTask: CreateTaskDto = {
+    const udpatedTask: EditTaskDto = {
+      id: this.task?.id!,
       name: formValues.name!,
       dueDate: formattedDate!,
       notes: formValues.notes!,
@@ -121,7 +149,8 @@ export class AddTaskComponent implements OnInit {
       energy: formValues.energy ?? EnergyEnum.NONE.id,
       projectId: formValues.projectId,
       categoryId: formValues.categoryId,
-      tags: formValues.selectedTags
+      tags: formValues.selectedTags,
+      isCompleted: this.task?.isCompleted!
     }
     let isConflict = false;
     if (formattedTime) {
@@ -149,12 +178,12 @@ export class AddTaskComponent implements OnInit {
               modalRef.onHidden!.subscribe((result) => {
                 isConflict = !(result === 'confirm');
                 if (!isConflict) {
-                  this.PostNewTask(createdTask);
+                  this.PutTask(udpatedTask);
                   this.bsModalRef.hide()
                 }
               });
             } else {
-              this.PostNewTask(createdTask);
+              this.PutTask(udpatedTask);
               this.bsModalRef.hide()
             }
             this.taskService.UserTasks().delete(-1);
@@ -162,35 +191,32 @@ export class AddTaskComponent implements OnInit {
           error: error => console.log(error)
         }
       );
-    } else {
-      this.PostNewTask(createdTask);
-      this.bsModalRef.hide()
-    }
+    } else this.PutTask(udpatedTask);
   }
 
-  private PostNewTask(createdTask: CreateTaskDto) {
-    this.taskService.postTask(createdTask).subscribe({
+  private PutTask(updatedTask: EditTaskDto) {
+    this.taskService.putTask(updatedTask).subscribe({
       next: (response: any) => {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: response.message, life: 3000 });
         const task: TaskDto = {
-          id: response.value,
-          name: createdTask.name,
-          dueDate: createdTask.dueDate,
-          notes: createdTask.notes,
+          id: updatedTask.id,
+          name: updatedTask.name,
+          dueDate: updatedTask.dueDate,
+          notes: updatedTask.notes,
           isCompleted: false,
-          dueTime: createdTask.dueTime,
-          durationTime: +createdTask.durationTime,
-          priority: +createdTask.priority,
-          energy: +createdTask.energy,
-          projectId: createdTask.projectId,
-          categoryId: createdTask.categoryId,
+          dueTime: updatedTask.dueTime,
+          durationTime: +updatedTask.durationTime,
+          priority: +updatedTask.priority,
+          energy: +updatedTask.energy,
+          projectId: updatedTask.projectId,
+          categoryId: updatedTask.categoryId,
           completedOnUtc: null,
-          tags: this.tagService.filterTagsByTagIds(createdTask.tags)
+          tags: this.tagService.filterTagsByTagIds(updatedTask.tags)
         };
-        this.taskService.addTask(task);
+        this.taskService.updateTask(task);
       },
       error: (err: HttpErrorResponse) => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Problem with creating task', life: 3000 });
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Problem with editing task', life: 3000 });
       }
     });
   }
@@ -208,14 +234,14 @@ export class AddTaskComponent implements OnInit {
   }
 
   addTime() {
-    let date: Date = this.addTaskForm.value.date;
+    let date: Date = this.editTaskForm.value.date;
     if (date) {
       const currentDate = new Date();
       const currentMinutes = currentDate.getMinutes();
       const nextMultipleOf5Minutes = Math.ceil(currentMinutes / 5) * 5;
       date.setHours(currentDate.getHours())
       date.setMinutes(nextMultipleOf5Minutes);
-      this.addTaskForm.get('date')?.setValue(date);
+      this.editTaskForm.get('date')?.setValue(date);
       this.addTimeChecked = !this.addTimeChecked;
     }
   }

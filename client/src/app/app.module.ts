@@ -25,6 +25,8 @@ import { TaskModule } from './task/task.module';
 import { TagModule } from './tag/tag.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
+import { ProjectModule } from './project/project.module';
+
 
 
 @NgModule({
@@ -48,7 +50,8 @@ import { ButtonsModule } from 'ngx-bootstrap/buttons';
     TaskModule,
     TagModule,
     DashboardModule,
-    ButtonsModule.forRoot()
+    ButtonsModule.forRoot(),
+    ProjectModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
