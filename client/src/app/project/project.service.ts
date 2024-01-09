@@ -5,6 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { ApiResponse } from '../shared/models/ApiResponse';
 import { map } from 'rxjs';
 import { CreateProjectDto } from '../shared/models/project/CreateProjectDto';
+import { TaskDto } from '../shared/models/task/TaskDto';
+import { EditProjectDto } from '../shared/models/project/EditProjectDto';
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +40,43 @@ export class ProjectService {
     })
   }
 
+  addTaskToProject(id: number, task: TaskDto) {
+    this.UserProjects.mutate((val) => {
+      const index = val.findIndex(p => p.id == id)
+      if (index !== -1) {
+        val[index].tasks.push(task)
+      }
+    })
+  }
+
+  editTaskInProject(id: number, task: TaskDto) {
+    this.UserProjects.mutate((val) => {
+      const index = val.findIndex(p => p.id == id)
+      if (index !== -1) {
+        const projectTasks = val[index].tasks || [];
+        const taskIndex = projectTasks.findIndex(t => t.id === task.id);
+        if (taskIndex !== -1) {
+          projectTasks[taskIndex] = task;
+          val[index].tasks = [...projectTasks]
+        }
+      }
+    })
+  }
+
+  removeTaskInProject(id: number, task: TaskDto) {
+    this.UserProjects.mutate((val) => {
+      const index = val.findIndex(p => p.id == id)
+      if (index !== -1) {
+        const projectTasks = val[index].tasks || [];
+        const taskIndex = projectTasks.findIndex(t => t.id === task.id);
+        if (taskIndex !== -1) {
+          projectTasks.splice(taskIndex, 1)
+          val[index].tasks = [...projectTasks]
+        }
+      }
+    })
+  }
+
   getProjects() {
     if (this.UserProjects().length == 0) {
       return this.http.get<ApiResponse<ProjectDto[]>>(this.apiUrl + 'Project').pipe(
@@ -49,6 +88,9 @@ export class ProjectService {
     return
   }
 
+  changeCompleteStatus(isComplete: boolean, id: number) {
+    return this.http.put(this.apiUrl + 'Project/' + id + '/changeCompleteStatus', { id, isComplete })
+  }
   postProject(values: CreateProjectDto) {
     return this.http.post<ApiResponse<number>>(this.apiUrl + 'Project', values);
   }
@@ -57,7 +99,7 @@ export class ProjectService {
     return this.http.delete(this.apiUrl + 'Project/' + id);
   }
 
-  putProject(updatedProject: ProjectDto) {
+  putProject(updatedProject: EditProjectDto) {
     return this.http.put(this.apiUrl + 'Project/' + updatedProject.id, updatedProject);
   }
 }

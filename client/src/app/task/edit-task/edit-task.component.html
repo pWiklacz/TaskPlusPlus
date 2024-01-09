@@ -93,8 +93,10 @@
                         <ng-select class="select" formControlName="projectId" placeholder="&#xf0ae; Project"
                             [searchable]="false">
                             <ng-option value='6' disabled="true" style="cursor: none;">&#xf0ae; Project</ng-option>
+                            <ng-option *ngFor="let project of projectService.UserProjects() "
+                            value="{{project.id}}">
+                            {{project.name}}</ng-option>
                             <ng-option value='' disabled="false" style="cursor: none;">None</ng-option>
-
                         </ng-select>
                     </div>
                 </div>

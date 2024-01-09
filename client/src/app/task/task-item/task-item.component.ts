@@ -6,6 +6,8 @@ import { MessageService } from 'primeng/api';
 import { HttpErrorResponse } from '@angular/common/http';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { EditTaskComponent } from '../edit-task/edit-task.component';
+import { DeleteConfirmationModalComponent } from 'src/app/shared/components/delete-confirmation-modal/delete-confirmation-modal.component';
+import { ProjectService } from 'src/app/project/project.service';
 
 @Component({
   selector: 'app-task-item',
@@ -19,7 +21,8 @@ export class TaskItemComponent implements OnInit {
 
   constructor(private taskService: TaskService,
     private messageService: MessageService,
-    private modalService: BsModalService) {}
+    private modalService: BsModalService,
+    private projectService: ProjectService) {}
 
   ngOnInit(): void {
     if(this.task?.dueTime)
@@ -122,6 +125,34 @@ export class TaskItemComponent implements OnInit {
       class: 'modal-dialog-centered'
     }
     this.bsModalRef = this.modalService.show(EditTaskComponent, initialState);
+  }
+
+  openDeleteTaskModal() {
+    const initialState: ModalOptions = {
+      initialState: {
+        name: this.task?.name
+      }
+    }
+    this.bsModalRef = this.modalService.show(DeleteConfirmationModalComponent, initialState);
+
+    this.bsModalRef.content.deleteConfirmed.subscribe((deleteConfirmed: boolean) => {
+      if (deleteConfirmed) {
+        this.taskService.deleteTask(this.task?.id!).subscribe({
+          next: (response: any) => {
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: response.message, life: 3000 });
+            this.taskService.removeTask(this.task!)
+            if(this.task?.projectId)
+            {
+              this.projectService.removeTaskInProject(this.task?.projectId, this.task)
+            }
+        
+          },
+          error: (err: HttpErrorResponse) => {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Problem with deleting task', life: 3000 });
+          }
+        })
+      }
+    });
   }
 }
 

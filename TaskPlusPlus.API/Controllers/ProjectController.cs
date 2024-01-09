@@ -6,6 +6,7 @@ using TaskPlusPlus.Application.DTOs.Project;
 using TaskPlusPlus.Application.Features.Projects.Commands.ChangeProjectCompleteStatus;
 using TaskPlusPlus.Application.Features.Projects.Commands.CreateProject;
 using TaskPlusPlus.Application.Features.Projects.Commands.DeleteProject;
+using TaskPlusPlus.Application.Features.Projects.Commands.EditProject;
 using TaskPlusPlus.Application.Features.Projects.Commands.UpdateProjectDueDate;
 using TaskPlusPlus.Application.Features.Projects.Commands.UpdateProjectNameAndNotes;
 using TaskPlusPlus.Application.Features.Projects.Queries.GetProjectById;
@@ -44,6 +45,15 @@ public class ProjectController : BaseController
     public async Task<ActionResult> Post([FromBody] CreateProjectDto dto)
     {
         var command = new CreateProjectCommand(dto);
+        var result = await _mediator.Send(command);
+
+        return FromResult(result);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult> Put([FromBody] EditProjectDto dto)
+    {
+        var command = new EditProjectCommand(dto);
         var result = await _mediator.Send(command);
 
         return FromResult(result);

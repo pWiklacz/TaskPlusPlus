@@ -15,6 +15,7 @@ import { AddTaskTimeConflictModalComponent } from '../add-task-time-conflict-mod
 import { Time } from '@angular/common';
 import { EditTaskDto } from 'src/app/shared/models/task/EditTaskDto';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ProjectService } from 'src/app/project/project.service';
 
 @Component({
   selector: 'app-edit-task',
@@ -49,7 +50,8 @@ export class EditTaskComponent {
     private messageService: MessageService,
     public tagService: TagService,
     private taskService: TaskService,
-    protected modalService: BsModalService) { }
+    protected modalService: BsModalService,
+    public projectService: ProjectService) { }
 
   ngOnInit() {
     document.documentElement.style.setProperty('--calendar-body-color',
@@ -64,8 +66,12 @@ export class EditTaskComponent {
     if (this.task?.dueTime)
       this.addTimeChecked = true;
 
-    const dueDate = new Date(this.task?.dueDate! + ' ' + this.task?.dueTime)
+    let dueDate: Date;
 
+    if (this.task?.dueTime)
+      dueDate = new Date(this.task?.dueDate! + ' ' + this.task?.dueTime)
+    else
+      dueDate = new Date(this.task?.dueDate!)
     const tagsIds = this.task?.tags.flatMap(tag => tag.id ?? []);
 
     this.editTaskForm = new FormGroup({
@@ -98,6 +104,9 @@ export class EditTaskComponent {
     this.tagService.getTags()?.subscribe({
       error: error => console.log(error)
     })
+    this.projectService.getProjects()?.subscribe({
+      error: error => console.log(error)
+    });
     this.systemCategories = this.categoryService.systemCategories.filter(category => ![0].includes(category.id));
     this.defaultDate = new Date()
 
@@ -191,7 +200,10 @@ export class EditTaskComponent {
           error: error => console.log(error)
         }
       );
-    } else this.PutTask(udpatedTask);
+    } else {
+      this.PutTask(udpatedTask);
+      this.bsModalRef.hide()
+    }
   }
 
   private PutTask(updatedTask: EditTaskDto) {
@@ -213,6 +225,11 @@ export class EditTaskComponent {
           completedOnUtc: null,
           tags: this.tagService.filterTagsByTagIds(updatedTask.tags)
         };
+        if (task.projectId) {
+
+          this.projectService.editTaskInProject(task.projectId, task);
+        }
+
         this.taskService.updateTask(task);
       },
       error: (err: HttpErrorResponse) => {

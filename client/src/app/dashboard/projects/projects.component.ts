@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CategoryService } from 'src/app/category/category.service';
 import { ProjectService } from 'src/app/project/project.service';
 import { TaskService } from 'src/app/task/task.service';
 
@@ -8,10 +9,12 @@ import { TaskService } from 'src/app/task/task.service';
   styleUrls: ['./projects.component.scss']
 })
 export class ProjectsComponent implements OnInit {
-  constructor(public projectService: ProjectService) {
+  constructor(public projectService: ProjectService, private categoryService: CategoryService) {
   }
 
   ngOnInit(): void {
+    const today = this.categoryService.systemCategories.find(cat => cat.name == 'Projects');
+    this.categoryService.selectCategory(today!)
     this.getProjects();
   }
 

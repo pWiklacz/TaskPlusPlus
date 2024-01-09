@@ -45,7 +45,11 @@ internal sealed class EditTaskCommandHandler : ICommandHandler<EditTaskCommand>
             return Result.Fail(new NotFoundError(nameof(Task), dto.Id));
         }
 
-        var dateChanged = dto.DueDate != task.DueDate!;
+        var dateChanged = false;
+        if (dto.DueDate.HasValue)
+        {
+            dateChanged = dto.DueDate != task.DueDate?.Value;
+        }
         var validator = new EditTaskDtoValidator(_unitOfWork, dateChanged);
         var validationResult = await validator.ValidateAsync(dto, cancellationToken);
 
@@ -62,7 +66,7 @@ internal sealed class EditTaskCommandHandler : ICommandHandler<EditTaskCommand>
         var updateNotesResult = task.UpdateNotes(dto.Notes);
         if (updateNotesResult.IsFailed)
             errors.AddRange(updateNotesResult.Errors);
-        var updateDueDateResult = task.UpdateDueDate((DateOnly)dto.DueDate!);
+        var updateDueDateResult = task.UpdateDueDate(dto.DueDate);
         if (updateDueDateResult.IsFailed)
             errors.AddRange(updateDueDateResult.Errors);
         var energyUpdateResult = Energy.FromValue(request.Dto.Energy);

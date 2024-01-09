@@ -9,13 +9,15 @@ import { SharedModule } from "../shared/shared.module";
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { ProjectItemComponent } from './project-item/project-item.component';
 import { TaskModule } from '../task/task.module';
+import { EditProjectComponent } from './edit-project/edit-project.component';
 
 
 
 @NgModule({
   declarations: [
     AddProjectComponent,
-    ProjectItemComponent
+    ProjectItemComponent,
+    EditProjectComponent
   ],
   imports: [
     CommonModule,

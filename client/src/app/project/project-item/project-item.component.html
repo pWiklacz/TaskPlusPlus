@@ -4,7 +4,7 @@
             <h5 class="card-title text-secondary">{{project.name}}</h5>
         </div>
         <div>
-            <input type="checkbox" id="box-{{project.id}}" [(ngModel)]="project.isCompleted"
+            <input type="checkbox" id="box-{{project.id}}" [(ngModel)]="project.isCompleted"  (change)="complete()"
                 [checked]="project.isCompleted">
             <label for="box-{{project.id}}"></label>
         </div>
@@ -17,17 +17,17 @@
                     <span class="widget-49-date-month  text-primary">{{project.dueDate | date:'MMM'}}</span>
                 </div>
                 <div class="widget-49-date-primary bg-secondary col-3" *ngIf="!project.dueDate">
-                    <span class="text-primary">NoDue</span>      
+                    <span class="text-primary">NoDue</span>
                 </div>
                 <div class="widget-49-meeting-info col-9">
-                    <span class="widget-49-pro-title notes">{{project.notes}}</span>
+                    <span class="notes text-white" style="font-size: 14px;">{{project.notes}}</span>
                     <span class="widget-49-meeting-time">
                         <div class="due-date" *ngIf="project.dueDate">
                             <i class="fa-regular fa-calendar-o fa-fw me-1"></i>
                             <span class="me-2">{{project.dueDate | date:'MMM d, y'}}</span> <span class="me-2"
                                 *ngIf="project.dueTime">{{time()}}</span>
                         </div>
-                    </span>                 
+                    </span>
                 </div>
             </div>
 
@@ -38,7 +38,21 @@
             </div>
 
             <div class="widget-49-meeting-action">
-                <a href="#" class="btn btn-sm btn-flash-border-primary text-secondary">View All</a>
+                <span dropdown container="body" [dropup]="true">
+                    <a id="basic-link" dropdownToggle (click)="false" aria-controls="basic-link-dropdown">
+                        <i class="fa-solid fa-gear text-white" style="cursor: pointer;"></i>
+                    </a>
+                    <ul id="basic-link-dropdown" *dropdownMenu class="dropdown-menu dropdown-menu-right border"
+                        role="menu" aria-labelledby="basic-link">
+                        <li role="menuitem">
+                            <a class="dropdown-item" (click)="openEditProjectModal()">
+                                <i class="fa-solid fa-pen-to-square me-2 fa-fw"></i>Edit</a>
+                        </li>
+                        <li role="menuitem"><a class="dropdown-item" (click)="openDeleteProjectModal()">
+                                <i class="fa-solid fa-trash me-2 fa-fw"></i>Delete</a>
+                        </li>
+                    </ul>
+                </span>
             </div>
         </div>
     </div>

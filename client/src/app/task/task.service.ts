@@ -28,7 +28,7 @@ export class TaskService {
         categoryTasks!['All'].push(task)
       })
     }
-    if (+this.categoryService.selectedCategory()!.id === +task.categoryId) {
+    else if (+this.categoryService.selectedCategory()!.id === +task.categoryId) {
       this.CurrentCategoryTasksMap.mutate((val) => {
         val!['All'].push(task)
       })
@@ -36,6 +36,19 @@ export class TaskService {
   }
 
   updateTask(task: TaskDto) {
+    if (this.UserTasks().has(task.categoryId)) {
+      this.UserTasks.mutate((val) => {
+        let categoryTasks = val.get(task.categoryId)
+        Object.keys(val!).forEach(tag => {
+          const tagTasks = categoryTasks![tag] || [];
+          const index = tagTasks.findIndex(t => t.id === task.id);
+          if (index !== -1) {
+            tagTasks[index] = task;
+            categoryTasks![tag] = [...tagTasks];
+          }
+        });
+      })
+    }
     if (+this.categoryService.selectedCategory()!.id === +task.categoryId) {
       this.CurrentCategoryTasksMap.mutate((val) => {
         Object.keys(val!).forEach(tag => {
@@ -44,6 +57,32 @@ export class TaskService {
           if (index !== -1) {
             tagTasks[index] = task;
             val![tag] = [...tagTasks];
+          }
+        });
+      })
+    }
+  }
+
+  removeTask(task: TaskDto) {
+    if (this.UserTasks().has(task.categoryId)) {
+      this.UserTasks.mutate((val) => {
+        let categoryTasks = val.get(task.categoryId)
+        Object.keys(val!).forEach(tag => {
+          const tagTasks = categoryTasks![tag] || [];
+          const index = tagTasks.findIndex(t => t.id === task.id);
+          if (index !== -1) {
+            categoryTasks![tag].splice(index, 1)
+          }
+        });
+      })
+    }
+    if (+this.categoryService.selectedCategory()!.id === +task.categoryId) {
+      this.CurrentCategoryTasksMap.mutate((val) => {
+        Object.keys(val!).forEach(tag => {
+          const tagTasks = val![tag] || [];
+          const index = tagTasks.findIndex(t => t.id === task.id);
+          if (index !== -1) {
+            val![tag].splice(index, 1)
           }
         });
       })
@@ -104,5 +143,9 @@ export class TaskService {
 
   putTask(updatedTask: EditTaskDto) {
     return this.http.put(this.apiUrl + 'Task/' + updatedTask.id, updatedTask);
+  }
+
+  deleteTask(id: number) {
+    return this.http.delete(this.apiUrl + 'Task/' + id);
   }
 }

@@ -176,12 +176,17 @@ public sealed class Task : Entity<TaskId>, IAuditEntity
 
     public void ChangeEnergy(Energy energy)
     => Energy = energy;
-    public Result UpdateDueDate(DateOnly dueDate)
+    public Result UpdateDueDate(DateOnly? dueDate)
     {
-        var dueDateResult = DueDate.Create(dueDate);
-        if (dueDateResult.IsFailed)
-            return Result.Fail(dueDateResult.Errors);
-        DueDate = dueDateResult.Value;
+        if (dueDate.HasValue)
+        {
+            var dueDateResult = DueDate.Create((DateOnly)dueDate);
+            if (dueDateResult.IsFailed)
+                return Result.Fail(dueDateResult.Errors);
+            DueDate = dueDateResult.Value;
+        }
+        else DueDate = null;
+
         return Result.Ok();
     }
     public Result UpdateName(string name)

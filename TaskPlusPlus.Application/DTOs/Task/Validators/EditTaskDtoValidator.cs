@@ -5,11 +5,14 @@ using TaskPlusPlus.Domain.ValueObjects.Category;
 using TaskPlusPlus.Domain.ValueObjects.Project;
 
 namespace TaskPlusPlus.Application.DTOs.Task.Validators;
-partial class EditTaskDtoValidator : AbstractValidator<EditTaskDto>
+public class EditTaskDtoValidator : AbstractValidator<EditTaskDto>
 {
-    public EditTaskDtoValidator(IUnitOfWork unitOfWork)
+    public EditTaskDtoValidator(IUnitOfWork unitOfWork, bool dateChanged = false)
     {
-        Include(new DueDateDtoValidator());
+        if (dateChanged)
+        {
+            Include(new DueDateDtoValidator());
+        }
         Include(new NameAndNotesValidator());
         Include(new TaskPriorityDtoValidator());
         Include(new TaskEnergyDtoValidator());

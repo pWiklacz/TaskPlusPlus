@@ -1,0 +1,107 @@
+:host ::ng-deep .p-inputtext {
+    border: 1px solid black;
+    border-radius: 5px;
+    background: var(--calendar-bg-color) !important;
+    color: var(--calendar-body-color) !important;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "FontAwesome";
+    font-size: 1rem;
+    height: 36px;
+    width: 100%;
+    margin-top: 1px;
+    padding-left: 1px;
+    cursor: pointer;
+  } 
+  
+  :host ::ng-deep .p-datepicker {
+    background: var(--calendar-bg-color) !important;
+    color: var(--calendar-body-color) !important;
+  }
+  
+  :host ::ng-deep .p-datepicker-header {
+    background: var(--calendar-bg-color) !important;
+    color: var(--calendar-body-color) !important;
+  }
+  
+  :host ::ng-deep .p-datepicker-year {
+    color: var(--calendar-body-color) !important;
+  }
+  
+  :host ::ng-deep .p-datepicker-month {
+    color: var(--calendar-body-color) !important;
+  }
+  
+  :host ::ng-deep .p-calendar {
+    border-radius: 5px;
+    align-items: center;
+    display: flex;
+    color: var(--calendar-body-color) !important;
+  }
+  
+  :host ::ng-deep .p-inputtext::placeholder {
+    border-radius: 5px;
+    color: #aaa !important;
+   
+  }
+  
+  .modal-footer {
+    border: none;
+  }
+  
+  .modal-header {
+    border: none;
+  }
+  
+  .select {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "FontAwesome";
+    font-size: 1rem;
+    padding-top: 1px;
+    padding-bottom: 1px;
+  }
+  
+  :host ::ng-deep .ng-select-container {
+    background: var(--calendar-bg-color) !important;
+    color: var(--calendar-body-color) !important;
+    border-color: black;
+  }
+  
+  :host ::ng-deep .ng-select.ng-select-focused:not(.ng-select-opened)>.ng-select-container {
+    border-color: var(--primary-color);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 3px rgba(var(--primary-color), 0.5);
+  }
+  
+  :host ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+    background: var(--calendar-bg-color) !important;
+    color: var(--calendar-body-color) !important;
+  }
+  
+  :host ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+  }
+  
+  :host ::ng-deep .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+  }
+  
+  :host ::ng-deep .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value .ng-value-icon.left {
+    border: none;
+  }
+  
+  :host ::ng-deep .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value .ng-value-icon:hover {
+    background-color: var(--secondary-color) !important;
+  }
+  
+  :host ::ng-deep .ng-select .ng-arrow-wrapper {
+    display: none;
+  }
+  
+  :host ::ng-deep .ng-input {
+    cursor: pointer !important;
+  }
+  
+  :host ::ng-deep .ng-select .ng-select-container .ng-value-container .ng-input>input {
+    cursor: pointer !important;
+    color: var(--calendar-body-color) !important;
+  }
+  

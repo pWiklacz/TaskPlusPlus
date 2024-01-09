@@ -4,11 +4,15 @@
 }
 
 .notes{
-  font-size: 14px;
+
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 100%; /* Opcjonalnie, dostosuj maksymalną szerokość, aby uniknąć przekraczania pewnej wartości */
+  max-width: 100%;
+}
+
+.dropdown-item {
+  cursor: pointer;
 }
 
 .card {

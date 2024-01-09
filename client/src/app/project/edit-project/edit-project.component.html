@@ -1,0 +1,40 @@
+<div class="modal-header bg-primary">
+    <h4 class="modal-title pull-left text-secondary">Edit Project</h4>
+    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+        <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+</div>
+
+<form [formGroup]="editProjectForm" (ngSubmit)="onSubmit()">
+    <div class="modal-body">
+        <div class="container text-center">
+            <div class="col-sm">
+                <div class="row mb-2">
+                    <input class="form-control mb-2" type="text" placeholder="Task Name" formControlName="name">
+                    <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Notes" rows="3"
+                        formControlName="notes"></textarea>
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <p-calendar class="" formControlName="date" placeholder="  &#xf133; Due date"
+                            [showTime]="addTimeChecked" hourFormat="12" [stepMinute]="5" [defaultDate]="defaultDate!"
+                            [showButtonBar]="true" dateFormat=" dd M yy">
+                            <ng-template pTemplate="footer">
+                                <label class="btn btn-secondary" btnCheckbox tabindex="0" role="button"
+                                    (click)="addTime()">
+                                    <i class="fa-regular fa-clock me-1"></i> Time
+                                </label>
+                            </ng-template>
+                        </p-calendar>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" [class.disabled]="this.editProjectForm.invalid">Edit</button>
+        <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">Cancel</button>
+    </div>
+</form>

@@ -57,11 +57,10 @@ export class CalendarService {
           console.log(err);
         }
       })
-
   }
 
   generateMonth(date: Date, calendarTasks: CalendarTaskDto[]) {
-    console.log(calendarTasks)
+
     const daysInMonth: calendarDay[] = [];
 
     const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
