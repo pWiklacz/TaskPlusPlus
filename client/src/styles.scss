@@ -12,3 +12,8 @@
 /* Importing Bootstrap SCSS file. */
 @import "./node_modules/bootstrap/scss/bootstrap";
 
+.settings-modal {
+    height: 100vh !important;
+    width: 100vw !important;
+}
+

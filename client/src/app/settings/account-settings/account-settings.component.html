@@ -1,0 +1,25 @@
+<h6>ACCOUNT SETTINGS</h6>
+<hr>
+<form [formGroup]="AccountSettingsForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input type="text" class="form-control" 
+    [class.is-invalid]="submitted && form.email.invalid"
+    formControlName="email" aria-describedby="emailHelp" placeholder="Enter your new email">
+    <div *ngIf="submitted && form.email.errors" class="errorMessage">
+      <div class="text-danger"  *ngIf="form.email.errors?.['required']"> <i class="fa fa-exclamation-circle"
+              aria-hidden="true"></i> Email is required</div>
+      <div class="text-danger" *ngIf="form.email.errors?.['email']"> <i class="fa fa-exclamation-circle"
+              aria-hidden="true"></i> Email must be a valid email address</div>
+  </div>
+    <small id="usernameHelp" class="form-text text-muted">After changing your email, your old email becomes available for anyone else to claim.</small>
+  </div>
+  <button type="submit" class="btn btn-primary my-3 me-1">Update Email</button>
+  <button type="button" (click)="onReset()" class="btn btn-light">Reset Changes</button>
+</form>
+  <hr>
+  <div class="form-group">
+    <label class="d-block text-danger">Delete Account</label>
+    <p class="text-muted font-size-sm">Once you delete your account, there is no going back. Please be certain.</p>
+  </div>
+  <button class="btn btn-danger" type="button">Delete Account</button>

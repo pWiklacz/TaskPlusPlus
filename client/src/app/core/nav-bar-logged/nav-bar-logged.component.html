@@ -8,7 +8,7 @@
                 </a>
             </li>
             <li>
-                <a class="nav-link px-2 link-secondary" style="font-size: 20px;" routerLink="dashboard/inbox">
+                <a class="nav-link px-2 link-secondary" style="font-size: 20px;" routerLink="app/dashboard/inbox">
                     <i class="fa-house fa-solid fa-fw"></i>
                 </a>
             </li>
@@ -62,7 +62,7 @@
                 <li role="menuitem"><a class="dropdown-item"><i class="fa fa-user me-2"
                             aria-hidden="true"></i>Profile</a></li>
                 <li role="menuitem">
-                    <a class="dropdown-item" (click)="this.openSettingsModal()"><i class="fa fa-cog me-2"
+                    <a class="dropdown-item" [routerLink]="['/app', {outlets: {settings: 'settings/profile'}}]"><i class="fa fa-cog me-2"
                             aria-hidden="true"></i>Settings</a>
                 </li>
                 <li class="divider dropdown-divider"></li>

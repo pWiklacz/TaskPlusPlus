@@ -1,12 +1,12 @@
 <div class="container p-3">
-    <div class="row" *ngFor="let project of this.projectService.UserProjects(); let i = index">
-      <ng-container *ngIf="i % 2 === 0">
-        <div class="col-lg-6" >
-          <app-project-item [project]="project"></app-project-item>
-        </div>
-        <div class="col-lg-6" *ngIf="this.projectService.UserProjects()[i + 1] && !this.projectService.UserProjects()[i + 1].isCompleted">
-          <app-project-item [project]="this.projectService.UserProjects()[i + 1]"></app-project-item>
-        </div>
-      </ng-container>
-    </div>
+  <div class="row" *ngFor="let project of this.projectService.UserProjects(); let i = index">
+    <ng-container *ngIf="i % 2 === 0">
+      <div class="col-lg-6">
+        <app-project-item [project]="project"></app-project-item>
+      </div>
+      <div class="col-lg-6" *ngIf="this.projectService.UserProjects()[i + 1]">
+          <app-project-item [project]=" this.projectService.UserProjects()[i + 1]"></app-project-item>
+      </div>
+    </ng-container>
   </div>
+</div>

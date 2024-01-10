@@ -51,7 +51,8 @@ import { ProjectModule } from './project/project.module';
     TagModule,
     DashboardModule,
     ButtonsModule.forRoot(),
-    ProjectModule
+    ProjectModule,
+    SettingsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

@@ -30,7 +30,7 @@ export class RegisterComponent {
     validators: MustMatch('password', 'confirmPassword')
   });
 
-  constructor(private fb: FormBuilder, private accountService: AccountService, private router: Router) { }
+  constructor(private accountService: AccountService, private router: Router) { }
 
   get form() { return this.registerForm.controls; }
 

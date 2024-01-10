@@ -5,17 +5,35 @@ import { authGuard } from './core/guards/auth.guard';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'account', loadChildren: () => import('./account/account.module').then(m => m.AccountModule) },
   {
-    path: 'dashboard',
-    canActivate: [authGuard],
-    loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule),
+    path: 'app',
+    children: [
+      {
+        path: 'dashboard',
+        canActivate: [authGuard],
+        loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule),
+      },
+      {
+        path: 'settings',
+        outlet: 'settings',   
+        canActivate: [authGuard],
+        loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule),
+      }
+    ]
   },
-  { path: '**', redirectTo: '', pathMatch: 'full' }
+  { path: 'account', loadChildren: () => import('./account/account.module').then(m => m.AccountModule) },
+  { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes,
+    {
+      useHash: true,
+  
+      scrollPositionRestoration: "enabled",
+      anchorScrolling: "enabled",
+      enableTracing: false
+    })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

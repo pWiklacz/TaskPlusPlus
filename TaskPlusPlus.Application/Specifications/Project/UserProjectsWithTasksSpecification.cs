@@ -5,6 +5,7 @@ internal class UserProjectsWithTasksSpecification : Specification<Domain.Entitie
     : base(project => project.UserId == userId)
     {
         AddInclude(p=>p.Tasks);
+        AddOrderBy(p => p.IsCompleted);
     }
 
     public UserProjectsWithTasksSpecification(ulong id, string userId)

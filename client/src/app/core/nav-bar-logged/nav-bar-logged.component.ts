@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { AccountService } from 'src/app/account/account.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { SettingsComponent } from 'src/app/settings/settings.component';
@@ -7,6 +7,9 @@ import { SideNavService } from '../services/side-nav.service';
 import { AddTaskComponent } from 'src/app/task/add-task/add-task.component';
 import { AddTagComponent } from 'src/app/tag/add-tag/add-tag.component';
 import { AddProjectComponent } from 'src/app/project/add-project/add-project.component';
+import { SettingsService } from 'src/app/settings/settings.service';
+import { NavigationStart, Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-nav-bar-logged',
@@ -18,13 +21,24 @@ export class NavBarLoggedComponent implements OnInit {
 
   constructor(public accountService: AccountService,
     private modalService: BsModalService,
-    private sideNavService: SideNavService) { }
+    private sideNavService: SideNavService,
+    public settingsService: SettingsService,
+    private router: Router) { }
 
   ngOnInit(): void {
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        console.log(this.settingsService.isOpen)
+        if (event.url.includes('settings') && !this.settingsService.isOpen) {
+          this.openSettingsModal()
+        }
+      }
+    });
   }
 
   openSettingsModal() {
-    this.bsModalRef = this.modalService.show(SettingsComponent, { backdrop: 'static', class: 'modal-dialog-centered' });
+    this.settingsService.setOpenState(true)
+    this.bsModalRef = this.modalService.show(SettingsComponent, { backdrop: 'static', class: 'modal-dialog-centered ' });
   }
 
   openAddCategoryModal() {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { AccountService } from './account/account.service';
 import { MessageService } from 'primeng/api';
 import { ThemeService } from './core/services/theme.service';

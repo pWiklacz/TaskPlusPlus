@@ -18,10 +18,16 @@ export class ProjectService {
 
   addProject(project: ProjectDto) {
     this.UserProjects.mutate((val) => {
-      val.push(project)
-    })
+      const index = val.findIndex((p) => !p.isCompleted);
+      
+      if (index !== -1) {
+        val.splice(index + 1, 0, project);
+      } else {
+        // Jeżeli nie ma projektów z isCompleted == false, dodaj na koniec tablicy
+        val.push(project);
+      }
+    });
   }
-
   removeProject(id: number) {
     this.UserProjects.mutate((val) => {
       const index = val.findIndex(p => p.id == id)

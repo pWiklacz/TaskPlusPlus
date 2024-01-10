@@ -51,7 +51,8 @@ export class AddTaskComponent implements OnInit {
     public tagService: TagService,
     private taskService: TaskService,
     protected modalService: BsModalService,
-    public projectService: ProjectService) { }
+    public projectService: ProjectService,
+    ) { }
 
   ngOnInit() {
     document.documentElement.style.setProperty('--calendar-body-color',

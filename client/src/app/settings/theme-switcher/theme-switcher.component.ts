@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ThemeService } from '../../core/services/theme.service';
+import { SettingsService } from '../settings.service';
 
 @Component({
   selector: 'app-theme-switcher',
@@ -8,7 +9,11 @@ import { ThemeService } from '../../core/services/theme.service';
 })
 export class ThemeSwitcherComponent {
 
-  constructor(private theme: ThemeService) { }
+
+  constructor(private settingsService: SettingsService,
+    private theme: ThemeService) {
+    settingsService.selectSettingsPage('theme');
+  }
 
   public currentTheme(): string {
     return this.theme.current;

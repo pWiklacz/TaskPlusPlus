@@ -1,14 +1,77 @@
 <div class="modal-header">
-    <h4 class="modal-title pull-left">{{title}}</h4>
-    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+    <h4 class="modal-title pull-left">Settings</h4>
+    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="closeModal()">
         <span aria-hidden="true" class="visually-hidden">&times;</span>
     </button>
 </div>
 <div class="modal-body">
-
-<app-theme-switcher></app-theme-switcher>
-
+    <div class="container">
+        <div class="row gutters-sm">
+            <div class="col-md-4 d-none d-md-block ">
+                <div class="card">
+                    <div class="card-body links">
+                        <nav class="nav flex-column nav-pills nav-gap-y-1">
+                            <a [routerLink]="['/app', {outlets: {settings: 'settings/profile'}}]" data-toggle="tab"
+                                class="nav-item nav-link has-icon nav-link-faded" [class.active]="settingsService.selectedSettingsPage() == 'profile'">
+                                <i class="fa-solid fa-user fa-fw"></i> Profile
+                            </a>
+                            <a [routerLink]="['/app', {outlets: {settings: 'settings/account'}}]" data-toggle="tab"
+                                class="nav-item nav-link has-icon nav-link-faded" [class.active]="settingsService.selectedSettingsPage() == 'account'">
+                                <i class="fa-solid fa-gear fa-fw"></i> Account
+                            </a>
+                            <a [routerLink]="['/app', {outlets: {settings: 'settings/security'}}]" data-toggle="tab"
+                                class="nav-item nav-link has-icon nav-link-faded" [class.active]="settingsService.selectedSettingsPage() == 'security'">
+                                <i class="fa-solid fa-shield fa-fw"></i> Security
+                            </a>
+                            <a [routerLink]="['/app', {outlets: {settings: 'settings/general'}}]" data-toggle="tab"
+                                class="nav-item nav-link has-icon nav-link-faded" [class.active]="settingsService.selectedSettingsPage() == 'general'">
+                                <i class="fa-solid fa-sliders fa-fw"></i> General
+                            </a>
+                            <a [routerLink]="['/app', {outlets: {settings: 'settings/theme'}}]" data-toggle="tab"
+                                class="nav-item nav-link has-icon nav-link-faded" [class.active]="settingsService.selectedSettingsPage() == 'theme'">
+                                <i class="fa-solid fa-brush fa-fw"></i> Theme
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card content">
+                    <div class="card-header border-bottom mb-3 d-flex d-md-none">
+                        <ul class="nav nav-tabs card-header-tabs nav-gap-x-1" role="tablist">
+                            <li class="nav-item">
+                                <a [routerLink]="['/app', {outlets: {settings: 'settings/profile'}}]" data-toggle="tab"
+                                    class="nav-link has-icon" [class.active]="settingsService.selectedSettingsPage() == 'profile'">
+                                    <i class="fa-solid fa-user fa-fw"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a [routerLink]="['/app', {outlets: {settings: 'settings/account'}}]" data-toggle="tab"
+                                    class="nav-link has-icon" [class.active]="settingsService.selectedSettingsPage() == 'account'"> <i class="fa-solid fa-gear fa-fw"></i></a>
+                            </li>
+                            <li class="nav-item">
+                                <a [routerLink]="['/app', {outlets: {settings: 'settings/security'}}]" data-toggle="tab"
+                                    class="nav-link has-icon" [class.active]="settingsService.selectedSettingsPage() == 'security'"><i class="fa-solid fa-shield fa-fw"></i></a>
+                            </li>
+                            <li class="nav-item">
+                                <a [routerLink]="['/app', {outlets: {settings: 'settings/general'}}]" data-toggle="tab"
+                                    class="nav-link has-icon" [class.active]="settingsService.selectedSettingsPage() == 'general'"><i class="fa-solid fa-sliders fa-fw"></i></a>
+                            </li>
+                            <li class="nav-item">
+                                <a [routerLink]="['/app', {outlets: {settings: 'settings/theme'}}]" data-toggle="tab"
+                                    class="nav-link has-icon" [class.active]="settingsService.selectedSettingsPage() == 'theme'"><i class="fa-solid fa-brush fa-fw"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body tab-content ">
+                        <div class="tab-pane active">
+                            <router-outlet name="settings"></router-outlet>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-default" (click)="bsModalRef.hide()">{{closeBtnName}}</button>
 </div>
