@@ -9,6 +9,7 @@ import { AddTagComponent } from 'src/app/tag/add-tag/add-tag.component';
 import { AddProjectComponent } from 'src/app/project/add-project/add-project.component';
 import { SettingsService } from 'src/app/settings/settings.service';
 import { NavigationStart, Router } from '@angular/router';
+import { UserStoreService } from 'src/app/account/user-store.service';
 
 
 @Component({
@@ -23,7 +24,8 @@ export class NavBarLoggedComponent implements OnInit {
     private modalService: BsModalService,
     private sideNavService: SideNavService,
     public settingsService: SettingsService,
-    private router: Router) { }
+    private router: Router,
+    public userStoreService: UserStoreService) { }
 
   ngOnInit(): void {
     this.router.events.subscribe((event) => {
@@ -38,7 +40,7 @@ export class NavBarLoggedComponent implements OnInit {
 
   openSettingsModal() {
     this.settingsService.setOpenState(true)
-    this.bsModalRef = this.modalService.show(SettingsComponent, { backdrop: 'static', class: 'modal-dialog-centered ' });
+    this.bsModalRef = this.modalService.show(SettingsComponent, { backdrop: 'static', class: 'modal-dialog-centered modal-lg ' });
   }
 
   openAddCategoryModal() {

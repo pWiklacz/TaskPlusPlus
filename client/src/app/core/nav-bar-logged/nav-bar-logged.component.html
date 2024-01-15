@@ -13,6 +13,11 @@
                 </a>
             </li>
             <li>
+                <a class="nav-link px-2 link-secondary" style="font-size: 20px;" routerLink="app/dashboard/inbox">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </a>
+            </li>
+            <li>
                 <div class="btn-group border" dropdown>
                     <button type="button" class="add-button btn px-2 button-secondary" style="font-size: 20px;"
                         (click)="this.openAddTaskModal()">
@@ -43,18 +48,19 @@
                         </li>
                     </ul>
                 </div>
-
             </li>
         </ul>
    
-        <form class="col-2 col-ssm-3  me-3 search" role="search">
+        <!-- <form class="col-2 col-ssm-3  me-3 search" role="search">
             <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
-        </form>
+        </form> -->
 
         <div dropdown class="text-end" style="cursor: pointer;">
             <a href id="userPicture" class="d-block link-body-emphasis text-decoration-none" dropdownToggle
                 (click)="false" aria-controls="basic-link-dropdown">
-                <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+                <!-- <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle"> -->
+                <p-avatar label="{{this.userStoreService.firstName().charAt(0).toLocaleUpperCase()}}" styleClass="mr-2" [style]="{ 'background-color': '#9c27b0', color: '#ffffff' }" shape="circle"></p-avatar>
+
             </a>
             <ul id="basic-link-dropdown" *dropdownMenu class="me-3 dropdown-menu dropdown-menu-right border "
                 role="menu" aria-labelledby="userPicture">

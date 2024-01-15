@@ -8,7 +8,7 @@ import { SharedModule } from '../shared/shared.module';
 import { ToastModule } from 'primeng/toast';
 import { SideNavComponent } from './side-nav/side-nav.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
-
+import { AvatarModule } from 'primeng/avatar';
 
 @NgModule({
   declarations: [
@@ -22,6 +22,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     RouterModule,
     SharedModule,
     NgxSpinnerModule,
+    AvatarModule
+
   ],
   exports: [
     NavBarUnloggedComponent,

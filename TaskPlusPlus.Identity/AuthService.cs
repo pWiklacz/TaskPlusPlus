@@ -9,7 +9,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text;
-using System.Text.Encodings.Web;
 using TaskPlusPlus.Application.Constants;
 using TaskPlusPlus.Application.Contracts.Identity;
 using TaskPlusPlus.Application.Contracts.Infrastructure;

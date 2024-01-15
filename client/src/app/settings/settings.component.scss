@@ -7,7 +7,7 @@
 .links {
     position: fixed;
     z-index: 1;
-    width: 20vw;
+    width: 14.5vw;
 }
 
 .content {
@@ -55,9 +55,3 @@
 .shadow-none {
     box-shadow: none!important;
 }
-
-@media screen and (min-width: 767px) {
-    ::ng-deep .modal-dialog {
-      max-width: 70vw;
-    }
-  }
