@@ -9,7 +9,6 @@ import { SettingsService } from '../settings.service';
 })
 export class ThemeSwitcherComponent {
 
-
   constructor(private settingsService: SettingsService,
     private theme: ThemeService) {
     settingsService.selectSettingsPage('theme');

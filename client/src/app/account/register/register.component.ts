@@ -53,7 +53,7 @@ export class RegisterComponent {
     };
 
     this.accountService.register(user).subscribe({
-      next: () => this.router.navigateByUrl('/dashboard'),
+      next: () => this.router.navigateByUrl('account/login'),
       error: error => {
         if(error.value) this.errors = error.value
         else this.errors?.push(error.message)

@@ -1,3 +1,4 @@
+using Azure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -14,13 +15,22 @@ builder.Host.UseSerilog((context, configuration) =>
 
 builder.Services.AddApplicationServices(builder.Configuration);
 
+if (builder.Environment.IsProduction())
+{
+    builder.Configuration.AddAzureKeyVault(
+        new Uri($"https://{builder.Configuration["KeyVaultName"]}.vault.azure.net/"),
+        new DefaultAzureCredential());
+}
+
 var app = builder.Build();
 
 app.UseAuthentication();
 
-app.UseCors("CorsPolicy");
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseStaticFiles();
+app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
 
@@ -29,6 +39,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapFallbackToController("Index", "Fallback");
 
 await UpdateDataBase(app);
 
@@ -43,7 +54,7 @@ async Task UpdateDataBase(WebApplication webApplication)
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
     var logger = services.GetRequiredService<ILogger<Program>>();
 
-//TODO:: use serilog here
+    //TODO:: use serilog here
 
     try
     {

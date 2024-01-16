@@ -47,10 +47,13 @@ export class AccountService {
         this.validateExternalAuth(externalAuth);
       }
     })
-    this.userPayload = this.DecodeToken();
-    this.userStoreService.setFirstName(this.getFirstNameFromToken());
-    this.userStoreService.setLastName(this.getLastNameFromToken());
-    this.userStoreService.setEmail(this.getEmailFromToken());
+    if(localStorage.getItem('token'))
+    {
+      this.userPayload = this.DecodeToken();
+      this.userStoreService.setFirstName(this.getFirstNameFromToken());
+      this.userStoreService.setLastName(this.getLastNameFromToken());
+      this.userStoreService.setEmail(this.getEmailFromToken());
+    }
   }
 
   login(values: any) {
@@ -58,8 +61,13 @@ export class AccountService {
     return this.http.post<ApiResponse<User>>(this.apiUrl + 'Account/login', values).pipe(
       map(response => {
         localStorage.setItem('token', response.value.token);
+        this.userPayload = this.DecodeToken();
+        this.userStoreService.setFirstName(this.getFirstNameFromToken());
+        this.userStoreService.setLastName(this.getLastNameFromToken());
+        this.userStoreService.setEmail(this.getEmailFromToken());
         this.isLoggedIn$.next(true);
         this.isExternalAuth$.next(false);
+        this.router.navigate(['app/dashboard']);
       }),
       finalize(() => this.busyService.idle())
     )
@@ -75,6 +83,7 @@ export class AccountService {
   logout() {
     this.themeService.current = ThemeService.default;
     this.busyService.busy();
+    this.userStoreService.clearSignals();
     localStorage.removeItem('token');
     this.isLoggedIn$.next(false);
 
@@ -126,7 +135,11 @@ export class AccountService {
           localStorage.setItem("token", res.value.token);
           this.isLoggedIn$.next(true);
           this.isExternalAuth$.next(true);
-          this.router.navigate(['dashboard']);
+          this.userPayload = this.DecodeToken();
+          this.userStoreService.setFirstName(this.getFirstNameFromToken());
+          this.userStoreService.setLastName(this.getLastNameFromToken());
+          this.userStoreService.setEmail(this.getEmailFromToken());
+          this.router.navigate(['app/dashboard']);
         },
         error: (err: HttpErrorResponse) => {
           this.signOutExternal();
@@ -153,5 +166,4 @@ export class AccountService {
     if(this.userPayload)
     return this.userPayload.email;
   }
-
 }

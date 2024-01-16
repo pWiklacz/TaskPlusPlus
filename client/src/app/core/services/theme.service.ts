@@ -5,13 +5,13 @@ import { Injectable } from '@angular/core';
 })
 export class ThemeService {
 
-  public static default = 'default';
+  public static default = 'pulse';
 
   getBodyColor(): string {
     switch (this.current) {
       case 'slate':
         return '#aaa';
-      case 'default':
+      case 'pulse':
         return '#444';
       default:
         return '#444';
@@ -22,7 +22,7 @@ export class ThemeService {
     switch (this.current) {
       case 'slate':
         return '#272b30';
-      case 'default':
+      case 'pulse':
         return '#ffffff';
       default:
         return '#ffffff';
@@ -33,7 +33,7 @@ export class ThemeService {
     switch (this.current) {
       case 'slate':
         return '#323232';
-      case 'default':
+      case 'pulse':
         return '#ffffff';
       default:
         return '#ffffff';
@@ -44,7 +44,7 @@ export class ThemeService {
     switch (this.current) {
       case 'slate':
         return '#3a3f44';
-      case 'default':
+      case 'pulse':
         return '#593196';
       default:
         return '#593196';
@@ -55,7 +55,7 @@ export class ThemeService {
     switch (this.current) {
       case 'slate':
         return '#7a8288';
-      case 'default':
+      case 'pulse':
         return '#a991d4';
       default:
         return '#a991d4';
