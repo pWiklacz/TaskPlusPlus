@@ -1,36 +1,63 @@
 .outer {
-  height: 100vh;
+  height: 100%;
   background: linear-gradient(to top, #c9c9ff 50%, #6f3dbc 90%) no-repeat;
 }
 
 @media (min-width: 992px) {
-  .rounded-lg-3 { border-radius: .3rem; }
+  .rounded-lg-3 {
+    border-radius: .3rem;
+  }
 }
 
-.feature-icon {
-  width: 4rem;
-  height: 4rem;
-  border-radius: .75rem;
+/* Center align the text within the three columns below the carousel */
+.marketing .col-lg-4 {
+  margin-bottom: 1.5rem;
+  text-align: center;
 }
 
-.icon-square {
-  width: 3rem;
-  height: 3rem;
-  border-radius: .75rem;
+/* rtl:begin:ignore */
+.marketing .col-lg-4 p {
+  margin-right: .75rem;
+  margin-left: .75rem;
 }
 
-.text-shadow-1 { text-shadow: 0 .125rem .25rem rgba(0, 0, 0, .25); }
-.text-shadow-2 { text-shadow: 0 .25rem .5rem rgba(0, 0, 0, .25); }
-.text-shadow-3 { text-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .25); }
+/* rtl:end:ignore */
 
-.card-cover {
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;
+
+/* Featurettes
+------------------------- */
+.featurette-divider_down {
+  margin: 5rem 0 0 0;
+  /* Tylko margines dolny */
 }
 
-.feature-icon-small {
-  width: 3rem;
-  height: 3rem;
+.featurette-divider_up {
+  margin: 0 0 5rem 0;
+  /* Tylko margines dolny */
 }
 
+.featurette-divider {
+  margin: 5rem 0;
+  /* Space out the Bootstrap <hr> more */
+}
+
+/* Thin out the marketing headings */
+/* rtl:begin:remove */
+.featurette-heading {
+  letter-spacing: -.05rem;
+}
+
+@media (min-width: 40em) {
+  /* Bump up size of carousel content */
+
+  .featurette-heading {
+    font-size: 50px;
+  }
+}
+
+@media (min-width: 62em) {
+  .featurette-heading {
+    margin-top: 5rem;
+  }
+
+}
