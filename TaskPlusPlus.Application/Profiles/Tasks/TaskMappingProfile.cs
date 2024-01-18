@@ -17,7 +17,7 @@ public class TaskMappingProfile : Profile
             .ForMember(dest => dest.Notes,
                 opt => opt.MapFrom(src => src.Notes.Value))
             .ForMember(dest => dest.DueDate,
-                opt => opt.MapFrom(src => src.DueDate != null ? src.DueDate.Value : (DateOnly?)null))
+                opt => opt.MapFrom(src => src.DueDate! != null! ? src.DueDate.Value : (DateOnly?)null))
             .ForMember(dest => dest.Priority,
                 opt => opt.MapFrom(src => src.Priority.Value))
             .ForMember(dest => dest.ProjectId,

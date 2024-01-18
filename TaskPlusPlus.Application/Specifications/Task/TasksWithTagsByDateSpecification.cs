@@ -9,7 +9,7 @@ internal class TasksWithTagsByDateSpecification : Specification<Domain.Entities.
     public TasksWithTagsByDateSpecification(TaskQueryParameters queryParams, string userId)
         : base(task =>
             (string.IsNullOrEmpty(queryParams.Search) || task.Name.Value.ToLower().Contains(queryParams.Search)) &&
-            (task.DueDate == DueDate.Create((DateOnly)queryParams.Date!).Value)
+            (task.DueDate! == DueDate.Create((DateOnly)queryParams.Date!).Value)
             && task.UserId == userId)
     {
         var x = DueDate.Create((DateOnly)queryParams.Date!).Value;

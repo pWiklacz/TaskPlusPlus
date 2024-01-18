@@ -9,13 +9,13 @@ namespace TaskPlusPlus.Domain.Entities;
 public class Category : Entity<CategoryId>
 {
     public CategoryName Name { get; private set; } = null!;
-    public bool IsImmutable { get; private set; }
+    public bool IsImmutable { get; }
     public bool IsFavorite { get; private set; }
     public ColorHex ColorHex { get; private set; } = null!;
-    public UserId UserId { get; private set; } = null!;
-    public string Icon { get; private set; } = null!;
+    public UserId UserId { get; } = null!;
 
     public const string SystemOwner = "SystemCategory";
+    public CategorySettings Settings { get; private set; } = null!;
 
     private Category() { }
 
@@ -24,7 +24,7 @@ public class Category : Entity<CategoryId>
         bool isImmutable,
         ColorHex colorHex,
         UserId userId,
-        string icon,
+        CategorySettings categorySettings,
         bool isFavorite = false
         )
     {
@@ -33,7 +33,7 @@ public class Category : Entity<CategoryId>
         IsFavorite = isFavorite;
         ColorHex = colorHex;
         UserId = userId;
-        Icon = icon;
+        Settings = categorySettings;
     }
 
     public static Result<Category> Create(
@@ -42,7 +42,7 @@ public class Category : Entity<CategoryId>
         bool isFavorite,
         string colorHex,
         string userId,
-        string icon)
+        CategorySettings categorySettings)
     {
         var errors = new List<IError>();
 
@@ -66,8 +66,8 @@ public class Category : Entity<CategoryId>
             isImmutable,
             colorResult.Value,
             userIdResult.Value,
-            icon,
-            isFavorite      
+            categorySettings,
+            isFavorite
             );
 
         return category;
@@ -92,6 +92,4 @@ public class Category : Entity<CategoryId>
         return Result.Ok();
     }
 
-    public void ChangeIcon(string icon)
-    => Icon = icon;
 }

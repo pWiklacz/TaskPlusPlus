@@ -6,7 +6,7 @@ internal class CalendarTasksInMonthSpecification : Specification<Domain.Entities
 {
     public CalendarTasksInMonthSpecification(DueDate firstDate, DueDate lastDate, string userId)
     : base(task =>
-        (task.DueDate != null && task.DueDate >= firstDate && task.DueDate <= lastDate)
+        (task.DueDate! != null! && task.DueDate >= firstDate && task.DueDate <= lastDate)
         && task.UserId == userId)
     {
         AddOrderBy(t => t.DueTime!);
