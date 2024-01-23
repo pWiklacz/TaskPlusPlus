@@ -9,6 +9,19 @@ public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
 {
     public void Configure(EntityTypeBuilder<ApplicationUser> builder)
     {
+        builder.OwnsOne(
+            user => user.Settings,
+            ownedNavigationBuilder =>
+            {
+                ownedNavigationBuilder.ToJson();
+                ownedNavigationBuilder.OwnsOne(us => us.InboxSettings);
+                ownedNavigationBuilder.OwnsOne(us => us.NextActionsSettings);
+                ownedNavigationBuilder.OwnsOne(us => us.SomedaySettings);
+                ownedNavigationBuilder.OwnsOne(us => us.TodaySettings);
+                ownedNavigationBuilder.OwnsOne(us => us.WaitingForSettings);
+            }
+        );
+
         var hasher = new PasswordHasher<ApplicationUser>();
         var admin = new ApplicationUser
         {
@@ -24,15 +37,15 @@ public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
         admin.EmailConfirmed = true;
 
         var user = new ApplicationUser
-            {
-                Id = "9e224968-33e4-4652-b7b7-8574d048cdb9",
-                Email = "user@localhost.com",
-                NormalizedEmail = "USER@LOCALHOST.COM",
-                FirstName = "System",
-                LastName = "User",
-                UserName = "user@localhost.com",
-                NormalizedUserName = "USER@LOCALHOST.COM",
-            };
+        {
+            Id = "9e224968-33e4-4652-b7b7-8574d048cdb9",
+            Email = "user@localhost.com",
+            NormalizedEmail = "USER@LOCALHOST.COM",
+            FirstName = "System",
+            LastName = "User",
+            UserName = "user@localhost.com",
+            NormalizedUserName = "USER@LOCALHOST.COM",
+        };
         user.PasswordHash = hasher.HashPassword(user, "P@ssword1");
         user.EmailConfirmed = true;
 

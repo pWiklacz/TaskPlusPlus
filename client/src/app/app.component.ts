@@ -6,6 +6,7 @@ import { BusyService } from './core/services/busy.service';
 import { ViewportScroller } from '@angular/common';
 import { SideNavService } from './core/services/side-nav.service';
 import { TagService } from './tag/tag.service';
+import { Route, Router } from '@angular/router';
 
 
 @Component({
@@ -26,7 +27,7 @@ export class AppComponent implements OnInit {
     this.accountService.isLoggedIn$.subscribe(res => {
       this.isLoggedIn = this.accountService.isLoggedIn();
     })
-
+  
     this.contentLoaded = true;
 
     this.checkScreenSize();

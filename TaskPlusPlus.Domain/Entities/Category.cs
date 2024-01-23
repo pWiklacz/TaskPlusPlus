@@ -9,10 +9,10 @@ namespace TaskPlusPlus.Domain.Entities;
 public class Category : Entity<CategoryId>
 {
     public CategoryName Name { get; private set; } = null!;
-    public bool IsImmutable { get; }
+    public bool IsImmutable { get; private set; }
     public bool IsFavorite { get; private set; }
     public ColorHex ColorHex { get; private set; } = null!;
-    public UserId UserId { get; } = null!;
+    public UserId UserId { get; private set; } = null!;
 
     public const string SystemOwner = "SystemCategory";
     public CategorySettings Settings { get; private set; } = null!;
@@ -92,4 +92,6 @@ public class Category : Entity<CategoryId>
         return Result.Ok();
     }
 
+    public void UpdateCategorySettings(CategorySettings settings)
+    => this.Settings = settings;
 }

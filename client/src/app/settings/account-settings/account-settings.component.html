@@ -3,10 +3,12 @@
 <form [formGroup]="AccountSettingsForm" (ngSubmit)="onSubmit()">
   <div class="form-group">
     <label for="email">Email</label>
-    <input type="text" class="form-control" 
-    [class.is-invalid]="submitted && form.email.invalid"
-    formControlName="email" aria-describedby="emailHelp" placeholder="Enter your new email">
-    <div *ngIf="submitted && form.email.errors" class="errorMessage">
+    <div class="input-field" [class.error]="submitted && form.email.invalid">
+      <input type="text" class="form-control"
+      [class.is-invalid]="submitted && form.email.invalid"
+      formControlName="email" aria-describedby="emailHelp" placeholder="Enter your new email" readonly>
+       </div>
+   <div *ngIf="submitted && form.email.errors" class="errorMessage">
       <div class="text-danger"  *ngIf="form.email.errors?.['required']"> <i class="fa fa-exclamation-circle"
               aria-hidden="true"></i> Email is required</div>
       <div class="text-danger" *ngIf="form.email.errors?.['email']"> <i class="fa fa-exclamation-circle"

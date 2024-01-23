@@ -259,7 +259,7 @@ namespace TaskPlusPlus.Identity.Migrations
                         {
                             Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0e87c55f-6542-4b4c-9780-5237919a6939",
+                            ConcurrencyStamp = "d4f68891-5333-4d2e-97c9-818e48b9f2c1",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "System",
@@ -267,9 +267,9 @@ namespace TaskPlusPlus.Identity.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOHVp5aQaN+MKlyAAcbV/TBpk41Rrn4DSO4cJ264cORZzs1+18p1J5BxMdoRHfdONg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJud8Qln8LYzf7H5LLVL0OaxRwdtT+NOPo4uP30LuAt/yd2qVXGuyZIIzV6IfkFB0Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "7fc3d7d0-4d23-44bd-a3ca-289688233de0",
+                            SecurityStamp = "39ff9ffe-cdf4-4537-9ecf-c98d6ef9e792",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         },
@@ -277,7 +277,7 @@ namespace TaskPlusPlus.Identity.Migrations
                         {
                             Id = "9e224968-33e4-4652-b7b7-8574d048cdb9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "513249f4-90b0-4d21-8099-618c51ba1a61",
+                            ConcurrencyStamp = "c1d6142b-8778-432e-a08f-cd449881e1d8",
                             Email = "user@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "System",
@@ -285,9 +285,9 @@ namespace TaskPlusPlus.Identity.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@LOCALHOST.COM",
                             NormalizedUserName = "USER@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEN0xTJXzIrWAvk4bThUvXTgK+5z5XNho3XuxWBLWtroC+g456vIoxw+yKE9F0DGBtw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBFP/aNllPWP2yhSIzH8CCWPZHHmolFkD7IT5Iuh9el9C9iSJ4z7HUPAS4gvIx48QQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "95df371b-c7b3-4025-becd-1ddccaa36efc",
+                            SecurityStamp = "a7ad3e3e-60ea-4268-9a61-b3bc5489c3eb",
                             TwoFactorEnabled = false,
                             UserName = "user@localhost.com"
                         });
@@ -341,6 +341,182 @@ namespace TaskPlusPlus.Identity.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TaskPlusPlus.Identity.Models.ApplicationUser", b =>
+                {
+                    b.OwnsOne("TaskPlusPlus.Application.Models.Identity.ApplicationUser.UserSettings", "Settings", b1 =>
+                        {
+                            b1.Property<string>("ApplicationUserId")
+                                .HasColumnType("nvarchar(450)");
+
+                            b1.Property<string>("DateFormat")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Language")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("StartPage")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Theme")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("TimeFormat")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("ApplicationUserId");
+
+                            b1.ToTable("AspNetUsers", "identity");
+
+                            b1.ToJson("Settings");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ApplicationUserId");
+
+                            b1.OwnsOne("TaskPlusPlus.Domain.ValueObjects.Category.CategorySettings", "InboxSettings", b2 =>
+                                {
+                                    b2.Property<string>("UserSettingsApplicationUserId")
+                                        .HasColumnType("nvarchar(450)");
+
+                                    b2.Property<bool>("Direction")
+                                        .HasColumnType("bit");
+
+                                    b2.Property<string>("Grouping")
+                                        .IsRequired()
+                                        .HasColumnType("nvarchar(max)");
+
+                                    b2.Property<string>("Sorting")
+                                        .IsRequired()
+                                        .HasColumnType("nvarchar(max)");
+
+                                    b2.HasKey("UserSettingsApplicationUserId");
+
+                                    b2.ToTable("AspNetUsers", "identity");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("UserSettingsApplicationUserId");
+                                });
+
+                            b1.OwnsOne("TaskPlusPlus.Domain.ValueObjects.Category.CategorySettings", "NextActionsSettings", b2 =>
+                                {
+                                    b2.Property<string>("UserSettingsApplicationUserId")
+                                        .HasColumnType("nvarchar(450)");
+
+                                    b2.Property<bool>("Direction")
+                                        .HasColumnType("bit");
+
+                                    b2.Property<string>("Grouping")
+                                        .IsRequired()
+                                        .HasColumnType("nvarchar(max)");
+
+                                    b2.Property<string>("Sorting")
+                                        .IsRequired()
+                                        .HasColumnType("nvarchar(max)");
+
+                                    b2.HasKey("UserSettingsApplicationUserId");
+
+                                    b2.ToTable("AspNetUsers", "identity");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("UserSettingsApplicationUserId");
+                                });
+
+                            b1.OwnsOne("TaskPlusPlus.Domain.ValueObjects.Category.CategorySettings", "SomedaySettings", b2 =>
+                                {
+                                    b2.Property<string>("UserSettingsApplicationUserId")
+                                        .HasColumnType("nvarchar(450)");
+
+                                    b2.Property<bool>("Direction")
+                                        .HasColumnType("bit");
+
+                                    b2.Property<string>("Grouping")
+                                        .IsRequired()
+                                        .HasColumnType("nvarchar(max)");
+
+                                    b2.Property<string>("Sorting")
+                                        .IsRequired()
+                                        .HasColumnType("nvarchar(max)");
+
+                                    b2.HasKey("UserSettingsApplicationUserId");
+
+                                    b2.ToTable("AspNetUsers", "identity");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("UserSettingsApplicationUserId");
+                                });
+
+                            b1.OwnsOne("TaskPlusPlus.Domain.ValueObjects.Category.CategorySettings", "TodaySettings", b2 =>
+                                {
+                                    b2.Property<string>("UserSettingsApplicationUserId")
+                                        .HasColumnType("nvarchar(450)");
+
+                                    b2.Property<bool>("Direction")
+                                        .HasColumnType("bit");
+
+                                    b2.Property<string>("Grouping")
+                                        .IsRequired()
+                                        .HasColumnType("nvarchar(max)");
+
+                                    b2.Property<string>("Sorting")
+                                        .IsRequired()
+                                        .HasColumnType("nvarchar(max)");
+
+                                    b2.HasKey("UserSettingsApplicationUserId");
+
+                                    b2.ToTable("AspNetUsers", "identity");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("UserSettingsApplicationUserId");
+                                });
+
+                            b1.OwnsOne("TaskPlusPlus.Domain.ValueObjects.Category.CategorySettings", "WaitingForSettings", b2 =>
+                                {
+                                    b2.Property<string>("UserSettingsApplicationUserId")
+                                        .HasColumnType("nvarchar(450)");
+
+                                    b2.Property<bool>("Direction")
+                                        .HasColumnType("bit");
+
+                                    b2.Property<string>("Grouping")
+                                        .IsRequired()
+                                        .HasColumnType("nvarchar(max)");
+
+                                    b2.Property<string>("Sorting")
+                                        .IsRequired()
+                                        .HasColumnType("nvarchar(max)");
+
+                                    b2.HasKey("UserSettingsApplicationUserId");
+
+                                    b2.ToTable("AspNetUsers", "identity");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("UserSettingsApplicationUserId");
+                                });
+
+                            b1.Navigation("InboxSettings")
+                                .IsRequired();
+
+                            b1.Navigation("NextActionsSettings")
+                                .IsRequired();
+
+                            b1.Navigation("SomedaySettings")
+                                .IsRequired();
+
+                            b1.Navigation("TodaySettings")
+                                .IsRequired();
+
+                            b1.Navigation("WaitingForSettings")
+                                .IsRequired();
+                        });
+
+                    b.Navigation("Settings")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618
