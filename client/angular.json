@@ -44,7 +44,17 @@
                 "input": "src/slate.scss",
                 "bundleName": "slate",
                 "inject": false
-              } 
+              },
+              {
+                "input": "src/united.scss",
+                "bundleName": "united",
+                "inject": false
+              },
+              {
+                "input": "src/lumen.scss",
+                "bundleName": "lumen",
+                "inject": false
+              }          
             ],
             "scripts": []
           },

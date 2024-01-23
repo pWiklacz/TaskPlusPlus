@@ -1,2 +1,39 @@
-<h6>GENERAL SETTINGS</h6>
+<form [formGroup]="generalSettingsForm" (ngSubmit)="onSubmit()">
+<div class="d-flex justify-content-between align-items-center">
+    <h6 class="col-4">GENERAL SETTINGS</h6> 
+    <div class="text-end col-8" *ngIf="isEdited">
+        <button type="submit" class="btn btn-primary me-1">Update</button>
+        <button type="button" class="btn btn-secondary">Cancel</button>    
+    </div>   
+</div>
 <hr>
+    <div class="form-group mb-3">
+        <label for="startPage">Home Page</label>
+        <ng-select class="select" formControlName="startPage" placeholder="&#xf86d; Category" [clearable]="false" [searchable]="false">
+            <ng-option *ngFor="let category of systemCategories " value="{{category.name}}">
+                <i class="{{category.icon}} fa-fw" [ngStyle]="{ 'color': category.colorHex }"></i>
+                {{category.name}}</ng-option>
+        </ng-select>
+    </div>
+    <div class="form-group mb-3">
+        <label for="language">Language</label>
+        <ng-select class="select" formControlName="language"  [searchable]="false" [clearable]="false">
+            <ng-option *ngFor="let language of languages" value="{{language.value}}">
+                {{language.label}}</ng-option>
+        </ng-select>
+    </div>
+    <div class="form-group mb-3">
+        <label for="dateFormat">Date format</label>
+        <ng-select class="select" formControlName="dateFormat" [searchable]="false" [clearable]="false">
+            <ng-option *ngFor="let dFormat of dateFormats" value="{{dFormat.value}}">
+                {{dFormat.label}}</ng-option>
+        </ng-select>
+    </div>
+    <div class="form-group mb-3">
+        <label for="timeFormat">Time format</label>
+        <ng-select class="select" formControlName="timeFormat" [searchable]="false" [clearable]="false">
+            <ng-option *ngFor="let tFormat of timeFormats" value="{{tFormat.value}}">
+                {{tFormat.label}}</ng-option>
+        </ng-select>
+    </div>
+</form>

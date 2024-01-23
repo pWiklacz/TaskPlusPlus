@@ -103,7 +103,7 @@ export class TaskService {
   }
 
   getTasks(paramsChanged = false) {
-    if (paramsChanged) {
+    if (paramsChanged) { 
       this.UserTasks().delete(this.QueryParams().categoryId)
     }
 
@@ -114,7 +114,6 @@ export class TaskService {
     }
 
     let params = new HttpParams();
-
     if (this.QueryParams().categoryId > 0) params = params.append('categoryId', this.QueryParams().categoryId.toString());
     params = params.append('sortDescending', this.QueryParams().sortDescending.toString());
     params = params.append('sortBy', this.QueryParams().sortBy.apiName);

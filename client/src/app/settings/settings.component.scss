@@ -2,12 +2,15 @@
     max-height: 70vh;
     height: 70vh;
     overflow-y: auto;
+    padding: 0px;
 }
 
 .links {
     position: fixed;
     z-index: 1;
-    width: 14.5vw;
+    width: 245px;
+    height: 70vh;
+    border-right: 1px solid #282d32;
 }
 
 .content {
@@ -30,6 +33,7 @@
     min-height: 1px;
     padding: 1rem;
     max-height: 100%;  
+    padding-left: 0px;   
 }
 
 
@@ -54,4 +58,13 @@
 }
 .shadow-none {
     box-shadow: none!important;
+}
+
+@media only screen and (max-width: 991px) {
+    .links {
+        position: fixed;
+        z-index: 1;
+        width: 150px;  
+    }
+    
 }

@@ -8,14 +8,18 @@ export class UserStoreService {
   firstName = signal<string>('');
   lastName = signal<string>('');
   email = signal<string>('');
-  private userPayload: any;
-
+  uid = signal<string>('');
+  hasPassword = signal<boolean>(false);
   constructor() {
- 
-   }
+
+  }
 
   setFirstName(value: string) {
     this.firstName.update(() => value);
+  }
+
+  setHasPassword(value: boolean) {
+    this.hasPassword.update(() => value);
   }
 
   setLastName(value: string) {
@@ -26,11 +30,15 @@ export class UserStoreService {
     this.email.update(() => value);
   }
 
+  setUId(value: string) {
+    this.uid.update(() => value);
+  }
+
   clearSignals() {
     this.firstName.update(() => '');
     this.lastName.update(() => '');
     this.email.update(() => '');
+    this.uid.update(() => '');
+    this.hasPassword.update(() => false);
   }
-  
 }
- 

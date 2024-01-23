@@ -10,13 +10,13 @@ import { SettingsRoutingModule } from './settings-routing.module';
 import { SharedModule } from 'primeng/api';
 import { CoreModule } from '../core/core.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 
 @NgModule({
   declarations: [
     SettingsComponent,
     ThemeSwitcherComponent,
-    
     AccountSettingsComponent,
     SecuritySettingsComponent,
     ProfileSettingsComponent,
@@ -28,7 +28,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ReactiveFormsModule,
     SharedModule,
     CoreModule,
-    FormsModule
+    FormsModule,
+    NgSelectModule
   ],
   exports: [
     SettingsComponent,

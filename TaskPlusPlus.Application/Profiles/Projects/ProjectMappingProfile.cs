@@ -16,7 +16,7 @@ public class ProjectMappingProfile : Profile
             .ForMember(dest => dest.Notes,
                 opt => opt.MapFrom(src => src.Notes.Value))
             .ForMember(dest => dest.DueDate,
-                opt => opt.MapFrom(src => src.DueDate != null ? src.DueDate.Value : (DateOnly?)null))
+                opt => opt.MapFrom(src => src.DueDate! != null! ? src.DueDate.Value : (DateOnly?)null))
             .ForMember(dest => dest.DueTime,
                 opt => opt.MapFrom(src => src.DueTime))
             .ForMember(dest => dest.IsCompleted,

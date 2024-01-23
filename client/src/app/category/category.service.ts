@@ -5,6 +5,7 @@ import { CategoryDto } from '../shared/models/category/CategoryDto';
 import { ApiResponse } from '../shared/models/ApiResponse';
 import { map } from 'rxjs';
 import { CreateCategoryDto } from '../shared/models/category/CreateCategoryDto';
+import { UpdateCategorySettingsDto } from '../shared/models/category/UpdateCategorySettingsDto';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ export class CategoryService {
   apiUrl = environment.apiUrl;
   public userCategories = signal<CategoryDto[]>([]);
   public selectedCategory = signal<CategoryDto | undefined>(undefined);
+  
   public systemCategories : CategoryDto[] = [
     {
       id: 1,
@@ -20,7 +22,12 @@ export class CategoryService {
       icon: 'fa-solid fa-inbox',
       isFavorite: false,
       isImmutable: true,
-      colorHex: '#4cd6f1'
+      colorHex: '#4cd6f1',
+      settings: {
+        grouping: 'None',
+        sorting: 'Name',
+        direction: false,
+      }
     },
     {
       id: 0,
@@ -28,7 +35,12 @@ export class CategoryService {
       icon: 'fa-solid fa-calendar-day',
       isFavorite: false,
       isImmutable: true,
-      colorHex: '#065535'
+      colorHex: '#065535',
+      settings: {
+        grouping: 'None',
+        sorting: 'Name',
+        direction: false,
+      }
     },
     {
       id: 0,
@@ -36,7 +48,12 @@ export class CategoryService {
       icon: 'fa-solid fa-calendar',
       isFavorite: false,
       isImmutable: true,
-      colorHex: '#cb063e'
+      colorHex: '#cb063e',
+      settings: {
+        grouping: 'None',
+        sorting: 'Name',
+        direction: false,
+      }
     },
     {
       id: 2,
@@ -44,7 +61,12 @@ export class CategoryService {
       icon: 'fa-solid fa-angles-right',
       isFavorite: false,
       isImmutable: true,
-      colorHex: '#f37b16'
+      colorHex: '#f37b16',
+      settings: {
+        grouping: 'None',
+        sorting: 'Name',
+        direction: false
+      }
     },
     {
       id: 0,
@@ -52,7 +74,12 @@ export class CategoryService {
       icon: 'fa-solid fa-list-check',
       isFavorite: false,
       isImmutable: true,
-      colorHex: '#ffffff'
+      colorHex: '#ffffff',
+      settings: {
+        grouping: 'None',
+        sorting: 'Name',
+        direction: false
+      }
     },
     {
       id: 5,
@@ -60,7 +87,12 @@ export class CategoryService {
       icon: 'fa-solid fa-hourglass-half',
       isFavorite: false,
       isImmutable: true,
-      colorHex: '#000000'
+      colorHex: '#000000',
+      settings: {
+        grouping: 'None',
+        sorting: 'Name',
+        direction: false,
+      }
     },
     {
       id: 6,
@@ -68,7 +100,12 @@ export class CategoryService {
       icon: 'fa-solid fa-lightbulb',
       isFavorite: false,
       isImmutable: true,
-      colorHex: '#f3f316'
+      colorHex: '#f3f316',
+      settings: {
+        grouping: 'None',
+        sorting: 'Name',
+        direction: false,
+      }
     }
   ];
 
@@ -128,5 +165,9 @@ export class CategoryService {
 
   putCategory(updatedCategory: CategoryDto) {
     return this.http.put(this.apiUrl + 'Category/' + updatedCategory.id, updatedCategory);
+  }
+
+  updateCategorySettings(settings: UpdateCategorySettingsDto){
+    return this.http.put(this.apiUrl + 'Category/' + settings.id + '/updateSettings', settings);
   }
 }

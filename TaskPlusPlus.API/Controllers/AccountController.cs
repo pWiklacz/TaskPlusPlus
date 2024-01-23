@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TaskPlusPlus.Application.Contracts.Identity;
 using TaskPlusPlus.Application.Models.Identity;
+using TaskPlusPlus.Application.Models.Identity.ExternalLogin;
 
 namespace TaskPlusPlus.API.Controllers;
 
@@ -49,5 +51,46 @@ public class AccountController : BaseController
         return FromResult(await _authenticationService.ExternalLogin(request));
     }
 
+    [Authorize]
+    [HttpPut("updateSettings")]
+    public async Task<IActionResult> UpdateSettings([FromBody] UpdateUserSettingsRequest request)
+    {
+        return FromResult(await _authenticationService.UpdateUserSettings(request));
+    }
+
+    [Authorize]
+    [HttpPut("updateEmail")]
+    public async Task<IActionResult> UpdateEmail([FromBody] UpdateEmailRequest request)
+    {
+        return FromResult(await _authenticationService.UpdateUserEmail(request));
+    }
+
+    [Authorize]
+    [HttpPut("updateData")]
+    public async Task<IActionResult> UpdateUserData([FromBody] UpdateUserDataRequest request)
+    {
+        return FromResult(await _authenticationService.UpdateUserData(request));
+    }
+
+    [Authorize]
+    [HttpPut("updatePassword")]
+    public async Task<IActionResult> UpdatePassword([FromBody] ChangePasswordRequest request)
+    {
+        return FromResult(await _authenticationService.UpdateUserPassword(request));
+    }
+
+    [Authorize]
+    [HttpPost("addPassword")]
+    public async Task<IActionResult> AddPassword([FromBody] AddPasswordRequest request)
+    {
+        return FromResult(await _authenticationService.AddUserPassword(request));
+    }
+
+    [HttpGet("changeEmailConfirmation")]
+    public async Task<IActionResult> ChangeEmailConfirmation([FromQuery] EmailConfirmationRequest request)
+    {
+        return FromResult(await _authenticationService.ChangeEmailConfirmation(request));
+    }
 }
 
+ 

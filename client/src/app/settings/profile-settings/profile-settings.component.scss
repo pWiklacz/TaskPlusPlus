@@ -1,0 +1,29 @@
+input[type='text'],
+input[type='password'] {
+    border: none;
+    outline: none;
+    box-shadow: none;
+    width: 100%;
+}
+
+.input-field {
+    border-radius: 5px;
+    background-color: var(--input-bg-color);
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    color: #4343ff
+}
+
+.errorMessage{
+    color: red;
+    padding-left: 10px;
+}
+
+
+.input-field.error{
+    border: 1px solid red;
+    color: red;
+}
