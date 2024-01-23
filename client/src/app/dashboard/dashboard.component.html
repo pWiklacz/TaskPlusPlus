@@ -69,7 +69,7 @@
                                 <ul id="basic-link-dropdown" *dropdownMenu class="dropdown-menu border" role="menu"
                                     aria-labelledby="basic-link">
                                     <li *ngFor="let choice of sortOptions| enumToArray">
-                                        <a class="dropdown-item" (click)="onSortingOptionSelected(choice.id)">
+                                        <a class="dropdown-item" (click)="this.onSortingOptionSelected(choice.id)">
                                             <div class="align-items-center row">
                                                 <div class="col-6">
                                                     {{choice.name}}

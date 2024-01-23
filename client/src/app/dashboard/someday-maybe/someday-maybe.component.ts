@@ -6,6 +6,10 @@ import { SomedayMaybeId } from 'src/app/shared/models/category/CategoryDto';
 import { TaskService } from 'src/app/task/task.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { MessageService } from 'primeng/api';
+import { AccountService } from 'src/app/account/account.service';
+import { GroupingOptionsEnum } from 'src/app/shared/models/task/GroupingOptionsEnum';
+import { SortingOptionsEnum } from 'src/app/shared/models/task/SortingOptionsEnum';
+import { UserStoreService } from 'src/app/account/user-store.service';
 
 @Component({
   selector: 'app-someday-maybe',
@@ -18,16 +22,25 @@ export class SomedayMaybeComponent extends DashboardComponent implements OnInit 
     taskService: TaskService,
     modalService: BsModalService,
     router: Router,
-    messageService: MessageService) {
+    accountService: AccountService,
+    messageService: MessageService,
+    userStoreService: UserStoreService) {
     super(categoryService, activatedRoute,
-      taskService, modalService, router, messageService);
+      taskService, modalService, router, messageService, accountService, userStoreService);
   }
 
   override ngOnInit(): void {
     this.categoryService.getCategory(+SomedayMaybeId).subscribe({
       error: error => console.log(error)
     })
+    const userSettings = this.accountService.getUserSettings();
+    const grouping = Object.values(GroupingOptionsEnum).find(enumItem => enumItem.apiName === userSettings?.somedaySettings.grouping);
+    const sorting = Object.values(SortingOptionsEnum).find(enumItem => enumItem.apiName === userSettings?.somedaySettings.sorting);
+    this.taskService.QueryParams().groupBy = grouping!;
+    this.taskService.QueryParams().sortBy = sorting!;
+    this.taskService.QueryParams().sortDescending = userSettings?.somedaySettings.direction!;
     this.taskService.QueryParams().categoryId = SomedayMaybeId;
     this.getTasks();
   }
+
 }

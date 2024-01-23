@@ -6,7 +6,7 @@ using TaskPlusPlus.Domain.ValueObjects;
 using TaskPlusPlus.Domain.ValueObjects.Category;
 
 namespace TaskPlusPlus.Persistence.Configurations;
-public class CategoryConfiguration  : IEntityTypeConfiguration<Category>
+public class CategoryConfiguration : IEntityTypeConfiguration<Category>
 {
     public void Configure(EntityTypeBuilder<Category> builder)
     {
@@ -29,6 +29,10 @@ public class CategoryConfiguration  : IEntityTypeConfiguration<Category>
         builder.Property(c => c.Id)
             .HasConversion(idConverter)
             .ValueGeneratedOnAdd();
+
+        builder.OwnsOne(
+            cat => cat.Settings,
+            ownedNavigationBuilder => ownedNavigationBuilder.ToJson());
 
         builder.Property(c => c.Name)
             .HasConversion(nameConverter);

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ThemeService } from 'src/app/core/services/theme.service';
-import { CategoryDto} from 'src/app/shared/models/category/CategoryDto';
+import { CategoryDto } from 'src/app/shared/models/category/CategoryDto';
 import { CategoryService } from '../category.service';
 import { MessageService } from 'primeng/api';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -35,7 +35,7 @@ export class AddCategoryComponent implements OnInit {
   changeIsFavoriteStatus() {
     this.isFavorite = !this.isFavorite;
   }
-  
+
   onSubmit() {
     const formValues = this.addCategoryForm.value;
     const createdCategory: CreateCategoryDto = {
@@ -54,11 +54,16 @@ export class AddCategoryComponent implements OnInit {
           isFavorite: createdCategory.isFavorite,
           isImmutable: false,
           colorHex: createdCategory.colorHex,
-          icon: createdCategory.icon
+          icon: createdCategory.icon,
+          settings: {
+            grouping: 'None',
+            sorting: 'Name',
+            direction: false,    
+          }
         }
         this.categoryService.addCategory(category);
       },
-      error: (err: HttpErrorResponse) => {      
+      error: (err: HttpErrorResponse) => {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Problem with creating category', life: 3000 });
       }
     })
