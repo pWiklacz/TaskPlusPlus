@@ -30,7 +30,6 @@ export class NavBarLoggedComponent implements OnInit {
   ngOnInit(): void {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
-        console.log(this.settingsService.isOpen)
         if (event.url.includes('settings') && !this.settingsService.isOpen) {
           this.openSettingsModal()
         }

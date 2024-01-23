@@ -1,10 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TaskPlusPlus.Application.DTOs;
 using TaskPlusPlus.Application.DTOs.Category;
 using TaskPlusPlus.Application.Features.Categories.Commands.CreateCategory;
 using TaskPlusPlus.Application.Features.Categories.Commands.DeleteCategory;
 using TaskPlusPlus.Application.Features.Categories.Commands.EditCategory;
+using TaskPlusPlus.Application.Features.Categories.Commands.UpdateCategorySettings;
 using TaskPlusPlus.Application.Features.Categories.Queries.GetCategoryById;
 using TaskPlusPlus.Application.Features.Categories.Queries.GetUserCategories;
 
@@ -43,13 +45,22 @@ public class CategoryController : BaseController
         var command = new CreateCategoryCommand(dto);
         var result = await _mediator.Send(command);
 
-        return FromResult(result); 
+        return FromResult(result);
     }
 
     [HttpPut("{id}")]
     public async Task<ActionResult> Put([FromBody] UpdateCategoryDto dto)
     {
         var command = new EditCategoryCommand(dto);
+        var result = await _mediator.Send(command);
+
+        return FromResult(result);
+    }
+
+    [HttpPut("{id}/updateSettings")]
+    public async Task<ActionResult> UpdateSettings([FromBody] UpdateCategorySettingsDto dto)
+    {
+        var command = new UpdateCategorySettingsCommand(dto);
         var result = await _mediator.Send(command);
 
         return FromResult(result);

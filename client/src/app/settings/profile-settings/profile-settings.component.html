@@ -1,29 +1,35 @@
-<h6>YOUR PROFILE INFORMATION</h6>
-<hr>
 <form [formGroup]="editProfileForm" (ngSubmit)="onSubmit()">
+  <div class="d-flex justify-content-between align-items-center">
+    <h6 class="col-4">PROFILE INFORMATION</h6>
+    <div class="text-end col-8" *ngIf="isEdited">
+      <button type="submit" class="btn btn-primary me-1">Update</button>
+      <button type="button" class="btn btn-secondary" (click)="onReset()">Cancel</button>
+    </div>
+  </div>
+  <hr>
   <div class="form-group mb-3">
     <label for="firstName">First Name</label>
-    <input type="text" class="form-control"
-    [class.is-invalid]="submitted && form.firstName.invalid"
-    formControlName="firstName"  aria-describedby="firstNameHelp"
-    placeholder="Enter your first name">
+    <div class="input-field" [class.error]="submitted && form.firstName.invalid">
+      <input type="text" class="form-control" [class.is-invalid]="submitted && form.firstName.invalid"
+        formControlName="firstName" aria-describedby="firstNameHelp" placeholder="Enter your first name">
+    </div>
     <div *ngIf="submitted && form.firstName.errors" class="errorMessage">
-      <div class="text-danger" *ngIf="form.firstName.errors?.['required']"> <i
-              class="fa fa-exclamation-circle" aria-hidden="true"></i> First name is
-          required</div>
-  </div>
+      <div class="text-danger" *ngIf="form.firstName.errors?.['required']"> <i class="fa fa-exclamation-circle"
+          aria-hidden="true"></i> First name is
+        required</div>
+    </div>
   </div>
   <div class="form-group">
     <label for="lastName">Last Name</label>
-    <input type="text" class="form-control"
-    [class.is-invalid]="submitted && form.lastName.invalid" 
-    formControlName="lastName" aria-describedby="lastNameHelp" placeholder="Enter your last name">
+    <div class="input-field" [class.error]="submitted && form.lastName.invalid">
+      <input type="text" class="form-control" [class.is-invalid]="submitted && form.lastName.invalid"
+        formControlName="lastName" aria-describedby="lastNameHelp" placeholder="Enter your last name">
+    </div>
+
     <div *ngIf="submitted && form.lastName.errors" class="errorMessage">
-      <div class="text-danger" *ngIf="form.lastName.errors?.['required']"> <i
-              class="fa fa-exclamation-circle" aria-hidden="true"></i> Last name is
-          required</div>
+      <div class="text-danger" *ngIf="form.lastName.errors?.['required']"> <i class="fa fa-exclamation-circle"
+          aria-hidden="true"></i> Last name is
+        required</div>
+    </div>
   </div>
-  </div>
-  <button type="submit" class="btn btn-primary my-3 me-1">Update Profile</button>
-  <button type="button" (click)="onReset()" class="btn btn-light">Reset Changes</button>
 </form>

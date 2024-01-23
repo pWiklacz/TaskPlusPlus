@@ -45,7 +45,7 @@ public class EmailSender : IEmailSender
         }
         catch (Exception ex)
         {
-            
+            var a = ex;
             return false;
         }
     }

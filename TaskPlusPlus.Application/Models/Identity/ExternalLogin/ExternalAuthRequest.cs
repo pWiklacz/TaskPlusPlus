@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace TaskPlusPlus.Application.Models.Identity;
+namespace TaskPlusPlus.Application.Models.Identity.ExternalLogin;
 
 public class ExternalAuthRequest
 {

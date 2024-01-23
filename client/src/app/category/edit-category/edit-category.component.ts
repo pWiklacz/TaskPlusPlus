@@ -58,7 +58,12 @@ export class EditCategoryComponent implements OnInit {
       colorHex: formValues.color!,
       isImmutable: false,
       icon: 'fa-solid fa-circle',
-      id: this.category?.id!
+      id: this.category?.id!,
+      settings: {
+        grouping: 'None',
+        sorting: 'Name',
+        direction: false,
+      }
     }
 
     this.categoryService.putCategory(updatedCategory).subscribe({

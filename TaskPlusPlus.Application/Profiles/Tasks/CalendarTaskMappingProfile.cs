@@ -12,7 +12,7 @@ public class CalendarTaskMappingProfile : Profile
             .ForMember(dest => dest.Name,
                 opt => opt.MapFrom(src => src.Name.Value))
             .ForMember(dest => dest.DueDate,
-                opt => opt.MapFrom(src => src.DueDate != null ? src.DueDate.Value : (DateOnly?)null))
+                opt => opt.MapFrom(src => src.DueDate! != null! ? src.DueDate.Value : (DateOnly?)null))
             .ForMember(dest => dest.IsCompleted,
                 opt => opt.MapFrom(src => src.IsCompleted))
             .ForMember(dest => dest.CategoryId,

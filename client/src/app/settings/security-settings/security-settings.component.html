@@ -1,41 +1,89 @@
 <h6>SECURITY SETTINGS</h6>
 <hr>
-<form [formGroup]="securitySettingsForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="changePasswordForm" (ngSubmit)="onChangePasswordSubmit()"
+  *ngIf="this.userStoreService.hasPassword()">
   <label class="d-block"> Change Password</label>
   <div class="form-group mb-3">
-    <input type="text" class="form-control" [class.is-invalid]="submitted && form.oldPassword.invalid"
-      formControlName="oldPassword" placeholder="Enter your old password">
-    <div *ngIf="submitted && form.oldPassword.errors" class="errorMessage">
-      <div class="text-danger" *ngIf="form.oldPassword.errors?.['required']"> <i class="fa fa-exclamation-circle"
+    <div class="input-field" [class.error]="submitted && changeForm.password.invalid">
+      <input [type]="type" class="form-control" [class.is-invalid]="submitted && changeForm.oldPassword.invalid"
+        formControlName="oldPassword" placeholder="Enter your old password">
+      <span (click)="hideShowPass()" class="fa {{eyeIcon}} text-primary"></span>
+    </div>
+    <div *ngIf="submitted && changeForm.oldPassword.errors" class="errorMessage">
+      <div class="text-danger" *ngIf="changeForm.oldPassword.errors?.['required']"> <i class="fa fa-exclamation-circle"
           aria-hidden="true"></i> To change the old password, enter it</div>
     </div>
   </div>
   <div class="form-group mb-3">
-    <input type="text" class="form-control" [class.is-invalid]="submitted && form.password.invalid"
-      formControlName="password" placeholder="New password">
-    <div *ngIf="submitted && form.password.errors" class="errorMessage">
-      <div class="text-danger" *ngIf="form.password.errors?.['required']"> <i class="fa fa-exclamation-circle"
+    <div class="input-field" [class.error]="submitted && changeForm.password.invalid">
+      <input [type]="type" class="form-control" [class.is-invalid]="submitted && changeForm.password.invalid"
+        formControlName="password" placeholder="New password">
+      <span (click)="hideShowPass()" class="fa {{eyeIcon}} text-primary"></span>
+    </div>
+
+    <div *ngIf="submitted && changeForm.password.errors" class="errorMessage">
+      <div class="text-danger" *ngIf="changeForm.password.errors?.['required']"> <i class="fa fa-exclamation-circle"
           aria-hidden="true"></i> Password is required</div>
-      <div class="text-danger" *ngIf="form.password.errors?.['pattern']"> <i class="fa fa-exclamation-circle"
+      <div class="text-danger" *ngIf="changeForm.password.errors?.['pattern']"> <i class="fa fa-exclamation-circle"
           aria-hidden="true"></i> Password should have at least 6 characters long,
         contain at least one digit, one lowercase letter, one uppercase letter, and one
         special character</div>
     </div>
   </div>
   <div class="form-group">
-    <input type="text" class="form-control" [class.is-invalid]="submitted && form.confirmPassword.invalid"
-      formControlName="confirmPassword" placeholder="Confirm new password">
-    <div *ngIf="submitted && form.confirmPassword.errors" class="errorMessage">
-      <div class="text-danger" *ngIf="form.confirmPassword.errors?.['required']"> <i class="fa fa-exclamation-circle"
-          aria-hidden="true"></i> Confirmation is required</div>
-      <div class="text-danger" *ngIf="form.confirmPassword.errors?.['mustMatch']"> <i class="fa fa-exclamation-circle"
-          aria-hidden="true"></i> Passwords must match</div>
+    <div class="input-field" [class.error]="submitted && changeForm.password.invalid">
+      <input [type]="type" class="form-control" [class.is-invalid]="submitted && changeForm.confirmPassword.invalid"
+        formControlName="confirmPassword" placeholder="Confirm new password">
+      <span (click)="hideShowPass()" class="fa {{eyeIcon}} text-primary"></span>
+    </div>
+    <div *ngIf="submitted && changeForm.confirmPassword.errors" class="errorMessage">
+      <div class="text-danger" *ngIf="changeForm.confirmPassword.errors?.['required']"> <i
+          class="fa fa-exclamation-circle" aria-hidden="true"></i> Confirmation is required</div>
+      <div class="text-danger" *ngIf="changeForm.confirmPassword.errors?.['mustMatch']"> <i
+          class="fa fa-exclamation-circle" aria-hidden="true"></i> Passwords must match</div>
     </div>
   </div>
 
   <button type="submit" class="btn btn-primary my-3 me-1">Change Password</button>
+  <hr>
 </form>
-<hr>
+
+<form [formGroup]="addPasswordForm" (ngSubmit)="onAddPasswordSubmit()" *ngIf="!this.userStoreService.hasPassword()">
+  <p class="small text-muted mt-2">You have used an external account to login and do not have a local
+    username/password. Simply set a new password if you want to login
+    using a local account. Use your email as the username.</p>
+  <div class="form-group mb-3">
+    <div class="input-field" [class.error]="submitted && addForm.password.invalid">
+      <input [type]="type" class="form-control" [class.is-invalid]="submitted && addForm.password.invalid"
+        formControlName="password" placeholder="Password">
+      <span (click)="hideShowPass()" class="fa {{eyeIcon}} text-primary"></span>
+    </div>
+    <div *ngIf="submitted && addForm.password.errors" class="errorMessage">
+      <div class="text-danger" *ngIf="addForm.password.errors?.['required']"> <i class="fa fa-exclamation-circle"
+          aria-hidden="true"></i> Password is required</div>
+      <div class="text-danger" *ngIf="addForm.password.errors?.['pattern']"> <i class="fa fa-exclamation-circle"
+          aria-hidden="true"></i> Password should have at least 6 characters long,
+        contain at least one digit, one lowercase letter, one uppercase letter, and one
+        special character</div>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="input-field" [class.error]="submitted && addForm.password.invalid">
+      <input [type]="type" class="form-control" [class.is-invalid]="submitted && addForm.confirmPassword.invalid"
+        formControlName="confirmPassword" placeholder="Confirm password">
+      <span (click)="hideShowPass()" class="fa {{eyeIcon}} text-primary"></span>
+    </div>
+    <div *ngIf="submitted && addForm.confirmPassword.errors" class="errorMessage">
+      <div class="text-danger" *ngIf="addForm.confirmPassword.errors?.['required']"> <i class="fa fa-exclamation-circle"
+          aria-hidden="true"></i> Confirmation is required</div>
+      <div class="text-danger" *ngIf="addForm.confirmPassword.errors?.['mustMatch']"> <i
+          class="fa fa-exclamation-circle" aria-hidden="true"></i> Passwords must match</div>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary my-3 me-1">Add Password</button>
+  <hr>
+</form>
+
 
 <div class="form-group">
   <label class="d-block">Two Factor Authentication</label>

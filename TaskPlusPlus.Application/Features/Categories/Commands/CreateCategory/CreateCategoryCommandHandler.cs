@@ -39,7 +39,14 @@ internal sealed class CreateCategoryCommandHandler : ICommandHandler<CreateCateg
             return Result.Fail(new ValidationError(validationResult, nameof(Category)));
         }
 
-        var result = Category.Create(dto.Name, isImmutable: false, dto.IsFavorite, dto.ColorHex, userId, dto.Icon);
+        var settings = new CategorySettings
+        {
+            Direction = false,
+            Grouping = "None",
+            Sorting = "Name"
+        };
+
+        var result = Category.Create(dto.Name, isImmutable: false, dto.IsFavorite, dto.ColorHex, userId, settings);
 
         if (result.IsFailed)
             return result.ToResult();

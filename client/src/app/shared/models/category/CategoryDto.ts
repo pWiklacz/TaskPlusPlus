@@ -1,5 +1,3 @@
-
-
 export interface CategoryDto {
     id: number;
     name: string;
@@ -7,6 +5,13 @@ export interface CategoryDto {
     isImmutable: boolean;
     colorHex: string;
     icon: string;
+    settings: CategorySettings;
+}
+
+export interface CategorySettings {
+    grouping: string;
+    sorting: string;
+    direction: boolean;
 }
 
 export const InboxId: number = 1;

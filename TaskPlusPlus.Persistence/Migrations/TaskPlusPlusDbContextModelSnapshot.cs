@@ -50,10 +50,6 @@ namespace TaskPlusPlus.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Icon")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsFavorite")
                         .HasColumnType("bit");
 
@@ -220,6 +216,38 @@ namespace TaskPlusPlus.Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("TaskId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TaskPlusPlus.Domain.Entities.Category", b =>
+                {
+                    b.OwnsOne("TaskPlusPlus.Domain.ValueObjects.Category.CategorySettings", "Settings", b1 =>
+                        {
+                            b1.Property<ulong>("CategoryId")
+                                .HasColumnType("decimal(20,0)");
+
+                            b1.Property<bool>("Direction")
+                                .HasColumnType("bit");
+
+                            b1.Property<string>("Grouping")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Sorting")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("CategoryId");
+
+                            b1.ToTable("Categories", "application");
+
+                            b1.ToJson("Settings");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CategoryId");
+                        });
+
+                    b.Navigation("Settings")
                         .IsRequired();
                 });
 

@@ -5,6 +5,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TaskService } from 'src/app/task/task.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { MessageService } from 'primeng/api';
+import { AccountService } from 'src/app/account/account.service';
+import { GroupingOptionsEnum } from 'src/app/shared/models/task/GroupingOptionsEnum';
+import { SortingOptionsEnum } from 'src/app/shared/models/task/SortingOptionsEnum';
+import { UserStoreService } from 'src/app/account/user-store.service';
+import { UpdateUserSettingsDto } from 'src/app/shared/models/account/UpdateUserSettingsDto';
+import { HttpErrorResponse } from '@angular/common/http';
+import { UserSettings } from 'src/app/shared/models/account/user';
 
 @Component({
   selector: 'app-today',
@@ -18,10 +25,14 @@ export class TodayComponent extends DashboardComponent implements OnInit, OnDest
     taskService: TaskService,
     modalService: BsModalService,
     router: Router,
-    messageService: MessageService) {
+    accountService: AccountService,
+    messageService: MessageService,
+    userStoreService: UserStoreService) {
     super(categoryService, activatedRoute,
-      taskService, modalService, router, messageService);
+      taskService, modalService, router, messageService, accountService, userStoreService);
   }
+
+
   ngOnDestroy(): void {
     this.taskService.QueryParams().date = '';
   }
@@ -31,8 +42,17 @@ export class TodayComponent extends DashboardComponent implements OnInit, OnDest
     this.categoryService.selectCategory(today!)
     let date = new Date();
     let formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-    this.taskService.QueryParams().categoryId  = this.categoryService.selectedCategory()!.id;
+    const userSettings = this.accountService.getUserSettings();
+    const grouping = Object.values(GroupingOptionsEnum)
+      .find(enumItem => enumItem.apiName === userSettings?.todaySettings.grouping);
+    const sorting = Object.values(SortingOptionsEnum)
+      .find(enumItem => enumItem.apiName === userSettings?.todaySettings.sorting);
+    this.taskService.QueryParams().groupBy = grouping!;
+    this.taskService.QueryParams().sortBy = sorting!;
+    this.taskService.QueryParams().sortDescending = userSettings?.todaySettings.direction!;
+    this.taskService.QueryParams().categoryId = this.categoryService.selectedCategory()!.id;
     this.taskService.QueryParams().date = formattedDate;
     this.getTasks();
   }
+
 }
