@@ -19,7 +19,15 @@ public static class DependencyInjection
 
             options.UseSqlServer(
                 configuration.GetConnectionString("TaskPlusPlusConnectionString"),
-                o => o.MigrationsHistoryTable(HistoryRepository.DefaultTableName, "application"))
+                o =>
+                {
+                    o.EnableRetryOnFailure(
+                        maxRetryCount: 10,
+                        maxRetryDelay: TimeSpan.FromSeconds(5),
+                        errorNumbersToAdd: null);
+                    o.MigrationsHistoryTable(HistoryRepository.DefaultTableName, "application");
+                }
+                )
                 .AddInterceptors(auditInterceptor);
         });
 
