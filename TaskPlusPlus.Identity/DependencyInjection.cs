@@ -25,6 +25,10 @@ public static class DependencyInjection
             options.UseSqlServer(configuration.GetConnectionString("TaskPlusPlusConnectionString"),
                 b =>
                 {
+                    b.EnableRetryOnFailure(
+                        maxRetryCount: 10,
+                        maxRetryDelay: TimeSpan.FromSeconds(5),
+                        errorNumbersToAdd: null);
                     b.MigrationsAssembly(typeof(TaskPlusPlusIdentityDbContext).Assembly.FullName);
                     b.MigrationsHistoryTable(HistoryRepository.DefaultTableName, "identity");
                 }));
@@ -40,7 +44,7 @@ public static class DependencyInjection
 
         services.Configure<IdentityOptions>(options =>
         {
-            options.User.RequireUniqueEmail = true;        
+            options.User.RequireUniqueEmail = true;
         });
 
         services.AddAuthentication(options =>
