@@ -104,60 +104,50 @@ public class AuthService : IAuthService
 
         var existingEmail = await _userManager.FindByEmailAsync(request.Email);
 
-        if (existingEmail == null)
-        {
-            var result = await _userManager.CreateAsync(user, request.Password);
+        if (existingEmail != null) return Result.Fail(new EmailAlreadyExistError());
+        var result = await _userManager.CreateAsync(user, request.Password);
 
-            if (result.Succeeded)
-            {
-                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        if (!result.Succeeded) return Result.Fail(new RegistrationError(result.Errors.ToList()));
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     
-                var param = new Dictionary<string, string?>
-                {
-                    {"token", token },
-                    {"email", user.Email }
-                };
-
-                var callback = QueryHelpers.AddQueryString(request.ClientURI, param);
-
-                string templateFolderPath = Path.Combine(_environment.ContentRootPath, "..", "TaskPlusPlus.Infrastructure", "Email", "EmailTemplates");
-                string templateFilePath = Path.Combine(templateFolderPath, "ConfirmationEmail.html");
-                string emailTemplate = await System.IO.File.ReadAllTextAsync(templateFilePath);
-                emailTemplate = emailTemplate.Replace("{{BackUrl}}", callback);
-                emailTemplate = emailTemplate.Replace("{{UserName}}", user.FirstName);
-
-                if (_env.IsDevelopment())
-                {
-                    emailTemplate = emailTemplate.Replace("{{HomeUrl}}", "https://localhost:4200/");
-                }
-                else if (_env.IsProduction())
-                {
-                    emailTemplate = emailTemplate.Replace("{{HomeUrl}}", "https://taskplusplus.azurewebsites.net/");
-                }
-
-                var email = new Email
-                {
-                    To = request.Email,
-                    RecipientName = user.FirstName,
-                    Subject = "Confirm your email",
-                    Body = emailTemplate,
-                    IsHtml = true
-                };
-
-                await _emailSender.SendEmailAsync(email);
-
-                await _userManager.AddToRoleAsync(user, "User");
-                return new RegistrationResponse() { UserId = user.Id };
-            }
-            else
-            {
-                return Result.Fail(new RegistrationError(result.Errors.ToList()));
-            }
-        }
-        else
+        var param = new Dictionary<string, string?>
         {
-            return Result.Fail(new EmailAlreadyExistError());
+            {"token", token },
+            {"email", user.Email }
+        };
+
+        var callback = QueryHelpers.AddQueryString(request.ClientURI, param);
+
+        string templateFolderPath = Path.Combine(_environment.ContentRootPath, "..", "TaskPlusPlus.Infrastructure", "Email", "EmailTemplates");
+        string templateFilePath = Path.Combine(templateFolderPath, "ConfirmationEmail.html");
+        string emailTemplate = await System.IO.File.ReadAllTextAsync(templateFilePath);
+        emailTemplate = emailTemplate.Replace("{{BackUrl}}", callback);
+        emailTemplate = emailTemplate.Replace("{{UserName}}", user.FirstName);
+
+        if (_env.IsDevelopment())
+        {
+            emailTemplate = emailTemplate.Replace("{{HomeUrl}}", "https://localhost:4200/");
         }
+        else if (_env.IsProduction())
+        {
+            emailTemplate = emailTemplate.Replace("{{HomeUrl}}", "https://taskplusplus.azurewebsites.net/");
+        }
+
+        var email = new Email
+        {
+            To = request.Email,
+            RecipientName = user.FirstName,
+            Subject = "Confirm your email",
+            Body = emailTemplate,
+            IsHtml = true
+        };
+
+        await _emailSender.SendEmailAsync(email);
+
+        await _userManager.AddToRoleAsync(user, "User");
+        return Result.Ok(new RegistrationResponse() { UserId = user.Id }).WithSuccess(
+            "Your account has been successfully created." +
+            " We sent a confirmation link to the email address you provided. Please check your inbox and confirm the email before logging in.");
     }
 
     public async Task<Result> ForgotPassword(ForgotPasswordRequest request)

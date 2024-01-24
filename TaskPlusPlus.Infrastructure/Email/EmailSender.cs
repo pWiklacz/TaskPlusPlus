@@ -1,4 +1,5 @@
 ﻿using MailKit.Net.Smtp;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using Org.BouncyCastle.Asn1.Pkcs;
@@ -10,8 +11,10 @@ namespace TaskPlusPlus.Infrastructure.Email;
 public class EmailSender : IEmailSender
 {
     private readonly EmailSettings _mailSettings;
-    public EmailSender(IOptions<EmailSettings> mailSettingsOptions)
+    private readonly ILogger<EmailSender> _logger;
+    public EmailSender(IOptions<EmailSettings> mailSettingsOptions, ILogger<EmailSender> logger)
     {
+        _logger = logger;
         _mailSettings = mailSettingsOptions.Value;
     }
     public async Task<bool> SendEmailAsync(Application.Models.Mail.Email email)
@@ -45,7 +48,10 @@ public class EmailSender : IEmailSender
         }
         catch (Exception ex)
         {
-            var a = ex;
+            _logger.LogError(ex, "Server error: {@Message}, {@DateTimeUtc}",
+                ex.Message,
+                DateTime.UtcNow);
+
             return false;
         }
     }

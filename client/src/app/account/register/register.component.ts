@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { MustMatch } from 'src/app/shared/validators/passwords-must-match-validator';
 import { UserForRegistrationDto } from 'src/app/shared/models/account/UserForRegistraionDto';
 import { environment } from 'src/environments/environment';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-register',
@@ -30,7 +31,9 @@ export class RegisterComponent {
     validators: MustMatch('password', 'confirmPassword')
   });
 
-  constructor(private accountService: AccountService, private router: Router) { }
+  constructor(private accountService: AccountService,
+    private router: Router,
+    private messageService: MessageService) { }
 
   get form() { return this.registerForm.controls; }
 
@@ -53,11 +56,13 @@ export class RegisterComponent {
     };
 
     this.accountService.register(user).subscribe({
-      next: () => this.router.navigateByUrl('account/login'),
+      next: (response) =>{ 
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: response.message, life: 10000 });
+        this.router.navigateByUrl('account/login')},
       error: error => {
-        if(error.value) this.errors = error.value
+        if (error.value) this.errors = error.value
         else this.errors?.push(error.message)
-        }
+      }
     })
   }
 
