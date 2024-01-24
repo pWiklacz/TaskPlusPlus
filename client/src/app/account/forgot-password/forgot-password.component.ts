@@ -20,7 +20,8 @@ export class ForgotPasswordComponent {
     email: new FormControl('', [Validators.required, Validators.email])
   })
 
-  constructor(private accountService: AccountService, private messageService: MessageService){}
+  constructor(private accountService: AccountService,
+     private messageService: MessageService){}
 
   get form() { return this.forgotPasswordForm.controls; }
 

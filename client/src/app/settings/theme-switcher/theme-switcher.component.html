@@ -1,53 +1,54 @@
 <div class="d-flex justify-content-between align-items-center">
-    <h6 class="col-4">THEME SETTINGS</h6> 
-    <div class="text-end col-8" *ngIf="isEdited">
-        <button type="submit" class="btn btn-primary me-1" (click)="submit()">Update</button>
-        <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>    
-    </div>   
+  <h6 class="col-4">THEME SETTINGS</h6>
+  <div class="text-end col-8" *ngIf="isEdited">
+    <button type="submit" class="btn btn-primary me-1" (click)="submit()">Update</button>
+    <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+  </div>
 </div>
 <hr>
 
-<!-- Grupa opcji Pulse i United -->
 <div class="option-group">
-    <div class="option-container">
-      <input class="option-input" [(ngModel)]="selectedTheme" id="option-1" type="radio" name="options" value="pulse" (change)="selectTheme(selectedTheme)" />
-      <input class="option-input" [(ngModel)]="selectedTheme" id="option-2" type="radio" name="options" value="united" (change)="selectTheme(selectedTheme)" />
-  
-      <label class="option" for="option-1" style="background-color: #a991d4;">
-        <span class="option__indicator pulse-option"></span>
-        <span class="option__label pulse-option-label">
-          <sub>Pulse</sub>
-        </span>
-      </label>
-  
-      <label class="option" for="option-2" style="background-color: #aea79f;">
-        <span class="option__indicator united-option"></span>
-        <span class="option__label united-option-label">
-          <sub>United</sub>
-        </span>
-      </label>
-    </div>
+  <div class="option-container">
+    <input class="option-input" [(ngModel)]="selectedTheme" id="option-1" type="radio" name="options" value="pulse"
+      (change)="selectTheme(selectedTheme)" />
+    <input class="option-input" [(ngModel)]="selectedTheme" id="option-2" type="radio" name="options" value="united"
+      (change)="selectTheme(selectedTheme)" />
+
+    <label class="option" for="option-1" style="background-color: #a991d4;">
+      <span class="option__indicator pulse-option"></span>
+      <span class="option__label pulse-option-label">
+        <sub>Pulse</sub>
+      </span>
+    </label>
+
+    <label class="option" for="option-2" style="background-color: #aea79f;">
+      <span class="option__indicator united-option"></span>
+      <span class="option__label united-option-label">
+        <sub>United</sub>
+      </span>
+    </label>
   </div>
-  
-  <!-- Grupa opcji Dark i Lumen -->
-  <div class="option-group">
-    <div class="option-container">
-      <input class="option-input" [(ngModel)]="selectedTheme" id="option-3" type="radio" name="options" value="slate" (change)="selectTheme(selectedTheme)"/>
-      <input class="option-input" [(ngModel)]="selectedTheme" id="option-4" type="radio" name="options" value="lumen" (change)="selectTheme(selectedTheme)"/>
-  
-      <label class="option" for="option-3" style="background-color: #7a8288;">
-        <span class="option__indicator dark-option"></span>
-        <span class="option__label dark-option-label">
-          <sub>Dark</sub>
-        </span>
-      </label>
-  
-      <label class="option" for="option-4" style="background-color: #75caeb;">
-        <span class="option__indicator lumen-option"></span>
-        <span class="option__label lumen-option-label">
-          <sub>Lumen</sub>
-        </span>
-      </label>
-    </div>
+</div>
+
+<div class="option-group">
+  <div class="option-container">
+    <input class="option-input" [(ngModel)]="selectedTheme" id="option-3" type="radio" name="options" value="slate"
+      (change)="selectTheme(selectedTheme)" />
+    <input class="option-input" [(ngModel)]="selectedTheme" id="option-4" type="radio" name="options" value="lumen"
+      (change)="selectTheme(selectedTheme)" />
+
+    <label class="option" for="option-3" style="background-color: #7a8288;">
+      <span class="option__indicator dark-option"></span>
+      <span class="option__label dark-option-label">
+        <sub>Dark</sub>
+      </span>
+    </label>
+
+    <label class="option" for="option-4" style="background-color: #75caeb;">
+      <span class="option__indicator lumen-option"></span>
+      <span class="option__label lumen-option-label">
+        <sub>Lumen</sub>
+      </span>
+    </label>
   </div>
-  
+</div>

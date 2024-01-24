@@ -1,14 +1,23 @@
 using Azure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.AzureAppServices;
 using Serilog;
 using TaskPlusPlus.API.Extensions;
+using TaskPlusPlus.API.Middlewares;
 using TaskPlusPlus.Identity;
 using TaskPlusPlus.Identity.Models;
 using TaskPlusPlus.Persistence;
 using TaskPlusPlus.Persistence.Context;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.AddAzureWebAppDiagnostics();
+
+builder.Services.Configure<AzureBlobLoggerOptions>(options =>
+{
+    options.BlobName = "log.txt";
+});
 
 builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
@@ -21,6 +30,8 @@ if (builder.Environment.IsProduction())
         new Uri($"https://{builder.Configuration["KeyVaultName"]}.vault.azure.net/"),
         new DefaultAzureCredential());
 }
+
+builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
 var app = builder.Build();
 
@@ -38,6 +49,8 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
+
 app.MapControllers();
 app.MapFallbackToController("Index", "Fallback");
 
@@ -53,8 +66,6 @@ async Task UpdateDataBase(WebApplication webApplication)
     var identityContext = services.GetRequiredService<TaskPlusPlusIdentityDbContext>();
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
     var logger = services.GetRequiredService<ILogger<Program>>();
-
-    //TODO:: use serilog here
 
     try
     {

@@ -1,4 +1,5 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using MediatR;
+using Microsoft.OpenApi.Models;
 using TaskPlusPlus.Application;
 using TaskPlusPlus.Identity;
 using TaskPlusPlus.Infrastructure;
@@ -11,6 +12,7 @@ public static class ApplicationServicesExtensions
     public static IServiceCollection AddApplicationServices(this IServiceCollection services,
         IConfiguration config)
     {
+        
         services.AddHttpContextAccessor();
         AddSwaggerDoc(services);
         services
@@ -29,6 +31,8 @@ public static class ApplicationServicesExtensions
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+
+        
 
         services.AddCors(opt =>
                      {
