@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Json;
+using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
@@ -118,7 +119,9 @@ public class AuthService : IAuthService
 
         var callback = QueryHelpers.AddQueryString(request.ClientURI, param);
 
-        string templateFolderPath = Path.Combine(_environment.ContentRootPath, "..", "TaskPlusPlus.Infrastructure", "Email", "EmailTemplates");
+        var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+        string templateFolderPath = Path.Combine(path!, "Email", "EmailTemplates");
         string templateFilePath = Path.Combine(templateFolderPath, "ConfirmationEmail.html");
         string emailTemplate = await System.IO.File.ReadAllTextAsync(templateFilePath);
         emailTemplate = emailTemplate.Replace("{{BackUrl}}", callback);
