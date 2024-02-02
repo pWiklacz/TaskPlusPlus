@@ -1,15 +1,18 @@
-
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
+import { AccountService } from 'src/app/account/account.service';
 
-
-export const authGuard: CanActivateFn = (route, state) => {
+export const authGuard: CanActivateFn = async (route, state) => {
   const token = localStorage.getItem('token');
-  const router = inject(Router);
-  if (token) {
+  const accountService = inject(AccountService);
+
+  if (token && !accountService.isTokenExpired()) {
+
     return true;
-  } else {
-    router.navigate(['/account/login']);
-    return false;
   }
+  const isRefreshSuccess = await accountService.tryRefreshingTokens(token!);
+  if (!isRefreshSuccess) { 
+    accountService.logout(); 
+  }
+  return isRefreshSuccess;
 };

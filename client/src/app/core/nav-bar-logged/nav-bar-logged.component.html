@@ -13,7 +13,7 @@
                 </a>
             </li>
             <li>
-                <a class="nav-link px-2 link-secondary" style="font-size: 20px;" routerLink="app/dashboard/inbox">
+                <a class="nav-link px-2 link-secondary" style="font-size: 20px;" routerLink="app/tags">
                     <i class="fa-solid fa-tags fa-fw"></i>
                 </a>
             </li>
@@ -50,7 +50,7 @@
                 </div>
             </li>
         </ul>
-   
+
         <!-- <form class="col-2 col-ssm-3  me-3 search" role="search">
             <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
         </form> -->
@@ -58,18 +58,20 @@
         <div dropdown class="text-end" style="cursor: pointer;">
             <a href id="userPicture" class="d-block link-body-emphasis text-decoration-none" dropdownToggle
                 (click)="false" aria-controls="basic-link-dropdown">
-                <!-- <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle"> -->
-                <p-avatar label="{{this.userStoreService.firstName().charAt(0).toLocaleUpperCase()}}" styleClass="mr-2" [style]="{ 'background-color': '#9c27b0', color: '#ffffff' }" shape="circle"></p-avatar>
+                <p-avatar label="{{this.userStoreService.firstName().charAt(0).toLocaleUpperCase()}}" styleClass="mr-2"
+                    [style]="{ 'background-color': '#9c27b0', color: '#ffffff' }" shape="circle"></p-avatar>
 
             </a>
             <ul id="basic-link-dropdown" *dropdownMenu class="me-3 dropdown-menu dropdown-menu-right border "
                 role="menu" aria-labelledby="userPicture">
 
-                <li role="menuitem"><a class="dropdown-item"><i class="fa fa-user me-2"
-                            aria-hidden="true"></i>Profile</a></li>
                 <li role="menuitem">
-                    <a class="dropdown-item" [routerLink]="['/app', {outlets: {settings: 'settings/profile'}}]"><i class="fa fa-cog me-2"
-                            aria-hidden="true"></i>Settings</a>
+                    <a class="dropdown-item" [routerLink]="['/app', {outlets: {settings: 'settings/profile'}}]"><i
+                            class="fa fa-user me-2" aria-hidden="true"></i>Profile</a>
+                </li>
+                <li role="menuitem">
+                    <a class="dropdown-item" [routerLink]="['/app', {outlets: {settings: 'settings/general'}}]"><i
+                            class="fa fa-cog me-2" aria-hidden="true"></i>Settings</a>
                 </li>
                 <li class="divider dropdown-divider"></li>
                 <li role="menuitem">

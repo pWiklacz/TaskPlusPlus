@@ -17,4 +17,8 @@ public interface IAuthService
     Task<Result> ChangeEmailConfirmation(EmailConfirmationRequest request);
     Task<Result> UpdateUserEmail(UpdateEmailRequest request);
     Task<Result> UpdateUserPassword(ChangePasswordRequest request);
+    Task<Result<AuthResponse>> TwoStepVerification(TwoFactorRequest request);
+    Task<Result<string>> ChangeTwoFactorEnabledStatus(TwoFactorEnabledStatusRequest request);
+    Task<Result> RevokeToken(string userId);
+    Task<Result<AuthResponse>> RefreshToken(TokenApiModel request);
 }

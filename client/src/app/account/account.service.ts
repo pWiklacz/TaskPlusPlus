@@ -21,6 +21,9 @@ import { UpdateProfileDto } from '../shared/models/account/UpdateProfileDto';
 import { UpdateEmailDto } from '../shared/models/account/updateEmailDto';
 import { UpdatePasswordDto } from '../shared/models/account/UpdatePasswordDto';
 import { AddPasswordDto } from '../shared/models/account/AddPasswordDto';
+import { TwoFactorDto } from '../shared/models/account/TwoFactorDto';
+import { changeTwoFactorEnabledStatusDto } from '../shared/models/account/changeTwoFactorEnabledStatusDto';
+
 
 @Injectable({
   providedIn: 'root'
@@ -53,11 +56,8 @@ export class AccountService {
     })
     if (localStorage.getItem('token')) {
       this.userPayload = this.DecodeToken();
-      this.userStoreService.setFirstName(this.getFirstNameFromToken());
-      this.userStoreService.setLastName(this.getLastNameFromToken());
-      this.userStoreService.setEmail(this.getEmailFromToken());
-      this.userStoreService.setUId(this.getUserIdFromToken());
-      this.userStoreService.setHasPassword(this.getHasPasswordFromToken());
+      console.log(this.userPayload)
+      this.getDataFromToken();
     }
   }
 
@@ -65,19 +65,23 @@ export class AccountService {
     this.busyService.busy();
     return this.http.post<ApiResponse<User>>(this.apiUrl + 'Account/login', values).pipe(
       map(response => {
-        const userSettingsJson = JSON.stringify(response.value.settings);
-        localStorage.setItem('settings', userSettingsJson);
-        localStorage.setItem('token', response.value.token);
-        this.themeService.current = response.value.settings.theme;
-        this.userPayload = this.DecodeToken();
-        this.userStoreService.setFirstName(this.getFirstNameFromToken());
-        this.userStoreService.setLastName(this.getLastNameFromToken());
-        this.userStoreService.setEmail(this.getEmailFromToken());
-        this.userStoreService.setUId(this.getUserIdFromToken());
-        this.userStoreService.setHasPassword(this.getHasPasswordFromToken())
-        this.isLoggedIn$.next(true);
-        this.isExternalAuth$.next(false);
-        this.router.navigate([`app/dashboard/${response.value.settings.startPage.toLowerCase()}`]);
+        if (response.value.is2StepVerificationRequired) {
+          this.isExternalAuth$.next(false);
+          this.router.navigate(['/authentication/twostepverification'],
+            { queryParams: { provider: response.value.provider, email: response.value.email } })
+        }
+        else {
+          const userSettingsJson = JSON.stringify(response.value.settings);
+          localStorage.setItem('settings', userSettingsJson);
+          localStorage.setItem('token', response.value.token);
+          localStorage.setItem("refreshToken", response.value.refreshToken);
+          this.themeService.current = response.value.settings.theme;
+          this.userPayload = this.DecodeToken();
+          this.getDataFromToken();
+          this.isLoggedIn$.next(true);
+          this.isExternalAuth$.next(false);
+          this.router.navigate([`app/dashboard/${response.value.settings.startPage.toLowerCase()}`]);
+        }
       }),
       finalize(() => this.busyService.idle())
     )
@@ -96,6 +100,7 @@ export class AccountService {
     this.userStoreService.clearSignals();
     localStorage.removeItem('token');
     localStorage.removeItem('settings');
+    localStorage.removeItem("refreshToken");
     this.isLoggedIn$.next(false);
 
     if (this.isExternalAuth$.value) {
@@ -143,36 +148,31 @@ export class AccountService {
     return this.http.put<ApiResponse<any>>(this.apiUrl + 'Account/updateSettings', values);
   }
 
-  updateProfileInformation(values: UpdateProfileDto)
-  {
+  updateProfileInformation(values: UpdateProfileDto) {
     return this.http.put<ApiResponse<User>>(this.apiUrl + 'Account/updateData', values).pipe(
       map(response => {
         localStorage.setItem('token', response.value.token);
         this.userPayload = this.DecodeToken();
-        this.userStoreService.setHasPassword(this.getHasPasswordFromToken())
+        this.getDataFromToken();
         return response
       }),
     );;
   }
 
-  updateEmail(values: UpdateEmailDto)
-  {
+  updateEmail(values: UpdateEmailDto) {
     return this.http.put<ApiResponse<any>>(this.apiUrl + 'Account/updateEmail', values);
   }
 
-  updatePassword(values: UpdatePasswordDto)
-  {
+  updatePassword(values: UpdatePasswordDto) {
     return this.http.put<ApiResponse<any>>(this.apiUrl + 'Account/updatePassword', values);
   }
 
-  addPassword(values: AddPasswordDto)
-  {
+  addPassword(values: AddPasswordDto) {
     return this.http.post<ApiResponse<User>>(this.apiUrl + 'Account/addPassword', values).pipe(
       map(response => {
         localStorage.setItem('token', response.value.token);
         this.userPayload = this.DecodeToken();
-        this.userStoreService.setFirstName(this.getFirstNameFromToken());
-        this.userStoreService.setLastName(this.getLastNameFromToken());
+        this.getDataFromToken();
         return response
       }),
     );
@@ -186,24 +186,53 @@ export class AccountService {
     return this.http.get(this.apiUrl + 'Account/changeEmailConfirmation', { params: params })
   }
 
+  public twoStepLogin = (values: TwoFactorDto) => {
+    this.busyService.busy();
+    return this.http.post<ApiResponse<User>>(this.apiUrl + 'Account/twoStepVerification', values).pipe(
+      map(response => {
+        const userSettingsJson = JSON.stringify(response.value.settings);
+        localStorage.setItem('settings', userSettingsJson);
+        localStorage.setItem('token', response.value.token);
+        this.themeService.current = response.value.settings.theme;
+        this.userPayload = this.DecodeToken();
+        this.getDataFromToken();
+        this.isLoggedIn$.next(true);
+        this.router.navigate([`app/dashboard/${response.value.settings.startPage.toLowerCase()}`]);
+      }),
+      finalize(() => this.busyService.idle()));
+  }
+
+  changeTwoFactorEnabledStatus(values: changeTwoFactorEnabledStatusDto) {
+    return this.http.put<ApiResponse<string>>(this.apiUrl + 'Account/changeTwoFactorEnabledStatus', values).pipe(
+      map(response => {
+        localStorage.setItem('token', response.value);
+        this.userPayload = this.DecodeToken();
+        this.getDataFromToken();
+        return response
+      }),
+    );
+  }
 
   private validateExternalAuth(externalAuth: ExternalAuthDto) {
     this.externalLogin(externalAuth)
       .subscribe({
         next: (res) => {
-          localStorage.setItem("token", res.value.token);
-          const userSettingsJson = JSON.stringify(res.value.settings);
-          localStorage.setItem('settings', userSettingsJson);
-          this.themeService.current = res.value.settings.theme;
-          this.isLoggedIn$.next(true);
-          this.isExternalAuth$.next(true);
-          this.userPayload = this.DecodeToken();
-          this.userStoreService.setFirstName(this.getFirstNameFromToken());
-          this.userStoreService.setLastName(this.getLastNameFromToken());
-          this.userStoreService.setEmail(this.getEmailFromToken());
-          this.userStoreService.setUId(this.getUserIdFromToken());
-          this.userStoreService.setHasPassword(this.getHasPasswordFromToken())
-          this.router.navigate([`app/dashboard/${res.value.settings.startPage.toLowerCase()}`]);
+          if (res.value.is2StepVerificationRequired) {
+            this.isExternalAuth$.next(true);
+            this.router.navigate(['/account/twostepverification'],
+              { queryParams: { provider: res.value.provider, email: res.value.email } })
+          }
+          else {
+            localStorage.setItem("token", res.value.token);
+            const userSettingsJson = JSON.stringify(res.value.settings);
+            localStorage.setItem('settings', userSettingsJson);
+            this.themeService.current = res.value.settings.theme;
+            this.isLoggedIn$.next(true);
+            this.isExternalAuth$.next(true);
+            this.userPayload = this.DecodeToken();
+            this.getDataFromToken();
+            this.router.navigate([`app/dashboard/${res.value.settings.startPage.toLowerCase()}`]);
+          }
         },
         error: (err: HttpErrorResponse) => {
           this.signOutExternal();
@@ -211,34 +240,95 @@ export class AccountService {
       });
   }
 
-  DecodeToken() {
+  public isTokenExpired(): boolean {
+
+    this.userPayload = this.DecodeToken();
+
+    if (this.userPayload && this.userPayload.exp) {
+
+      const expireDateInSeconds = this.userPayload.exp;
+
+      const expireDate = new Date(expireDateInSeconds * 1000);
+      console.log(expireDate)
+
+      const currentDate = new Date();
+
+      return expireDate < currentDate;
+    } else {
+
+      return true;
+    }
+  }
+
+  public async tryRefreshingTokens(token: string): Promise<boolean> 
+  {
+    const refreshToken = localStorage.getItem("refreshToken");
+    if (!token || !refreshToken) { 
+      return false;
+    }
+
+    const credentials = JSON.stringify({ accessToken: token, refreshToken: refreshToken });
+    let isRefreshSuccess: boolean;
+
+    const refreshRes = await new Promise<ApiResponse<User>>((resolve, reject) => {
+      this.http.post<ApiResponse<User>>(this.apiUrl + 'Token/refresh', credentials, {
+        headers: new HttpHeaders({
+          "Content-Type": "application/json"
+        })
+      }).subscribe({
+        next: (res) => resolve(res),
+        error: (_) => { reject; isRefreshSuccess = false;}
+      });
+    });
+
+    localStorage.setItem("token", refreshRes.value.token);
+    localStorage.setItem("refreshToken", refreshRes.value.refreshToken);
+    isRefreshSuccess = true;
+    return isRefreshSuccess;
+  }
+
+  private DecodeToken() {
     const token = localStorage.getItem('token')!;
     return jwtDecode(token);
   }
 
-  getFirstNameFromToken() {
+  private getDataFromToken() {
+    this.userStoreService.setFirstName(this.getFirstNameFromToken());
+    this.userStoreService.setLastName(this.getLastNameFromToken());
+    this.userStoreService.setEmail(this.getEmailFromToken());
+    this.userStoreService.setUId(this.getUserIdFromToken());
+    this.userStoreService.setHasPassword(this.getHasPasswordFromToken());
+    this.userStoreService.setTwoFactorEnabled(this.getTwoFactorEnabledFromToken());
+  }
+
+  private getFirstNameFromToken() {
     if (this.userPayload)
       return this.userPayload.name;
   }
 
-  getLastNameFromToken() {
+  private getLastNameFromToken() {
     if (this.userPayload)
       return this.userPayload.family_name;
   }
 
-  getEmailFromToken() {
+  private getEmailFromToken() {
     if (this.userPayload)
       return this.userPayload.email;
   }
 
-  getUserIdFromToken() {
+  private getUserIdFromToken() {
     if (this.userPayload)
       return this.userPayload.uid;
   }
 
-  getHasPasswordFromToken(){
+  private getHasPasswordFromToken() {
     if (this.userPayload)
-    return this.userPayload.hasPassword;
+      return this.userPayload.hasPassword;
+  }
+
+  private getTwoFactorEnabledFromToken() {
+    if (this.userPayload)
+      return this.userPayload.twoFactorEnabled;
   }
 
   getUserSettings(): UserSettings | null {
@@ -248,5 +338,9 @@ export class AccountService {
       return JSON.parse(userSettingsJson);
     }
     return null;
+  }
+
+  private createCompleteRoute = (route: string, envAddress: string) => {
+    return `${envAddress}/${route}`;
   }
 }

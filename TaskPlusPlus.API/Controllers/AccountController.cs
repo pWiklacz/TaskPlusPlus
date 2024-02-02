@@ -65,6 +65,14 @@ public class AccountController : BaseController
         return FromResult(await _authenticationService.UpdateUserEmail(request));
     }
 
+
+    [Authorize]
+    [HttpPut("changeTwoFactorEnabledStatus")]
+    public async Task<IActionResult> ChangeTwoFactorEnabledStatus([FromBody] TwoFactorEnabledStatusRequest request)
+    {
+        return FromResult(await _authenticationService.ChangeTwoFactorEnabledStatus(request));
+    }
+
     [Authorize]
     [HttpPut("updateData")]
     public async Task<IActionResult> UpdateUserData([FromBody] UpdateUserDataRequest request)
@@ -91,6 +99,13 @@ public class AccountController : BaseController
     {
         return FromResult(await _authenticationService.ChangeEmailConfirmation(request));
     }
+
+
+    [HttpPost("twoStepVerification")]
+    public async Task<ActionResult<AuthResponse>> TwoStepVerification(TwoFactorRequest request)
+    {
+        return FromResult(await _authenticationService.TwoStepVerification(request));
+    }
 }
 
- 
+
