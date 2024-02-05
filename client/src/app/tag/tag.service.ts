@@ -20,10 +20,23 @@ export class TagService {
       val.push(tag);
     })
   }
- 
+
   removeTag(id: number) {
     this.userTags.mutate((val) => {
-      val.splice(id, 1);
+      const index = val.findIndex(t => t.id == id)
+      if (index !== -1) {
+        val.splice(index, 1);
+      }
+    })
+  }
+
+
+  updateTag(tag: TagDto) {
+    this.userTags.mutate((val) => {
+      const index = val.findIndex(t => t.id == tag.id)
+      if (index !== -1) {
+        val[index] = tag;
+      }
     })
   }
 
@@ -32,8 +45,7 @@ export class TagService {
   }
 
   getTags() {
-    if(this.userTags().length == 0)
-    {
+    if (this.userTags().length == 0) {
       return this.http.get<ApiResponse<TagDto[]>>(this.apiUrl + 'Tag').pipe(
         map(tags => {
           this.userTags.set(tags.value)

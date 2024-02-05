@@ -7,6 +7,9 @@ export interface User {
     token: string;
     settings: UserSettings;
     hasPassword: boolean;
+    is2StepVerificationRequired: boolean;
+    provider: string;
+    refreshToken: string;
 }
 
 export interface UserSettings {

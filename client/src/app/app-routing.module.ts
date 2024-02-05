@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { authGuard } from './core/guards/auth.guard';
+import { TagListComponent } from './tag/tag-list/tag-list.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -12,6 +13,11 @@ const routes: Routes = [
         path: 'dashboard',
         canActivate: [authGuard],
         loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule),
+      },
+      {
+        path: 'tags',
+        canActivate: [authGuard],
+        component: TagListComponent
       },
       {
         path: 'settings',

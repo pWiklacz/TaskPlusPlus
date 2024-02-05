@@ -9,6 +9,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { AddPasswordDto } from 'src/app/shared/models/account/AddPasswordDto';
 import { ThemeService } from 'src/app/core/services/theme.service';
+import { changeTwoFactorEnabledStatusDto } from 'src/app/shared/models/account/changeTwoFactorEnabledStatusDto';
 
 @Component({
   selector: 'app-security-settings',
@@ -61,7 +62,7 @@ export class SecuritySettingsComponent implements OnInit {
     }
     const formValues = this.changePasswordForm.value;
 
-    const updatePasswordDto : UpdatePasswordDto = {
+    const updatePasswordDto: UpdatePasswordDto = {
       userId: this.userStoreService.uid(),
       newPassword: formValues.password!,
       currentPassword: formValues.oldPassword!
@@ -76,7 +77,8 @@ export class SecuritySettingsComponent implements OnInit {
       error: (response) => {
         console.error(response.message);
         this.addPasswordForm.reset();
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: response.message, life: 3000 });}
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: response.message, life: 3000 });
+      }
     })
   }
 
@@ -88,7 +90,7 @@ export class SecuritySettingsComponent implements OnInit {
 
     const formValues = this.addPasswordForm.value;
 
-    const addPasswordDto : AddPasswordDto = {
+    const addPasswordDto: AddPasswordDto = {
       userId: this.userStoreService.uid(),
       password: formValues.password!,
     }
@@ -103,7 +105,26 @@ export class SecuritySettingsComponent implements OnInit {
       error: (err: HttpErrorResponse) => {
         console.error(err);
         this.addPasswordForm.reset();
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Problem updating password', life: 3000 });}
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Problem updating password', life: 3000 });
+      }
+    })
+  }
+
+  twoFactorSubmit(status: boolean) {
+    const twoFactorEnabledStatusDto: changeTwoFactorEnabledStatusDto = {
+      userId: this.userStoreService.uid(),
+      twoFactorEnabled: status
+    }
+
+    this.accountService.changeTwoFactorEnabledStatus(twoFactorEnabledStatusDto).subscribe({
+      next: (response) => {
+        this.userStoreService.setTwoFactorEnabled(status);
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: response.message, life: 3000 });
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error(err);
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Problem updating two factor status', life: 3000 });
+      }
     })
   }
 
@@ -113,4 +134,3 @@ export class SecuritySettingsComponent implements OnInit {
     this.isText ? this.type = "text" : this.type = "password";
   }
 }
- 

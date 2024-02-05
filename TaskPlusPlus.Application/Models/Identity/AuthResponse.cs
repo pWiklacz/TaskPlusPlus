@@ -9,4 +9,8 @@ public class AuthResponse
     public string Token { get; set; } = null!;
     public UserSettings Settings { get; set; } = null!;
     public bool HasPassword { get; set; }
+    public bool Is2StepVerificationRequired { get; set; }
+    public string? Provider { get; set; }
+
+    public string? RefreshToken { get; set; }
 }

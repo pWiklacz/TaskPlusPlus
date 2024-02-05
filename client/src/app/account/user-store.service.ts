@@ -10,6 +10,8 @@ export class UserStoreService {
   email = signal<string>('');
   uid = signal<string>('');
   hasPassword = signal<boolean>(false);
+  twoFactorEnabled = signal<boolean>(false);
+
   constructor() {
 
   }
@@ -20,6 +22,10 @@ export class UserStoreService {
 
   setHasPassword(value: boolean) {
     this.hasPassword.update(() => value);
+  }
+
+  setTwoFactorEnabled(value: boolean) {
+    this.twoFactorEnabled.update(() => value);
   }
 
   setLastName(value: string) {
@@ -40,5 +46,6 @@ export class UserStoreService {
     this.email.update(() => '');
     this.uid.update(() => '');
     this.hasPassword.update(() => false);
+    this.twoFactorEnabled.update(() => false);
   }
 }

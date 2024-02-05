@@ -1,4 +1,3 @@
-import { Time } from '@angular/common';
 import { Component, Input, OnInit, signal } from '@angular/core';
 import { TaskDto } from 'src/app/shared/models/task/TaskDto';
 import { TaskService } from '../task.service';
@@ -22,17 +21,15 @@ export class TaskItemComponent implements OnInit {
   constructor(private taskService: TaskService,
     private messageService: MessageService,
     private modalService: BsModalService,
-    private projectService: ProjectService) {}
+    private projectService: ProjectService) { }
 
   ngOnInit(): void {
-    if(this.task?.dueTime)
-    {
-      this.time.update(() =>this.formatTime(this.task?.dueTime!))
+    if (this.task?.dueTime) {
+      this.time.update(() => this.formatTime(this.task?.dueTime!))
     }
   }
 
-  complete()
-  {
+  complete() {
     this.taskService.changeCompleteStatus(this.task!.isCompleted, this.task!.id).subscribe({
       next: (response: any) => {
         this.taskService.updateTask(this.task!);
@@ -119,7 +116,7 @@ export class TaskItemComponent implements OnInit {
   openEditTaskModal() {
     const initialState: ModalOptions = {
       initialState: {
-       task: this.task
+        task: this.task
       },
       backdrop: 'static',
       class: 'modal-dialog-centered'
@@ -141,11 +138,10 @@ export class TaskItemComponent implements OnInit {
           next: (response: any) => {
             this.messageService.add({ severity: 'success', summary: 'Success', detail: response.message, life: 3000 });
             this.taskService.removeTask(this.task!)
-            if(this.task?.projectId)
-            {
+            if (this.task?.projectId) {
               this.projectService.removeTaskInProject(this.task?.projectId, this.task)
             }
-        
+
           },
           error: (err: HttpErrorResponse) => {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Problem with deleting task', life: 3000 });

@@ -9,6 +9,7 @@ import { CoreModule } from '../core/core.module';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { EmailConfirmationComponent } from './email-confirmation/email-confirmation.component';
 import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
+import { TwoStepVerificationComponent } from './two-step-verification/two-step-verification.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
     RegisterComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
-    EmailConfirmationComponent
+    EmailConfirmationComponent,
+    TwoStepVerificationComponent
   ],
   imports: [
     CommonModule,

@@ -35,6 +35,10 @@ export class RegisterComponent {
     private router: Router,
     private messageService: MessageService) { }
 
+  externalLogin = () => {
+    this.accountService.signInWithFB();
+  }
+
   get form() { return this.registerForm.controls; }
 
   onSubmit() {
@@ -56,9 +60,10 @@ export class RegisterComponent {
     };
 
     this.accountService.register(user).subscribe({
-      next: (response) =>{ 
+      next: (response) => {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: response.message, life: 10000 });
-        this.router.navigateByUrl('account/login')},
+        this.router.navigateByUrl('account/login')
+      },
       error: error => {
         if (error.value) this.errors = error.value
         else this.errors?.push(error.message)
