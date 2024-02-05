@@ -88,20 +88,13 @@
                             <button type="submit" class="btn btn-primary btn-block mt-4 w-100">Sign Up</button>
                             <div class="mx-3 ">
                                 <div class="text-center py-3">
-                                    <button type="button" class="btn btn-link btn-floating mx-1">
+                                    <button type="button" class="btn btn-link btn-floating mx-1" (click)="externalLogin()">
                                         <i class="fa fa-facebook-f fa-lg text-primary"></i>
                                     </button>
                              
                                     <asl-google-signin-button  type='icon' size='medium'
                                         class="btn btn-link btn-floating mx-1"></asl-google-signin-button>
-
-                                    <button type="button" class="btn btn-link btn-floating mx-1">
-                                        <i class="fa fa-twitter fa-lg text-primary"></i>
-                                    </button>
-
-                                    <button type="button" class="btn btn-link btn-floating mx-1">
-                                        <i class="fa fa-github fa-lg text-primary"></i>
-                                    </button>
+                 
                                 </div>
                             </div>
                             <div class="text-center text-muted">Already have account? <a id="forget"

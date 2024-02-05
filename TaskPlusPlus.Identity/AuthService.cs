@@ -22,6 +22,12 @@ using TaskPlusPlus.Domain.Errors;
 using TaskPlusPlus.Identity.Errors;
 using TaskPlusPlus.Identity.Models;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using Azure.Core;
+using Newtonsoft.Json.Linq;
+using System.Security.Cryptography;
+using MediatR;
 
 namespace TaskPlusPlus.Identity;
 public class AuthService : IAuthService
@@ -43,8 +49,8 @@ public class AuthService : IAuthService
         SignInManager<ApplicationUser> signInManager,
         IEmailSender emailSender,
         IWebHostEnvironment environment,
-        IHttpClientFactory httpClientFactory, 
-        TaskPlusPlusIdentityDbContext dbContext, 
+        IHttpClientFactory httpClientFactory,
+        TaskPlusPlusIdentityDbContext dbContext,
         IWebHostEnvironment env)
     {
         _userManager = userManager;
@@ -60,7 +66,8 @@ public class AuthService : IAuthService
 
     public async Task<Result<AuthResponse>> Login(AuthRequest request)
     {
-        var user = await _userManager.FindByEmailAsync(request.Email);
+        
+        var user = await _dbContext.Set<ApplicationUser>().SingleOrDefaultAsync(u => u.Email == request.Email);
 
         if (user == null)
             return Result.Fail(new LoginError());
@@ -75,7 +82,23 @@ public class AuthService : IAuthService
             return Result.Fail(new LoginError());
         }
 
+        if (await _userManager.GetTwoFactorEnabledAsync(user))
+        {
+            return await GenerateOtpFor2StepVerification(user);
+        }
+
         JwtSecurityToken jwtSecurityToken = await GenerateToken(user);
+        var refreshToken = GenerateRefreshToken();
+
+        user.RefreshToken = refreshToken;
+        user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
+        _dbContext.Set<ApplicationUser>().Update(user);
+        var saveResult = await _dbContext.SaveChangesAsync();
+
+        if (saveResult <= 0)
+        {
+            return Result.Fail(new BaseError(400, "Invalid Login Request"));
+        }
 
         AuthResponse response = new()
         {
@@ -84,7 +107,94 @@ public class AuthService : IAuthService
             Email = user.Email!,
             UserName = user.UserName!,
             Settings = user.Settings,
-            HasPassword = true
+            HasPassword = true,
+            RefreshToken = refreshToken
+        };
+
+        return response;
+    }
+
+    public async Task<Result<AuthResponse>> TwoStepVerification(TwoFactorRequest request)
+    {
+        var user = await _userManager.FindByEmailAsync(request.Email!);
+
+        if (user is null)
+            return Result.Fail("Invalid request.");
+
+        var validVerification = await _userManager.VerifyTwoFactorTokenAsync(user, request.Provider!, request.Token!);
+        if (!validVerification)
+            return Result.Fail("Invalid Token Verification");
+
+        JwtSecurityToken jwtSecurityToken = await GenerateToken(user);
+
+        var hasPassword = await _userManager.HasPasswordAsync(user);
+
+        AuthResponse response = new()
+        {
+            Id = user.Id,
+            Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
+            Email = user.Email!,
+            UserName = user.UserName!,
+            Settings = user.Settings,
+            HasPassword = hasPassword
+        };
+
+        return response;
+    }
+
+    private async Task<Result<AuthResponse>> GenerateOtpFor2StepVerification(ApplicationUser user)
+    {
+        var providers = await _userManager.GetValidTwoFactorProvidersAsync(user);
+
+        if (!providers.Contains("Email"))
+        {
+            return Result.Fail("Invalid 2-Step Verification Provider.");
+        }
+
+        var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
+
+        var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+        string templateFolderPath = Path.Combine(path!, "Email", "EmailTemplates");
+        string templateFilePath = Path.Combine(templateFolderPath, "2FA_Email.html");
+        string emailTemplate = await System.IO.File.ReadAllTextAsync(templateFilePath);
+        emailTemplate = emailTemplate.Replace("{{Token}}", token);
+        emailTemplate = emailTemplate.Replace("{{UserName}}", user.FirstName);
+
+        if (_env.IsDevelopment())
+        {
+            emailTemplate = emailTemplate.Replace("{{HomeUrl}}", "https://localhost:4200/");
+        }
+        else if (_env.IsProduction())
+        {
+            emailTemplate = emailTemplate.Replace("{{HomeUrl}}", "https://taskplusplus.azurewebsites.net/");
+        }
+
+        var email = new Email
+        {
+            To = user.Email!,
+            RecipientName = user.FirstName,
+            Subject = "2-Step Verification",
+            Body = emailTemplate,
+            IsHtml = true
+        };
+
+        await _emailSender.SendEmailAsync(email);
+
+        JwtSecurityToken jwtSecurityToken = await GenerateToken(user);
+
+        var hasPassword = await _userManager.HasPasswordAsync(user);
+
+        AuthResponse response = new()
+        {
+            Id = user.Id,
+            Token = "none",
+            Email = user.Email!,
+            UserName = user.UserName!,
+            Settings = user.Settings,
+            HasPassword = hasPassword,
+            Is2StepVerificationRequired = true,
+            Provider = "Email"
         };
 
         return response;
@@ -110,7 +220,7 @@ public class AuthService : IAuthService
 
         if (!result.Succeeded) return Result.Fail(new RegistrationError(result.Errors.ToList()));
         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    
+
         var param = new Dictionary<string, string?>
         {
             {"token", token },
@@ -219,7 +329,7 @@ public class AuthService : IAuthService
         }
 
         var confirmResult = await _userManager.ConfirmEmailAsync(user, request.Token);
-        
+
 
         if (!confirmResult.Succeeded)
         {
@@ -264,6 +374,11 @@ public class AuthService : IAuthService
         if (user == null)
             return Result.Fail(new BaseError(400, "Invalid External Authentication."));
 
+        if (await _userManager.GetTwoFactorEnabledAsync(user))
+        {
+            return await GenerateOtpFor2StepVerification(user);
+        }
+
         var userHasPassword = await _userManager.HasPasswordAsync(user);
 
         JwtSecurityToken jwtSecurityToken = await GenerateToken(user);
@@ -284,7 +399,7 @@ public class AuthService : IAuthService
     public async Task<Result> UpdateUserSettings(UpdateUserSettingsRequest request)
     {
         var user = await _dbContext.Set<ApplicationUser>().SingleOrDefaultAsync(u => u.Id == request.UserId);
-        
+
         if (user == null)
         {
             return Result.Fail(new BaseError(400, "Invalid Setting Update Request"));
@@ -328,6 +443,29 @@ public class AuthService : IAuthService
         return Result.Ok().WithSuccess("Password changed successfully");
     }
 
+    public async Task<Result<string>> ChangeTwoFactorEnabledStatus(TwoFactorEnabledStatusRequest request)
+    {
+        var user = await _userManager.FindByIdAsync(request.UserId);
+
+        if (user == null)
+        {
+            return Result.Fail(new BaseError(400, "Invalid Two Factor Request"));
+        }
+
+        var changeTwoFactorStatusResult = await _userManager.SetTwoFactorEnabledAsync(user, request.TwoFactorEnabled);
+
+        if (!changeTwoFactorStatusResult.Succeeded)
+        {
+            return Result.Fail(new BaseError(400, "Invalid Two Factor Request"));
+        }
+
+        JwtSecurityToken jwtSecurityToken = await GenerateToken(user);
+
+        return request.TwoFactorEnabled
+            ? Result.Ok(new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken)).WithSuccess("Two-factor verification successfully enabled")
+            : Result.Ok(new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken)).WithSuccess("Two-factor verification successfully disabled");
+    }
+
     public async Task<Result> UpdateUserEmail(UpdateEmailRequest request)
     {
         var user = await _userManager.FindByIdAsync(request.UserId);
@@ -367,7 +505,7 @@ public class AuthService : IAuthService
         {
             emailTemplate = emailTemplate.Replace("{{HomeUrl}}", "https://taskplusplus.azurewebsites.net/");
         }
-        
+
         var email = new Email
         {
             To = request.Email,
@@ -378,7 +516,7 @@ public class AuthService : IAuthService
         };
 
         await _emailSender.SendEmailAsync(email);
-         
+
         return Result.Ok();
     }
 
@@ -476,6 +614,75 @@ public class AuthService : IAuthService
         return Result.Ok(response).WithSuccess("Profile updated successfully");
     }
 
+    public async Task<Result<AuthResponse>> RefreshToken(TokenApiModel request)
+    {
+        if (request.AccessToken is null || request.RefreshToken is null) 
+        {
+            return Result.Fail("Invalid client request");
+        }
+
+        string accessToken = request.AccessToken;
+        string refreshToken = request.RefreshToken;
+        var principal = GetPrincipalFromExpiredToken(accessToken);
+        
+        var email = principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress");
+
+        var user = await _dbContext.Set<ApplicationUser>().SingleOrDefaultAsync(u => u.Email == email!.Value);
+
+        if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+        {
+            return Result.Fail("Invalid client request");
+        }
+
+        JwtSecurityToken jwtSecurityToken = await GenerateToken(user);
+        var newRefreshToken = GenerateRefreshToken();
+        user.RefreshToken = newRefreshToken;
+        _dbContext.Set<ApplicationUser>().Update(user);
+        var saveResult = await _dbContext.SaveChangesAsync();
+
+        if (saveResult <= 0)
+        {
+            return Result.Fail(new BaseError(400, "Invalid Login Request"));
+        }
+
+        AuthResponse response = new()
+        {
+            Id = user.Id,
+            Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
+            Email = user.Email!,
+            UserName = user.UserName!,
+            Settings = user.Settings,
+            HasPassword = true,
+            RefreshToken = newRefreshToken
+        };
+
+        return response;
+
+    }
+
+    public async Task<Result> RevokeToken(string userId)
+    {
+        var user = await _dbContext.Set<ApplicationUser>().SingleOrDefaultAsync(u => u.Id == userId);
+
+        if (user == null)
+        {
+            return Result.Fail(new BaseError(400, "Invalid Setting Update Request"));
+        }
+
+        user.RefreshToken = null;
+
+        _dbContext.Set<ApplicationUser>().Update(user);
+        var saveResult = await _dbContext.SaveChangesAsync();
+
+
+        if (saveResult <= 0)
+        {
+            return Result.Fail(new BaseError(400, "Invalid Setting Update Request"));
+        }
+
+        return Result.Ok();
+
+    }
     private async Task<Result<string>> ValidateSocialToken(ExternalAuthRequest request)
     {
         return request.Provider switch
@@ -557,6 +764,7 @@ public class AuthService : IAuthService
             roleClaims.Add(new Claim(ClaimTypes.Role, roles[i]));
         }
         var userHasPassword = await _userManager.HasPasswordAsync(user);
+        var userHasTwoFactorEnabled = await _userManager.GetTwoFactorEnabledAsync(user);
 
         var claims = new[]
         {
@@ -566,7 +774,8 @@ public class AuthService : IAuthService
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email!),
             new Claim(CustomClaimTypes.Uid, user.Id),
-            new Claim(CustomClaimTypes.HasPassword, userHasPassword.ToString())
+            new Claim(CustomClaimTypes.HasPassword, userHasPassword.ToString()),
+            new Claim(CustomClaimTypes.TwoFactorEnabled, userHasTwoFactorEnabled.ToString())
         }
         .Union(userClaims)
         .Union(roleClaims);
@@ -582,4 +791,32 @@ public class AuthService : IAuthService
             signingCredentials: signingCredentials);
         return jwtSecurityToken;
     }
+
+    private string GenerateRefreshToken()
+    {
+        var randomNumber = new byte[32];
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomNumber);
+        return Convert.ToBase64String(randomNumber);
+    }
+
+    private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+    {
+        var tokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = false,
+            ValidateIssuer = false,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key)),
+            ValidateLifetime = false 
+        };
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
+        if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            throw new SecurityTokenException("Invalid token");
+        return principal;
+    }
+
+
+
 }

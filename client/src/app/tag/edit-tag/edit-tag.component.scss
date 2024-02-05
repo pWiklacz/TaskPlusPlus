@@ -1,0 +1,19 @@
+:host ::ng-deep .p-colorpicker-panel { 
+    background: var(--some-var) !important; 
+}
+
+.starIcon{
+  cursor: pointer;
+}
+
+.isFavorite {
+  color: #e1c108;
+}
+
+.modal-footer {
+  border: none;
+}
+
+.modal-header {
+  border: none;
+}

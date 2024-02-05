@@ -1,0 +1,26 @@
+<li class="d-flex justify-content-between bg-secondary tagItem " *ngIf="tag">
+    <div class="d-flex flex-row align-items-center text-white">
+        <div class="ml-">
+            <h6 class="mb-0 ">
+                <i class="fa-solid fa-tag fa-fw me-1" [ngStyle]="{'color': tag.colorHex}"></i>{{tag.name}}
+            </h6>
+        </div>
+    </div>
+    <div class="d-flex flex-row align-items-center text-white">
+        <span dropdown container="body">
+            <a id="basic-link" dropdownToggle (click)="false" aria-controls="basic-link-dropdown">
+                <i class="fa-solid fa-ellipsis"></i>
+            </a>
+            <ul id="basic-link-dropdown" *dropdownMenu class="dropdown-menu dropdown-menu-right border" role="menu"
+                aria-labelledby="basic-link">
+                <li role="menuitem">
+                    <a class="dropdown-item" (click)="openEditTagModal()">
+                        <i class="fa-solid fa-pen-to-square me-2 fa-fw"></i>Edit</a>
+                </li>
+                <li role="menuitem"><a class="dropdown-item" (click)="openDeleteTagModal()">
+                        <i class="fa-solid fa-trash me-2 fa-fw"></i>Delete</a>
+                </li>
+            </ul>
+        </span>
+    </div>
+</li>

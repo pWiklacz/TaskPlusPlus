@@ -39,7 +39,6 @@ export class LoginComponent {
     }
     
     this.accountService.login(this.loginForm.value).subscribe({
-      next: () => this.router.navigateByUrl('dashboard/inbox'),
       error: (err: HttpErrorResponse) => {
         console.log(err);
         this.errorMessage = err.message}

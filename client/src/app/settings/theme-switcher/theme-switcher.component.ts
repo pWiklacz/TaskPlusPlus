@@ -34,6 +34,8 @@ export class ThemeSwitcherComponent implements OnInit {
       this.isEdited = true;
     else this.isEdited = false;
     this.themeService.current = value;
+    document.documentElement.style.setProperty('--border-color',
+    this.themeService.getBorderColor());
   }
 
   public cancel() {

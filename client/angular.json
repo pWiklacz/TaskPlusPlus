@@ -36,22 +36,22 @@
               "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
               "node_modules/ngx-spinner/animations/square-jelly-box.css",           
               {
-                "input": "src/pulse.scss",
+                "input": "src/themes/pulse.scss",
                 "bundleName": "pulse",
                 "inject": false
               },
               {
-                "input": "src/slate.scss",
+                "input": "src/themes/slate.scss",
                 "bundleName": "slate",
                 "inject": false
               },
               {
-                "input": "src/united.scss",
+                "input": "src/themes/united.scss",
                 "bundleName": "united",
                 "inject": false
               },
               {
-                "input": "src/lumen.scss",
+                "input": "src/themes/lumen.scss",
                 "bundleName": "lumen",
                 "inject": false
               }          
